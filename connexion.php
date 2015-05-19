@@ -5,7 +5,7 @@
         <title>Se connecter </title>
     </head>
     <body>
-        <h2>Page de test</h2>
+        <h2>Page de teeeeest</h2>
         
 
 	<?php
