@@ -3,44 +3,24 @@
 namespace SC\UserBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use FOS\UserBundle\Model\User as BaseUser;
+use Symfony\Component\Security\Core\User\UserInterface;
+
 /**
  * User
  *
  * @ORM\Table()
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="SC\UserBundle\Entity\UserRepository")
  */
-class User extends BaseUser
+class User 
 {
+   
+
     /**
-     * @var integer
-     *
-     * @ORM\Column(name="id", type="integer")
+     * @var string
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\Column(name="email", type="string", length=255)
      */
-    protected $id;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="adresse", type="string", length=255)
-     */
-    private $adresse;
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="telephone", type="integer")
-     */
-    private $telephone;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="commune", type="string", length=255)
-     */
-    private $commune;
+    private $email;
 
     /**
      * @var string
@@ -56,6 +36,48 @@ class User extends BaseUser
      */
     private $prenom;
 
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="telephone", type="integer")
+     */
+    private $telephone;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="adresse", type="string", length=255)
+     */
+    private $adresse;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="commune", type="string", length=255)
+     */
+    private $commune;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="password", type="string", length=255)
+     */
+    private $password;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="type", type="string", length=255)
+     */
+    private $type;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="validite", type="boolean")
+     */
+    private $validite;
+
 
     /**
      * Get id
@@ -68,72 +90,26 @@ class User extends BaseUser
     }
 
     /**
-     * Set adresse
+     * Set email
      *
-     * @param string $adresse
+     * @param string $email
      * @return User
      */
-    public function setAdresse($adresse)
+    public function setEmail($email)
     {
-        $this->adresse = $adresse;
+        $this->email = $email;
 
         return $this;
     }
 
     /**
-     * Get adresse
+     * Get email
      *
      * @return string 
      */
-    public function getAdresse()
+    public function getEmail()
     {
-        return $this->adresse;
-    }
-
-    /**
-     * Set telephone
-     *
-     * @param integer $telephone
-     * @return User
-     */
-    public function setTelephone($telephone)
-    {
-        $this->telephone = $telephone;
-
-        return $this;
-    }
-
-    /**
-     * Get telephone
-     *
-     * @return integer 
-     */
-    public function getTelephone()
-    {
-        return $this->telephone;
-    }
-
-    /**
-     * Set commune
-     *
-     * @param string $commune
-     * @return User
-     */
-    public function setCommune($commune)
-    {
-        $this->commune = $commune;
-
-        return $this;
-    }
-
-    /**
-     * Get commune
-     *
-     * @return string 
-     */
-    public function getCommune()
-    {
-        return $this->commune;
+        return $this->email;
     }
 
     /**
@@ -180,5 +156,143 @@ class User extends BaseUser
     public function getPrenom()
     {
         return $this->prenom;
+    }
+
+    /**
+     * Set telephone
+     *
+     * @param integer $telephone
+     * @return User
+     */
+    public function setTelephone($telephone)
+    {
+        $this->telephone = $telephone;
+
+        return $this;
+    }
+
+    /**
+     * Get telephone
+     *
+     * @return integer 
+     */
+    public function getTelephone()
+    {
+        return $this->telephone;
+    }
+
+    /**
+     * Set adresse
+     *
+     * @param string $adresse
+     * @return User
+     */
+    public function setAdresse($adresse)
+    {
+        $this->adresse = $adresse;
+
+        return $this;
+    }
+
+    /**
+     * Get adresse
+     *
+     * @return string 
+     */
+    public function getAdresse()
+    {
+        return $this->adresse;
+    }
+
+    /**
+     * Set commune
+     *
+     * @param string $commune
+     * @return User
+     */
+    public function setCommune($commune)
+    {
+        $this->commune = $commune;
+
+        return $this;
+    }
+
+    /**
+     * Get commune
+     *
+     * @return string 
+     */
+    public function getCommune()
+    {
+        return $this->commune;
+    }
+
+    /**
+     * Set password
+     *
+     * @param string $password
+     * @return User
+     */
+    public function setPassword($password)
+    {
+        $this->password = $password;
+
+        return $this;
+    }
+
+    /**
+     * Get password
+     *
+     * @return string 
+     */
+    public function getPassword()
+    {
+        return $this->password;
+    }
+
+    /**
+     * Set type
+     *
+     * @param string $type
+     * @return User
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * Get type
+     *
+     * @return string 
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * Set validite
+     *
+     * @param boolean $validite
+     * @return User
+     */
+    public function setValidite($validite)
+    {
+        $this->validite = $validite;
+
+        return $this;
+    }
+
+    /**
+     * Get validite
+     *
+     * @return boolean 
+     */
+    public function getValidite()
+    {
+        return $this->validite;
     }
 }
