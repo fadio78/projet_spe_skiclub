@@ -79,6 +79,7 @@ class User extends UserInterface
     private $validite;
 
 
+
     /**
      * @ORM\Column(type="string", length=32)
      */
@@ -89,6 +90,7 @@ class User extends UserInterface
         //$this->isActive = true;
         $this->salt = md5(uniqid(null, true));
     }
+
 
     /**
      * Set email
