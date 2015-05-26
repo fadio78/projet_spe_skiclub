@@ -1,0 +1,4 @@
+services:
+#    sc_user.example:
+#        class: SC\UserBundle\Example
+#        arguments: [@service_id, "plain_value", %parameter%]
