@@ -3,7 +3,7 @@
 namespace SC\UserBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\UserInterface ;
 
 /**
  * User
@@ -11,7 +11,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @ORM\Table()
  * @ORM\Entity(repositoryClass="SC\UserBundle\Entity\UserRepository")
  */
-class User 
+class User extends UserInterface
 {
    
 
@@ -80,13 +80,14 @@ class User
 
 
     /**
-     * Get id
-     *
-     * @return integer 
+     * @ORM\Column(type="string", length=32)
      */
-    public function getId()
+    private $salt;
+    
+    public function __construct()
     {
-        return $this->id;
+        //$this->isActive = true;
+        $this->salt = md5(uniqid(null, true));
     }
 
     /**
@@ -294,5 +295,48 @@ class User
     public function getValidite()
     {
         return $this->validite;
+    }
+    
+    //Afin de pouvoir utiliser l'interface user on implemente ces méthodes
+    
+    /**
+     * @inheritDoc
+     */
+    public function getRoles()
+    {
+        return array('ROLE_USER');
+    }
+    
+    /**
+     * @inheritDoc
+     */
+    public function eraseCredentials()
+    {
+    }
+    
+     /**
+     * @inheritDoc
+     */
+    public function getSalt()
+    {
+        return $this->salt;
+    }
+    
+    /**
+     * @inheritDoc
+     */
+    public function getUsername()
+    {
+        return $this->email;
+    }
+    /**
+     * @inheritDoc
+     */
+    public function equals(UserInterface $user){
+        $bool=false;
+        if( $this->getEmail()== $user->getUsername()){
+            $bool=true;
+        }
+        return $bool;
     }
 }
