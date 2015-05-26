@@ -8,7 +8,7 @@ security:
 
     # http://symfony.com/doc/current/book/security.html#hierarchical-roles
     role_hierarchy:
-        ROLE_ADMIN:       ROLE_USER
+        ROLE_ADMIN:       [ROLE_AUTEUR, ROLE_MODERATEUR]
         ROLE_SUPER_ADMIN: [ROLE_USER, ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
 
     # http://symfony.com/doc/current/book/security.html#where-do-users-come-from-user-providers
@@ -18,8 +18,8 @@ security:
                 users:
                     user:  { password: userpass, roles: [ 'ROLE_USER' ] }
                     admin: { password: adminpass, roles: [ 'ROLE_ADMIN' ] }
-        main:
-            id: fos_user.user_provider.username
+        #main:
+         #   id: fos_user.user_provider.username
 
     # the main part of the security, where you can set up firewalls
     # for specific sections of your app
@@ -31,7 +31,7 @@ security:
         main:
             pattern:   ^/
             anonymous: true
-            provider: main
+            provider: in_memory
             form_login:
                 login_path: login
                 check_path: login_check
@@ -66,4 +66,5 @@ security:
     # of your application based on roles, ip, host or methods
     # http://symfony.com/doc/current/cookbook/security/access_control.html
     access_control:
+        - { path: ^/admin, ip: 127.0.0.1, requires_channel: https }
         #- { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: https }
