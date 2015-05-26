@@ -16,14 +16,17 @@ class Enfant
 
     /**
     * @ORM\ManyToOne(targetEntity="SC\UserBundle\Entity\User")
-    * @ORM\JoinColumn(nullable=false)
+    * @ORM\JoinColumn(nullable=false, name="email", referencedColumnName="email")
+    * @ORM\Id
     */
     private $userParent;
 
+   
     /**
      * @var string
      *
      * @ORM\Column(name="nomEnfant", type="string", length=255)
+     * @ORM\Id
      */
     private $nomEnfant;
 
@@ -31,6 +34,7 @@ class Enfant
      * @var string
      *
      * @ORM\Column(name="prenomEnfant", type="string", length=255)
+     * @ORM\Id
      */
     private $prenomEnfant;
 
@@ -39,7 +43,7 @@ class Enfant
      *
      * @ORM\Column(name="niveauSki", type="string", length=255)
      * 
-     * @ORM\Id
+     * 
      */
     private $niveauSki;
 
@@ -48,19 +52,9 @@ class Enfant
      *
      * @ORM\Column(name="dateNaissance", type="string", length=255)
      * 
-     * @ORM\Id
      */
     private $dateNaissance;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="email", type="string", length=255)
-     * 
-     * @ORM\Id
-     */
-    private $email;
-
+    
     /**
      * Set nomEnfant
      *
@@ -153,29 +147,6 @@ class Enfant
         return $this->dateNaissance;
     }
 
-    /**
-     * Set email
-     *
-     * @param string $email
-     * @return Enfant
-     */
-    public function setEmail($email)
-    {
-        $this->email = $email;
-
-        return $this;
-    }
-
-    /**
-     * Get email
-     *
-     * @return string 
-     */
-    public function getEmail()
-    {
-        return $this->email;
-    }
-    
     /**
      * Get userParent
      *

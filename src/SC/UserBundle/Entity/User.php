@@ -78,17 +78,6 @@ class User
      */
     private $validite;
 
-
-    /**
-     * Get id
-     *
-     * @return integer 
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
     /**
      * Set email
      *
