@@ -165,7 +165,7 @@ class ActiviteController extends Controller
             $em->flush();
             return $this->redirect($this->generateUrl('sc_activite_view', array('id' => $activite->getId())));
         }
-            return $this->render('SCActiviteBundle::addSortie.html.twig', array(
+            return $this->render('SCActiviteBundle::add.html.twig', array(
             'form' => $form->createView(),
             ));
     } 
