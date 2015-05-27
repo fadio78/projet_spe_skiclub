@@ -7,7 +7,7 @@ sc_activite_homepage:
         page: \d* 
 
 sc_activite_view:
-    path:      /{id}
+    path:      /view/{id}
     defaults:  { _controller: SCActiviteBundle:Activite:view }
     requirements:
         id: \d+

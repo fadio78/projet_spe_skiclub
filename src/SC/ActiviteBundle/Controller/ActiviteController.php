@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use SC\ActiviteBundle\Entity\Activite;
+use SC\UserBundle\Entity\User;
 
 
 class ActiviteController extends Controller 
@@ -36,10 +37,17 @@ class ActiviteController extends Controller
     
     public function viewAction($id)
     {
-    // Ici, on récupérera l'activité correspondante à l'id $id
-        return $this->render('SCActiviteBundle:Activite:view.html.twig', array(
-      'id' => $id
-        ));
+        // Ici, on récupérera l'activité correspondante à l'id $id
+        $repository = $this
+          ->getDoctrine()
+          ->getManager()
+          ->getRepository('SCActiviteBundle:Activite');
+        $activite = $repository->find($id); 
+        if (null === $activite) {
+          throw new NotFoundHttpException("L'activité d'id ".$id." n'existe pas.");
+        }
+
+        return $this->render('SCActiviteBundle::view.html.twig', array('activite' => $activite));
     }
     
     
@@ -50,8 +58,21 @@ class ActiviteController extends Controller
     {
         
         
+              // On crée l'utilisateur
+      $user = new User;
+
+   
+  
+    $Repository = $this->getDoctrine()->getManager()->getRepository('SC\UserBundle\Entity\User')->findAll();
+    $user=$Repository[0];
+   
+  
+        
+        
         // On crée un objet Advert
         $activite = new Activite();
+        $activite->setUser($user);
+        
         // On crée le FormBuilder grâce au service form factory
         $form = $this->get('form.factory')->createBuilder('form', $activite)
           ->add('nomActivite','text')
