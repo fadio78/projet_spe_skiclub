@@ -30,8 +30,8 @@ class Activite
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="description", type="text")
+     * 
+     * @ORM\Column(nullable=true,name="description", type="text")
      */
     private $description;
 
@@ -97,7 +97,7 @@ class Activite
      * @param string $description
      * @return Activite
      */
-    public function setDescription($description)
+    public function setDescription($description )
     {
         $this->description = $description;
 
@@ -182,4 +182,6 @@ class Activite
     {
         return $this->licence;
     }
+
+
 }
