@@ -6,7 +6,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use SC\ActiviteBundle\Entity\Activite;
+use SC\ActiviteBundle\Form\ActiviteType;
 use SC\UserBundle\Entity\User;
+use SC\UserBundle\Entity\Licence;
 
 
 class ActiviteController extends Controller 
@@ -56,30 +58,16 @@ class ActiviteController extends Controller
     
     public function addAction(Request $request)
     {
-        
-        
-              // On crée l'utilisateur
-      $user = new User;
-
+        // On crée l'utilisateur
+        $user = new User;
+        $Repository = $this->getDoctrine()->getManager()->getRepository('SC\UserBundle\Entity\User')->findAll();
+        $user=$Repository[0];
    
-  
-    $Repository = $this->getDoctrine()->getManager()->getRepository('SC\UserBundle\Entity\User')->findAll();
-    $user=$Repository[0];
-   
-  
-        
-        
         // On crée un objet Advert
         $activite = new Activite();
         $activite->setUser($user);
         
-        // On crée le FormBuilder grâce au service form factory
-        $form = $this->get('form.factory')->createBuilder('form', $activite)
-          ->add('nomActivite','text')
-          ->add('description','textarea')
-          ->add('prixActivite','number')
-          ->add('enregistrer','submit')
-          ->getForm();
+        $form = $this->get('form.factory')->create(new ActiviteType(), $activite);
         // On fait le lien Requête <-> Formulaire
         // À partir de maintenant, la variable $activite contient les valeurs entrées dans le formulaire par le visiteur
         $form->handleRequest($request);
