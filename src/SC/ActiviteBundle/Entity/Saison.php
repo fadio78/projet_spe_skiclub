@@ -14,65 +14,32 @@ class Saison
 {
 
     /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="debutSaison", type="datetime")
+     * @var integer
      * @ORM\Id
+     * @ORM\Column(name="annee", type="integer")
      */
-    private $debutSaison;
+    private $annee;
 
     /**
-     * @var \DateTime
+     * Set annee
      *
-     * @ORM\Column(name="finSaison", type="datetime")
-     * @ORM\Id
-     */
-    private $finSaison;
-
-
-    /**
-     * Set debutSaison
-     *
-     * @param \DateTime $debutSaison
+     * @param integer $annee
      * @return Saison
      */
-    public function setDebutSaison($debutSaison)
+    public function setAnnee($annee)
     {
-        $this->debutSaison = $debutSaison;
+        $this->annee = $annee;
 
         return $this;
     }
 
     /**
-     * Get debutSaison
+     * Get annee
      *
-     * @return \DateTime 
+     * @return integer 
      */
-    public function getDebutSaison()
+    public function getAnnee()
     {
-        return $this->debutSaison;
-    }
-
-    /**
-     * Set finSaison
-     *
-     * @param \DateTime $finSaison
-     * @return Saison
-     */
-    public function setFinSaison($finSaison)
-    {
-        $this->finSaison = $finSaison;
-
-        return $this;
-    }
-
-    /**
-     * Get finSaison
-     *
-     * @return \DateTime 
-     */
-    public function getFinSaison()
-    {
-        return $this->finSaison;
+        return $this->annee;
     }
 }
