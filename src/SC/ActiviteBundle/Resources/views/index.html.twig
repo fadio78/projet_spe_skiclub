@@ -1,7 +1,16 @@
 {# src/SC/ActiviteBundle/Resources/views/index.html.twig #}
 {% extends "SCActiviteBundle::layout.html.twig" %}
 {% block title %}{{ parent() }} - Index{% endblock %}
-{% block body %}
-  Notre plateforme est un peu vide pour le moment, mais cela viendra !
+{% block activité_body %}
+<ul>
+ 
+    {% for activite in listeActivites %}
+        <a href="{{ path('sc_activite_view', {'id': activite.id}) }}">
+          {{ activite.nomactivite }}
+        </a> 
+    {% endfor %}
+
+</ul> 
+ 
 {% endblock %} 
 

@@ -23,6 +23,7 @@ class AppKernel extends Kernel
 
             new FOS\UserBundle\FOSUserBundle(),
 
+            new SC\LicenceBundle\SCLicenceBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {
