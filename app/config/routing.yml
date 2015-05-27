@@ -19,7 +19,7 @@ login:
     defaults:  { _controller: SCUserBundle:Security:login }
 
 login_check:
-    pattern:   /login_check
+    pattern:   user/login_check
 
 logout:
-    pattern:   /logout  
+    pattern:   user/logout  
