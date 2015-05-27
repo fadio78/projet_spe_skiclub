@@ -88,13 +88,13 @@ class User implements AdvancedUserInterface
      */
     private $salt;
     
-   public function __construct(array $roles)
+  /* public function __construct(array $roles)
     {
         //$this->isActive = true;
       //  $this->type = $roles;
         $this->salt = md5(uniqid(null, true));
     }
-
+    */
     /**
    * @ORM\Column(name="roles", type="array", nullable=TRUE)
    
@@ -295,7 +295,18 @@ class User implements AdvancedUserInterface
 
         return $this;
     }
+    /**
+     * Set salt
+     *
+     * @param string $salt
+     * @return User
+     */
+    public function setSalt($salt)
+    {
+        $this->salt = $salt;
 
+        return $this;
+    }
     /**
      * Get validite
      *
