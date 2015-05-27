@@ -1,4 +1,4 @@
 sc_user_homepage:
-    path:     /hello/{name}
+    path:     /
     defaults: { _controller: SCUserBundle:Default:index }
 
