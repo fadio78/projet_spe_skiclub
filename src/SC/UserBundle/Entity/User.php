@@ -13,12 +13,16 @@ use Symfony\Component\Security\Core\User\UserInterface ;
  */
 class User implements UserInterface
 {
-   
+    /**
+    * @ORM\OneToMany(targetEntity="SC\UserBundle\Entity\Enfant", mappedBy="userParent", cascade = {"all"})
+    */
+    private $enfants;   
 
     /**
      * @var string
      * @ORM\Id
      * @ORM\Column(name="email", type="string", length=255, unique=true)
+     * )
      */
     private $email;
 
@@ -350,4 +354,70 @@ class User implements UserInterface
         return false;
     }
    
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->enfants = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Set salt
+     *
+     * @param string $salt
+     * @return User
+     */
+    public function setSalt($salt)
+    {
+        $this->salt = $salt;
+
+        return $this;
+    }
+
+    /**
+     * Set roles
+     *
+     * @param array $roles
+     * @return User
+     */
+    public function setRoles($roles)
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
+
+    /**
+     * Add enfants
+     *
+     * @param \SC\UserBundle\Entity\Enfant $enfants
+     * @return User
+     */
+    public function addEnfant(\SC\UserBundle\Entity\Enfant $enfants)
+    {
+        $this->enfants[] = $enfants;
+
+        return $this;
+    }
+
+    /**
+     * Remove enfants
+     *
+     * @param \SC\UserBundle\Entity\Enfant $enfants
+     */
+    public function removeEnfant(\SC\UserBundle\Entity\Enfant $enfants)
+    {
+        $this->enfants->removeElement($enfants);
+    }
+
+    /**
+     * Get enfants
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getEnfants()
+    {
+        return $this->enfants;
+    }
 }
