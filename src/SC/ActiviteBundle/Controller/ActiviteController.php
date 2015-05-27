@@ -54,9 +54,9 @@ class ActiviteController extends Controller
         $activite = new Activite();
         // On crée le FormBuilder grâce au service form factory
         $form = $this->get('form.factory')->createBuilder('form', $activite)
-          ->add('nomactivite','text')
+          ->add('nomActivite','text')
           ->add('description','textarea')
-          ->add('prixactivite','number')
+          ->add('prixActivite','number')
           ->add('enregistrer','submit')
           ->getForm();
         // On fait le lien Requête <-> Formulaire

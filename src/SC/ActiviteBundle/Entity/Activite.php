@@ -24,9 +24,9 @@ class Activite
     /**
      * @var string
      *
-     * @ORM\Column(name="nomactivite", type="string", length=255)
+     * @ORM\Column(name="nomActivite", type="string", length=255)
      */
-    private $nomactivite;
+    private $nomActivite;
 
     /**
      * @var string
@@ -38,9 +38,9 @@ class Activite
     /**
      * @var integer
      *
-     * @ORM\Column(name="prixactivite", type="integer")
+     * @ORM\Column(name="prixActivite", type="integer")
      */
-    private $prixactivite;
+    private $prixActivite;
     
     
     /**
@@ -62,26 +62,26 @@ class Activite
     }
 
     /**
-     * Set nomactivite
+     * Set nomActivite
      *
-     * @param string $nomactivite
+     * @param string $nomActivite
      * @return Activite
      */
-    public function setNomactivite($nomactivite)
+    public function setNomActivite($nomActivite)
     {
-        $this->nomactivite = $nomactivite;
+        $this->nomActivite = $nomActivite;
 
         return $this;
     }
 
     /**
-     * Get nomactivite
+     * Get nomActivite
      *
      * @return string 
      */
     public function getNomactivite()
     {
-        return $this->nomactivite;
+        return $this->nomActivite;
     }
 
     /**
@@ -108,26 +108,26 @@ class Activite
     }
 
     /**
-     * Set prixactivite
+     * Set prixActivite
      *
-     * @param integer $prixactivite
+     * @param integer $prixActivite
      * @return Activite
      */
-    public function setPrixactivite($prixactivite)
+    public function setPrixactivite($prixActivite)
     {
-        $this->prixactivite = $prixactivite;
+        $this->prixActivite = $prixActivite;
 
         return $this;
     }
 
     /**
-     * Get prixactivite
+     * Get prixActivite
      *
      * @return integer 
      */
     public function getPrixactivite()
     {
-        return $this->prixactivite;
+        return $this->prixActivite;
     }
 
 
