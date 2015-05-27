@@ -48,7 +48,7 @@ class Enfant
     private $niveauSki;
 
     /**
-     * @var string
+     * @var \DateTime 
      *
      * @ORM\Column(name="dateNaissance", type="datetime")
      * 
