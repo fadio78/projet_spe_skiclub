@@ -8,7 +8,7 @@ use SC\UserBundle\Entity\Enfant;
 use SC\UserBundle\Entity\User;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
-
+use Symfony\Component\Validator\Constraints\DateTime;
 
 class LoadEnfant extends AbstractFixture implements OrderedFixtureInterface
 {
@@ -20,7 +20,7 @@ class LoadEnfant extends AbstractFixture implements OrderedFixtureInterface
     //on va creer un nouvel enfant
     foreach ($advertRepository as $client) {
         $enfant = new Enfant;
-        $enfant->setDateNaissance('17aout'); 
+        $enfant->setDateNaissance(new \DateTime("2012-07-08")); 
         $enfant->setNiveauSki('bon'); 
         $enfant->setNomEnfant('monNom'); 
         $enfant->setPrenomEnfant('monPrenom');
