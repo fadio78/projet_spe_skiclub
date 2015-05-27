@@ -3,7 +3,7 @@
 namespace SC\UserBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\UserInterface ;
 
 /**
  * User
@@ -11,14 +11,14 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @ORM\Table()
  * @ORM\Entity(repositoryClass="SC\UserBundle\Entity\UserRepository")
  */
-class User 
+class User implements UserInterface
 {
    
 
     /**
      * @var string
      * @ORM\Id
-     * @ORM\Column(name="email", type="string", length=255)
+     * @ORM\Column(name="email", type="string", length=255, unique=true)
      */
     private $email;
 
@@ -60,6 +60,7 @@ class User
     /**
      * @var string
      *
+     * 
      * @ORM\Column(name="password", type="string", length=255)
      */
     private $password;
@@ -79,16 +80,25 @@ class User
     private $validite;
 
 
-    /**
-     * Get id
-     *
-     * @return integer 
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
 
+    /**
+     * @var string
+     * 
+     * @ORM\Column(type="string", length=32)
+     */
+    private $salt;
+    
+   // public function __construct(array $roles)
+    //{
+        //$this->isActive = true;
+      //  $this->type = $roles;
+        //$this->salt = md5(uniqid(null, true));
+    //}
+
+    /**
+   * @ORM\Column(name="roles", type="array")
+   */
+    private $roles = array();
     /**
      * Set email
      *
@@ -295,4 +305,49 @@ class User
     {
         return $this->validite;
     }
+    
+    //Afin de pouvoir utiliser l'interface user on implemente ces méthodes
+    
+    /**
+     * @inheritDoc
+     */
+    public function getRoles()
+    {
+        return array('ROLE_USER');
+        //return $this->roles;
+    }
+    
+    /**
+     * @inheritDoc
+     */
+    public function eraseCredentials()
+    {
+    }
+    
+     /**
+     * @inheritDoc
+     */
+    public function getSalt()
+    {
+        return $this->salt;
+    }
+    
+    /**
+     * @inheritDoc
+     */
+    public function getUsername()
+    {
+        return $this->email;
+    }
+    /**
+     * @inheritDoc
+     */
+    public function equals(UserInterface $user){
+       
+        if( $this->email === $user->getUsername()){
+           return true;
+        }
+        return false;
+    }
+   
 }
