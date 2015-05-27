@@ -39,8 +39,8 @@ class Sortie
     /**
      * Set dateSortie
      *
-     * @param string $dateSortie
-     * @return Sortie
+     * @param \DateTime $dateSortie
+     * @return \DateTime
      */
     public function setDateSortie($dateSortie)
     {
@@ -52,7 +52,7 @@ class Sortie
     /**
      * Get dateSortie
      *
-     * @return string 
+     * @return \DateTime
      */
     public function getDateSortie()
     {

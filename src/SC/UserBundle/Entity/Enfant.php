@@ -48,9 +48,9 @@ class Enfant
     private $niveauSki;
 
     /**
-     * @var string
+     * @var \DateTime 
      *
-     * @ORM\Column(name="dateNaissance", type="string", length=255)
+     * @ORM\Column(name="dateNaissance", type="datetime")
      * 
      */
     private $dateNaissance;
@@ -127,7 +127,7 @@ class Enfant
     /**
      * Set dateNaissance
      *
-     * @param string $dateNaissance
+     * @param \DateTime $dateNaissance
      * @return Enfant
      */
     public function setDateNaissance($dateNaissance)
@@ -140,7 +140,7 @@ class Enfant
     /**
      * Get dateNaissance
      *
-     * @return string 
+     * @return \DateTime 
      */
     public function getDateNaissance()
     {
