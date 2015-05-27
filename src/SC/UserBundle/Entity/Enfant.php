@@ -15,7 +15,7 @@ class Enfant
     
 
     /**
-    * @ORM\ManyToOne(targetEntity="SC\UserBundle\Entity\User",inversedBy="enfants")
+    * @ORM\ManyToOne(targetEntity="SC\UserBundle\Entity\User")
     * @ORM\JoinColumn(nullable=false, name="email", referencedColumnName="email")
     * @ORM\Id 
     */
