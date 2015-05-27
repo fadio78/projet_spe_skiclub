@@ -1,0 +1,3 @@
+sc_licence_homepage:
+    path:     /hello/{name}
+    defaults: { _controller: SCLicenceBundle:Default:index }
