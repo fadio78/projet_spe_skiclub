@@ -30,8 +30,8 @@ class Activite
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="description", type="text")
+     * 
+     * @ORM\Column(nullable=true,name="description", type="text")
      */
     private $description;
 
@@ -50,12 +50,13 @@ class Activite
      */
     private $user; 
     
-    /*
-      /**
-     * @ORM\ManyToOne(targetEntity="OC\PlatformBundle\Entity\Advert")
-     */ /*
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="SC\LicenceBundle\Entity\Licence")
+     * @ORM\JoinColumn(name="typeLicence",referencedColumnName="typeLicence")
+     */ 
     private $licence; 
-*/
+    
 
     /**
      * Get id
@@ -96,7 +97,7 @@ class Activite
      * @param string $description
      * @return Activite
      */
-    public function setDescription($description)
+    public function setDescription($description )
     {
         $this->description = $description;
 
@@ -112,30 +113,6 @@ class Activite
     {
         return $this->description;
     }
-
-    /**
-     * Set prixActivite
-     *
-     * @param integer $prixActivite
-     * @return Activite
-     */
-    public function setPrixactivite($prixActivite)
-    {
-        $this->prixActivite = $prixActivite;
-
-        return $this;
-    }
-
-    /**
-     * Get prixActivite
-     *
-     * @return integer 
-     */
-    public function getPrixactivite()
-    {
-        return $this->prixActivite;
-    }
-
 
     /**
      * Set user
@@ -159,4 +136,52 @@ class Activite
     {
         return $this->user;
     }
+
+    /**
+     * Set prixActivite
+     *
+     * @param integer $prixActivite
+     * @return Activite
+     */
+    public function setPrixActivite($prixActivite)
+    {
+        $this->prixActivite = $prixActivite;
+
+        return $this;
+    }
+
+    /**
+     * Get prixActivite
+     *
+     * @return integer 
+     */
+    public function getPrixActivite()
+    {
+        return $this->prixActivite;
+    }
+
+    /**
+     * Set licence
+     *
+     * @param \SC\LicenceBundle\Entity\Licence $licence
+     * @return Activite
+     */
+    public function setLicence(\SC\LicenceBundle\Entity\Licence $licence = null)
+    {
+        $this->licence = $licence;
+
+        return $this;
+    }
+
+    /**
+     * Get licence
+     *
+     * @return \SC\LicenceBundle\Entity\Licence 
+     */
+    public function getLicence()
+    {
+        return $this->licence;
+    }
+
+
 }
