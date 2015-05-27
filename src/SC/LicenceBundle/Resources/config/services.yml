@@ -1,0 +1,4 @@
+services:
+#    sc_licence.example:
+#        class: SC\LicenceBundle\Example
+#        arguments: [@service_id, "plain_value", %parameter%]

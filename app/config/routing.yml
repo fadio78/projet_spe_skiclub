@@ -1,3 +1,7 @@
+sc_licence:
+    resource: "@SCLicenceBundle/Resources/config/routing.yml"
+    prefix:   /
+
 sc_activite:
     resource: "@SCActiviteBundle/Resources/config/routing.yml"
     prefix:   /activite

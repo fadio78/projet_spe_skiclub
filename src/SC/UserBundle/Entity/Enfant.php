@@ -15,7 +15,7 @@ class Enfant
     
 
     /**
-    * @ORM\ManyToOne(targetEntity="SC\UserBundle\Entity\User")
+    * @ORM\ManyToOne(targetEntity="SC\UserBundle\Entity\User",inversedBy="enfants")
     * @ORM\JoinColumn(nullable=false, name="email", referencedColumnName="email")
     * @ORM\Id
     */
@@ -150,7 +150,7 @@ class Enfant
     /**
      * Get userParent
      *
-     * @return user 
+     * @return string 
      */
     public function getUserParent()
     {
@@ -160,7 +160,7 @@ class Enfant
     /**
      * Set userParent
      *
-     * @param user $user
+     * @param string $user
      * @return Enfant
      */
     public function setUserParent($user)
@@ -168,6 +168,15 @@ class Enfant
         $this->userParent = $user;
 
         return $this;
-    }    
+    }
+    
+    public function __construct($email,$nom,$prenom,$level,$birth) {
+        $this->userParent = $email;
+        $this->nomEnfant = $nom;
+        $this->PrenomEnfant = $prenom;
+        $this->niveauSki = $level;
+        $this->dateNaissance = $birth;
+        
+    }
     
 }
