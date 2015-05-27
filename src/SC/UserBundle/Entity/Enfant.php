@@ -170,7 +170,7 @@ class Enfant
         return $this;
     }
     
-    public function __construct($mail,$nom,$prenom,$level,$birth) {
+    public function __construct($email,$nom,$prenom,$level,$birth) {
         $this->userParent = $email;
         $this->nomEnfant = $nom;
         $this->PrenomEnfant = $prenom;
