@@ -19,17 +19,21 @@ class ActiviteController extends Controller
       // On déclenche une exception NotFoundHttpException, cela va afficher
       // une page d'erreur 404 (qu'on pourra personnaliser plus tard d'ailleurs)
             throw new NotFoundHttpException('Page "'.$page.'" inexistante.');
-        }
+        } */
       // Ici, on récupérera la liste des activités, puis on la passera au template
-        */  
+        $repository = $this
+          ->getDoctrine()
+          ->getManager()
+          ->getRepository('SCActiviteBundle:Activite');
+        $listeActivites = $repository->findAll();  
         
-        return $this->render('SCActiviteBundle::index.html.twig');
+        return $this->render('SCActiviteBundle::index.html.twig',array('listeActivites' => $listeActivites ));
     }
     
     
     
     
-    /*
+    
     public function viewAction($id)
     {
     // Ici, on récupérera l'activité correspondante à l'id $id
@@ -38,20 +42,21 @@ class ActiviteController extends Controller
         ));
     }
     
-    */
+    
     
     
     
     public function addAction(Request $request)
     {
         
+        
         // On crée un objet Advert
         $activite = new Activite();
         // On crée le FormBuilder grâce au service form factory
         $form = $this->get('form.factory')->createBuilder('form', $activite)
-          ->add('nomactivite','text')
+          ->add('nomActivite','text')
           ->add('description','textarea')
-          ->add('prixactivite','number')
+          ->add('prixActivite','number')
           ->add('enregistrer','submit')
           ->getForm();
         // On fait le lien Requête <-> Formulaire

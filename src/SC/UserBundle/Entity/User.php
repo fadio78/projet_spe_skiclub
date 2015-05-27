@@ -4,14 +4,14 @@ namespace SC\UserBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface ;
-
+use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 /**
  * User
  *
  * @ORM\Table()
  * @ORM\Entity(repositoryClass="SC\UserBundle\Entity\UserRepository")
  */
-class User implements UserInterface
+class User implements AdvancedUserInterface
 {
     /**
     * @ORM\OneToMany(targetEntity="SC\UserBundle\Entity\Enfant", mappedBy="userParent", cascade = {"all"})
@@ -79,9 +79,9 @@ class User implements UserInterface
     /**
      * @var boolean
      *
-     * @ORM\Column(name="validite", type="boolean")
+     * @ORM\Column(name="isActive", type="boolean")
      */
-    private $validite;
+    private $isActive;
 
 
 
@@ -92,17 +92,17 @@ class User implements UserInterface
      */
     private $salt;
     
-   // public function __construct(array $roles)
-    //{
+  /* public function __construct(array $roles)
+    {
         //$this->isActive = true;
       //  $this->type = $roles;
-        //$this->salt = md5(uniqid(null, true));
-    //}
-
+        $this->salt = md5(uniqid(null, true));
+    }
+    */
     /**
-   * @ORM\Column(name="roles", type="array")
-   */
-    private $roles = array();
+   * @ORM\Column(name="roles", type="array", nullable=TRUE)
+   
+    private $roles = array();*/
     /**
      * Set email
      *
@@ -293,21 +293,32 @@ class User implements UserInterface
      * @param boolean $validite
      * @return User
      */
-    public function setValidite($validite)
+    public function setIsActive($isActive)
     {
-        $this->validite = $validite;
+        $this->isActive = $isActive;
 
         return $this;
     }
+    /**
+     * Set salt
+     *
+     * @param string $salt
+     * @return User
+     */
+    public function setSalt($salt)
+    {
+        $this->salt = $salt;
 
+        return $this;
+    }
     /**
      * Get validite
      *
      * @return boolean 
      */
-    public function getValidite()
+    public function getIsActive()
     {
-        return $this->validite;
+        return $this->isActive;
     }
     
     //Afin de pouvoir utiliser l'interface user on implemente ces méthodes
@@ -353,6 +364,26 @@ class User implements UserInterface
         }
         return false;
     }
+     public function isAccountNonExpired()
+    {
+        return true;
+    }
+
+    public function isAccountNonLocked()
+    {
+        return true;
+    }
+
+    public function isCredentialsNonExpired()
+    {
+        return true;
+    }
+
+    public function isEnabled()
+    {
+        return $this->isActive;
+    }
+    
    
     /**
      * Constructor

@@ -16,7 +16,7 @@ class Sortie
     /**
      * @var string
      *
-     * @ORM\Column(name="dateSortie", type="string", length=255)
+     * @ORM\Column(name="dateSortie", type="datetime")
      * @ORM\Id
      */
     private $dateSortie;

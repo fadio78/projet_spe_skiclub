@@ -28,12 +28,13 @@ class LoadUser extends AbstractFixture implements OrderedFixtureInterface
       $user->setTelephone('06125566333');
       $user->setPassword('azerty');
       $user->setType('ok');
-      $user->setValidite(1);
+      $user->setIsActive(1);
       
+     
       // On ne se sert pas du sel pour l'instant
-      $user->setSalt('');
+      $user->setSalt(''); 
       // On définit uniquement le role ROLE_USER qui est le role de base
-      $user->setRoles(array('ROLE_USER'));
+     // $user->setRoles(array('ROLE_USER'));
 
       // On le persiste
       $manager->persist($user);
