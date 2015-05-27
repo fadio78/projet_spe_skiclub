@@ -49,7 +49,13 @@ class Activite
      * 
      */
     private $user; 
-
+    
+    /*
+      /**
+     * @ORM\ManyToOne(targetEntity="OC\PlatformBundle\Entity\Advert")
+     */ /*
+    private $licence; 
+*/
 
     /**
      * Get id
