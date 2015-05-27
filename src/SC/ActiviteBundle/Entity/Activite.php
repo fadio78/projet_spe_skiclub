@@ -50,12 +50,13 @@ class Activite
      */
     private $user; 
     
-    /*
-      /**
-     * @ORM\ManyToOne(targetEntity="OC\PlatformBundle\Entity\Advert")
-     */ /*
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="SC\LicenceBundle\Entity\Licence")
+     * @ORM\JoinColumn(name="typeLicence",referencedColumnName="typeLicence")
+     */ 
     private $licence; 
-*/
+    
 
     /**
      * Get id
@@ -114,30 +115,6 @@ class Activite
     }
 
     /**
-     * Set prixActivite
-     *
-     * @param integer $prixActivite
-     * @return Activite
-     */
-    public function setPrixactivite($prixActivite)
-    {
-        $this->prixActivite = $prixActivite;
-
-        return $this;
-    }
-
-    /**
-     * Get prixActivite
-     *
-     * @return integer 
-     */
-    public function getPrixactivite()
-    {
-        return $this->prixActivite;
-    }
-
-
-    /**
      * Set user
      *
      * @param \SC\UserBundle\Entity\User $user
@@ -158,5 +135,51 @@ class Activite
     public function getUser()
     {
         return $this->user;
+    }
+
+    /**
+     * Set prixActivite
+     *
+     * @param integer $prixActivite
+     * @return Activite
+     */
+    public function setPrixActivite($prixActivite)
+    {
+        $this->prixActivite = $prixActivite;
+
+        return $this;
+    }
+
+    /**
+     * Get prixActivite
+     *
+     * @return integer 
+     */
+    public function getPrixActivite()
+    {
+        return $this->prixActivite;
+    }
+
+    /**
+     * Set licence
+     *
+     * @param \SC\LicenceBundle\Entity\Licence $licence
+     * @return Activite
+     */
+    public function setLicence(\SC\LicenceBundle\Entity\Licence $licence = null)
+    {
+        $this->licence = $licence;
+
+        return $this;
+    }
+
+    /**
+     * Get licence
+     *
+     * @return \SC\LicenceBundle\Entity\Licence 
+     */
+    public function getLicence()
+    {
+        return $this->licence;
     }
 }
