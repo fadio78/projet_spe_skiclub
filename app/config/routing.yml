@@ -3,8 +3,8 @@ sc_activite:
     prefix:   /activite
 
 sc_user:
-    resource: "@SCUserBundle/Resources/config/routing.yml"
-    prefix:   /
+    pattern:   /user
+    defaults:  { _controller: SCUserBundle:Default:index }
 
 app:
     resource: "@AppBundle/Controller/"
