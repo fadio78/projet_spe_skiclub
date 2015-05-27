@@ -2,7 +2,9 @@
 
 sc_activite_homepage:
     path:     /{page}
-    defaults: { _controller: SCActiviteBundle:Activite:index , page: 1 }
+    defaults: { _controller: SCActiviteBundle:Activite:index, page: 1 }    
+    requirements:
+        page: \d* 
 
 sc_activite_view:
     path:      /{id}

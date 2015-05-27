@@ -41,13 +41,14 @@ class Activite
      * @ORM\Column(name="prixactivite", type="integer")
      */
     private $prixactivite;
-
+    
+    
     /**
-     * @var integer
-     *
-     * @ORM\Column(name="prixlicence", type="integer")
+     * @ORM\ManyToOne(targetEntity="SC\UserBundle\Entity\User")
+     * @ORM\JoinColumn(nullable=false, name="email",referencedColumnName="email")
+     * 
      */
-    private $prixlicence;
+    private $user; 
 
 
     /**
@@ -129,26 +130,27 @@ class Activite
         return $this->prixactivite;
     }
 
+
     /**
-     * Set prixlicence
+     * Set user
      *
-     * @param integer $prixlicence
+     * @param \SC\UserBundle\Entity\User $user
      * @return Activite
      */
-    public function setPrixlicence($prixlicence)
+    public function setUser(\SC\UserBundle\Entity\User $user)
     {
-        $this->prixlicence = $prixlicence;
+        $this->user = $user;
 
         return $this;
     }
 
     /**
-     * Get prixlicence
+     * Get user
      *
-     * @return integer 
+     * @return \SC\UserBundle\Entity\User 
      */
-    public function getPrixlicence()
+    public function getUser()
     {
-        return $this->prixlicence;
+        return $this->user;
     }
 }

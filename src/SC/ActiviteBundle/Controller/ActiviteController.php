@@ -5,27 +5,27 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use OC\PlatformBundle\Entity\Activite;
+use SC\ActiviteBundle\Entity\Activite;
 
 
 class ActiviteController extends Controller 
 {
-    /*
-    public function indexAction($page)
+    
+    public function indexAction()
     {
     // On ne sait pas combien de pages il y a
     // Mais on sait qu'une page doit être supérieure ou égale à 1
-        if ($page < 1) {
+       /*if ($page < 1) {
       // On déclenche une exception NotFoundHttpException, cela va afficher
       // une page d'erreur 404 (qu'on pourra personnaliser plus tard d'ailleurs)
             throw new NotFoundHttpException('Page "'.$page.'" inexistante.');
         }
       // Ici, on récupérera la liste des activités, puis on la passera au template
-          
+        */  
         
-        return $this->render('SCActiviteBundle:Activite:index.html.twig');
+        return $this->render('SCActiviteBundle::index.html.twig');
     }
-    */
+    
     
     
     
@@ -48,41 +48,35 @@ class ActiviteController extends Controller
         // On crée un objet Advert
         $activite = new Activite();
         // On crée le FormBuilder grâce au service form factory
-        $formBuilder = $this->get('form.factory')->createBuilder('form', $activite);
-        // On ajoute les champs de l'entité que l'on veut à notre formulaire
-      $formBuilder
-        ->add('Nom activité','text')
-        ->add('Description','textarea')
-        ->add('Prix activité','number')
-        ->add('Prix licence ','number')
-        ->add('enregistrer','submit');
-
-        // À partir du formBuilder, on génère le formulaire
-        $form = $formBuilder->getForm();
-        // On passe la méthode createView() du formulaire à la vue
-        // afin qu'elle puisse afficher le formulaire toute seule
-        return $this->render('SCActiviteBundle:Activite:add.html.twig', array(
-          'form' => $form->createView(),
+        $form = $this->get('form.factory')->createBuilder('form', $activite)
+          ->add('nomactivite','text')
+          ->add('description','textarea')
+          ->add('prixactivite','number')
+          ->add('enregistrer','submit')
+          ->getForm();
+        // On fait le lien Requête <-> Formulaire
+        // À partir de maintenant, la variable $activite contient les valeurs entrées dans le formulaire par le visiteur
+        $form->handleRequest($request);
+        // On vérifie que les valeurs entrées sont correctes
+        if ($form->isValid()) {
+        // On l'enregistre notre objet $activite dans la base de données, par exemple
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($activite);
+        $em->flush();
+        $request->getSession()->getFlashBag()->add('notice', 'Activité bien enregistrée.');
+        // On redirige vers la page de visualisation de l'annonce nouvellement créée
+        return $this->redirect($this->generateUrl('sc_activite_view', array('id' => $activite->getId())));
+        }
+        // À ce stade, le formulaire n'est pas valide car :
+        // - Soit la requête est de type GET, donc l'admin vient d'arriver sur la page et veut voir le formulaire
+        // - Soit la requête est de type POST, mais le formulaire contient des valeurs invalides, donc on l'affiche de nouveau
+        return $this->render('SCActiviteBundle::add.html.twig', array(
+        'form' => $form->createView(),
         ));
+    
     } 
   
   
-  
-  
-   /*
-  
-    // Si la requête est en POST, c'est que l'admin a soumis le formulaire
-        if ($request->isMethod('POST')) {
-      // Ici, on s'occupera de la création et de la gestion du formulaire
-            $request->getSession()->getFlashBag()->add('notice', 'Activité bien enregistrée.');
-      // Puis on redirige vers la page de visualisation de cettte activité
-            return $this->redirect($this->generateUrl('sc_activite_view', array('id' => 5)));
-        }
-    // Si on n'est pas en POST, alors on affiche le formulaire
-        return $this->render('SCActiviteBundle:Activite:add.html.twig');
-     
-     */
- 
   
   
    /*
