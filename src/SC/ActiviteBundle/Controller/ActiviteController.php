@@ -9,6 +9,8 @@ use SC\ActiviteBundle\Entity\Activite;
 use SC\ActiviteBundle\Form\ActiviteType;
 use SC\UserBundle\Entity\User;
 use SC\UserBundle\Entity\Licence;
+use SC\ActiviteBundle\Entity\Sortie;
+
 
 
 class ActiviteController extends Controller 
@@ -105,22 +107,59 @@ class ActiviteController extends Controller
         }
         return $this->render('SCActiviteBundle:Activite:edit.html.twig');
     }
-  
+    */
   
   
   
     public function deleteAction($id)
     {
-    // Ici, on récupérera l'activité correspondant à $id
-    // Ici, on gérera la suppression de l'activité en question
-        return $this->render('SCActiviteBundle:Activite:delete.html.twig');
+        //on recupere l'entity managere 
+        $em = $this->getDoctrine()->getManager();
+        $repository = $em->getRepository('SCActiviteBundle:Activite');
+        //on recupere l'activite
+        $activite = $repository->find($id);
+        
+        //si n'existe pas -> message d'erreur
+        if (is_null($activite)) {
+            // erreur a lance
+            //return new Response('probleme cette activite nexiste pas');
+        }
+        else {
+            $em->remove($activite);
+            $em->flush();
+            $listeActivites = $em->getRepository('SCActiviteBundle:Activite')->findAll();
+            return $this->render('SCActiviteBundle::index.html.twig', array('listeActivites' => $listeActivites));
+        }    
     }
-    */
+    
+    public function ajoutSortieAction($id,Request $request) {
+        
+        $sortie = new Sortie();
+        $sortie->setActivite($this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Activite')->find($id));
+            
+        // On crée le FormBuilder grâce au service form factory
+        $form = $this->get('form.factory')->createBuilder('form', $sortie)
+          ->add('dateSortie','text')
+          ->add('lieu','text')
+          ->add('enregistrer','submit')
+          ->getForm();
+        // On fait le lien Requête <-> Formulaire
+        // À partir de maintenant, la variable $activite contient les valeurs entrées dans le formulaire par le visiteur
+        $form->handleRequest($request);
+        // On vérifie que les valeurs entrées sont correctes
+        if ($form->isValid()) {
+            // On l'enregistre notre objet $activite dans la base de données, par exemple
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($sortie);
+            $em->flush();
+            return $this->redirect($this->generateUrl('sc_activite_view', array('id' => $activite->getId())));
+        }
+            return $this->render('SCActiviteBundle::add.html.twig', array(
+            'form' => $form->createView(),
+            ));
+    } 
   
-  
-} 
-  
 
 
 
-
+}

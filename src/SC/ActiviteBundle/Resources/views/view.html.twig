@@ -20,6 +20,10 @@
       <i class="glyphicon glyphicon-edit"></i>
       Modifier l'activité
     </a>
+    <a href="{{ path('sc_activite_ajoutSortie', {'id': activite.id}) }}" class="btn btn-default">
+      <i class="glyphicon glyphicon-edit"></i>
+      Ajouter une sortie
+    </a>      
     <a href="{{ path('sc_activite_delete', {'id': activite.id}) }}" class="btn btn-danger">
       <i class="glyphicon glyphicon-trash"></i>
       Supprimer l'activité
