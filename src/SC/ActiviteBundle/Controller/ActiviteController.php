@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use SC\ActiviteBundle\Entity\Activite;
 use SC\ActiviteBundle\Form\ActiviteType;
+use SC\ActiviteBundle\Form\ActiviteEditType;
 use SC\UserBundle\Entity\User;
 use SC\UserBundle\Entity\Licence;
 use SC\ActiviteBundle\Entity\Sortie;
@@ -65,7 +66,7 @@ class ActiviteController extends Controller
         $Repository = $this->getDoctrine()->getManager()->getRepository('SC\UserBundle\Entity\User')->findAll();
         $user=$Repository[0];
    
-        // On crée un objet Advert
+        // On crée un objet Activite
         $activite = new Activite();
         $activite->setUser($user);
         
@@ -79,7 +80,7 @@ class ActiviteController extends Controller
         $em = $this->getDoctrine()->getManager();
         $em->persist($activite);
         $em->flush();
-        $request->getSession()->getFlashBag()->add('notice', 'Activité bien enregistrée.');
+        $request->getSession()->getFlashBag()->add('info', 'Activité bien enregistrée');
         // On redirige vers la page de visualisation de l'annonce nouvellement créée
         return $this->redirect($this->generateUrl('sc_activite_view', array('id' => $activite->getId())));
         }
@@ -94,20 +95,33 @@ class ActiviteController extends Controller
   
   
   
-  
-   /*
-  
+ 
+
     public function editAction($id, Request $request)
     {
-    // Ici, on récupérera l'activité correspondante à $id
-    // Même mécanisme que pour l'ajout
-        if ($request->isMethod('POST')) {
-            $request->getSession()->getFlashBag()->add('notice', 'Annonce bien modifiée.');
-            return $this->redirect($this->generateUrl('sc_activite_view', array('id' => 5)));
+        $em = $this->getDoctrine()->getManager();
+
+        // On récupère l'activité $id
+        $activite = $em->getRepository('SCActiviteBundle:Activite')->find($id);
+
+        if (null === $activite) {
+            throw new NotFoundHttpException("L'activité d'id ".$id." n'existe pas.");
         }
-        return $this->render('SCActiviteBundle:Activite:edit.html.twig');
+
+        $form = $this->createForm(new ActiviteEditType(), $activite);
+
+        if ($form->handleRequest($request)->isValid()) {
+        // Inutile de persister ici, Doctrine connait déjà notre activité
+        $em->flush();
+
+        $request->getSession()->getFlashBag()->add('info', 'Activité bien modifiée.');
+
+          return $this->redirect($this->generateUrl('sc_activite_view', array('id' => $activite->getId())));
+        }
+
+        return $this->render('SCActiviteBundle::edit.html.twig', array('form'   => $form->createView(),'activite' => $activite ));// Je passe également l'activité à la vue si jamais elle veut l'afficher))
     }
-    */
+    
   
   
   

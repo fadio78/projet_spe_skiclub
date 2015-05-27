@@ -22,7 +22,7 @@ class ActiviteType extends AbstractType
             ->add('description')
             ->add('prixActivite') 
             ->add('licence', 'entity', array('class'=> 'SCLicenceBundle:Licence','property' => 'typeLicence',
-          'multiple' => false,'expanded' => false))
+          'multiple' => false,'expanded' => false,'required' => false))
             ->add('enregistrer','submit');
     }
     

@@ -5,11 +5,22 @@
 {% endblock %}
 {% block activité_body %}
     
+      
+  <p>
+    {# On affiche tous les messages flash dont le nom est « info » #}
+      {% for message in app.session.flashbag.get('info') %}
+        <p>{{ message }}</p>
+      {% endfor %}
+  </p>
+    
   <h2>{{ activite.nomActivite }}</h2>
+
  
-  <div class="well">
-    {{ activite.description }}
-  </div>
+  <ul> {{ activite.description }} </ul>
+    
+    <br>
+    </br>
+
     <ul> Le prix de l'activité est: {{activite.prixActivite}} € <ul>
   <p>
     <a href="{{ path('sc_activite_homepage') }}" class="btn btn-default">
