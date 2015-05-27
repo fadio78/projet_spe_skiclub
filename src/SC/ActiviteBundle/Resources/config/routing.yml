@@ -24,3 +24,8 @@ sc_activite_delete:
     defaults:  { _controller: SCActiviteBundle:Activite:delete }
     requirements:
         id: \d+ 
+sc_activite_ajoutSortie:
+    path:      /ajoutSortie/{id}
+    defaults:  { _controller: SCActiviteBundle:Activite:ajoutSortie }
+    requirements:
+        id: \d+ 
