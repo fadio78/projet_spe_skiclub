@@ -11,14 +11,14 @@ use Symfony\Component\Security\Core\User\UserInterface ;
  * @ORM\Table()
  * @ORM\Entity(repositoryClass="SC\UserBundle\Entity\UserRepository")
  */
-class User extends UserInterface
+class User implements UserInterface
 {
    
 
     /**
      * @var string
      * @ORM\Id
-     * @ORM\Column(name="email", type="string", length=255)
+     * @ORM\Column(name="email", type="string", length=255, unique=true)
      */
     private $email;
 
@@ -60,6 +60,7 @@ class User extends UserInterface
     /**
      * @var string
      *
+     * 
      * @ORM\Column(name="password", type="string", length=255)
      */
     private $password;
@@ -81,17 +82,23 @@ class User extends UserInterface
 
 
     /**
+     * @var string
+     * 
      * @ORM\Column(type="string", length=32)
      */
     private $salt;
     
-    public function __construct()
-    {
+   // public function __construct(array $roles)
+    //{
         //$this->isActive = true;
-        $this->salt = md5(uniqid(null, true));
-    }
+      //  $this->type = $roles;
+        //$this->salt = md5(uniqid(null, true));
+    //}
 
-
+    /**
+   * @ORM\Column(name="roles", type="array")
+   */
+    private $roles = array();
     /**
      * Set email
      *
@@ -307,6 +314,7 @@ class User extends UserInterface
     public function getRoles()
     {
         return array('ROLE_USER');
+        //return $this->roles;
     }
     
     /**
@@ -335,10 +343,11 @@ class User extends UserInterface
      * @inheritDoc
      */
     public function equals(UserInterface $user){
-        $bool=false;
-        if( $this->getEmail()== $user->getUsername()){
-            $bool=true;
+       
+        if( $this->email === $user->getUsername()){
+           return true;
         }
-        return $bool;
+        return false;
     }
+   
 }
