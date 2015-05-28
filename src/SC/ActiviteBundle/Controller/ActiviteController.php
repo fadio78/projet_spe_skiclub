@@ -86,9 +86,9 @@ class ActiviteController extends Controller
         $em = $this->getDoctrine()->getManager();
         $em->persist($activite);
         $em->flush();
-        $request->getSession()->getFlashBag()->add('info', 'Activité bien enregistrée');
+        $request->getSession()->getFlashBag()->add('info', 'User bien enregistrée');
         // On redirige vers la page de visualisation de l'annonce nouvellement créée
-        return $this->redirect($this->generateUrl('sc_activite_view', array('id' => $activite->getId())));
+        return $this->redirect($this->generateUrl('sc_user_homepage'));
         }
         // À ce stade, le formulaire n'est pas valide car :
         // - Soit la requête est de type GET, donc l'admin vient d'arriver sur la page et veut voir le formulaire

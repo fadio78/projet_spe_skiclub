@@ -5,3 +5,8 @@ sc_user_homepage:
 sc_user_compte:
     path:     /monCompte
     defaults: { _controller: SCUserBundle:Security:compte }
+
+
+sc_user_register:
+    path:     /register
+    defaults: { _controller: SCUserBundle:Security:register }

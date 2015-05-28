@@ -1,4 +1,4 @@
-{# src/OC/UserBundle/Resources/views/Security/monCompte.html.twig #}
+{# src/SC/UserBundle/Resources/views/Security/monCompte.html.twig #}
 
 {#{% extends "OCCoreBundle::layout.html.twig" %}#}
 
@@ -6,6 +6,16 @@
 
   
 
-  <h1> Hello {{nom}}<h1/> 
-
+  <h1> Hello {{nom}}<h1/>
+   
+  <h2> Enfant(s) inscrit(s) :
+      <ul>
+      {% for enfant in listEnfants %}
+        
+          {{ enfant.prenomEnfant }}
+        
+        <br>
+        <ul/>
+        {% endfor %}
+   <h2/>
 {% endblock %}
