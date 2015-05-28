@@ -6,9 +6,15 @@
  
     {% for activite in listeActivites %}
         <a href="{{ path('sc_activite_view', {'id': activite.id}) }}">
-          {{ activite.nomactivite }}
+          {{ activite.nomActivite }}
         </a> 
+        <br>
     {% endfor %}
+        <br>
+        <a href="{{ path('sc_activite_add')}}">
+          Ajouter une activité
+        </a>
+        
 
 </ul> 
  

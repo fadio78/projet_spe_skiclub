@@ -13,12 +13,11 @@ use Symfony\Component\Security\Core\User\AdvancedUserInterface;
  */
 class User implements AdvancedUserInterface
 {
-   
-
     /**
      * @var string
      * @ORM\Id
      * @ORM\Column(name="email", type="string", length=255, unique=true)
+     * )
      */
     private $email;
 
@@ -296,18 +295,7 @@ class User implements AdvancedUserInterface
 
         return $this;
     }
-    /**
-     * Set salt
-     *
-     * @param string $salt
-     * @return User
-     */
-    public function setSalt($salt)
-    {
-        $this->salt = $salt;
-
-        return $this;
-    }
+    
     /**
      * Get validite
      *
@@ -380,6 +368,32 @@ class User implements AdvancedUserInterface
     {
         return $this->isActive;
     }
+
+    /**
+     * Set salt
+     *
+     * @param string $salt
+     * @return User
+     */
+    public function setSalt($salt)
+    {
+        $this->salt = $salt;
+
+        return $this;
+    }
+
+    /**
+     * Set roles
+     *
+     * @param array $roles
+     * @return User
+     */
+    public function setRoles($roles)
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
+
     
-   
 }

@@ -16,14 +16,14 @@ class Sortie
     /**
      * @var string
      *
-     * @ORM\Column(name="dateSortie", type="datetime")
+     * @ORM\Column(name="dateSortie", type="string")
      * @ORM\Id
      */
     private $dateSortie;
 
 
     /**
-     * @ORM\ManyToOne(targetEntity="SC\ActiviteBundle\Entity\Lieu")
+     * @ORM\ManyToOne(targetEntity="SC\ActiviteBundle\Entity\Lieu",cascade={"remove"})
      * @ORM\JoinColumn(nullable=false, name="nomLieu", referencedColumnName="nomLieu")
      */
     private $lieu;
@@ -39,8 +39,8 @@ class Sortie
     /**
      * Set dateSortie
      *
-     * @param string $dateSortie
-     * @return Sortie
+     * @param \DateTime $dateSortie
+     * @return \DateTime
      */
     public function setDateSortie($dateSortie)
     {
@@ -52,7 +52,7 @@ class Sortie
     /**
      * Get dateSortie
      *
-     * @return string 
+     * @return \DateTime
      */
     public function getDateSortie()
     {

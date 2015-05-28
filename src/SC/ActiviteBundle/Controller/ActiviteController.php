@@ -6,6 +6,18 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use SC\ActiviteBundle\Entity\Activite;
+use SC\ActiviteBundle\Form\ActiviteType;
+
+use SC\ActiviteBundle\Form\LieuType;
+use SC\ActiviteBundle\Form\SortieType;
+
+use SC\ActiviteBundle\Form\ActiviteEditType;
+
+use SC\UserBundle\Entity\User;
+use SC\UserBundle\Entity\Licence;
+use SC\ActiviteBundle\Entity\Sortie;
+use SC\ActiviteBundle\Entity\Lieu;
+
 
 
 class ActiviteController extends Controller 
@@ -36,10 +48,17 @@ class ActiviteController extends Controller
     
     public function viewAction($id)
     {
-    // Ici, on récupérera l'activité correspondante à l'id $id
-        return $this->render('SCActiviteBundle:Activite:view.html.twig', array(
-      'id' => $id
-        ));
+        // Ici, on récupérera l'activité correspondante à l'id $id
+        $repository = $this
+          ->getDoctrine()
+          ->getManager()
+          ->getRepository('SCActiviteBundle:Activite');
+        $activite = $repository->find($id); 
+        if (null === $activite) {
+          throw new NotFoundHttpException("L'activité d'id ".$id." n'existe pas.");
+        }
+
+        return $this->render('SCActiviteBundle::view.html.twig', array('activite' => $activite));
     }
     
     
@@ -48,17 +67,16 @@ class ActiviteController extends Controller
     
     public function addAction(Request $request)
     {
-        
-        
-        // On crée un objet Advert
+        // On crée l'utilisateur
+        $user = new User;
+        $Repository = $this->getDoctrine()->getManager()->getRepository('SC\UserBundle\Entity\User')->findAll();
+        $user=$Repository[0];
+   
+        // On crée un objet Activite
         $activite = new Activite();
-        // On crée le FormBuilder grâce au service form factory
-        $form = $this->get('form.factory')->createBuilder('form', $activite)
-          ->add('nomactivite','text')
-          ->add('description','textarea')
-          ->add('prixactivite','number')
-          ->add('enregistrer','submit')
-          ->getForm();
+        $activite->setUser($user);
+        
+        $form = $this->get('form.factory')->create(new ActiviteType(), $activite);
         // On fait le lien Requête <-> Formulaire
         // À partir de maintenant, la variable $activite contient les valeurs entrées dans le formulaire par le visiteur
         $form->handleRequest($request);
@@ -68,7 +86,7 @@ class ActiviteController extends Controller
         $em = $this->getDoctrine()->getManager();
         $em->persist($activite);
         $em->flush();
-        $request->getSession()->getFlashBag()->add('notice', 'Activité bien enregistrée.');
+        $request->getSession()->getFlashBag()->add('info', 'Activité bien enregistrée');
         // On redirige vers la page de visualisation de l'annonce nouvellement créée
         return $this->redirect($this->generateUrl('sc_activite_view', array('id' => $activite->getId())));
         }
@@ -83,35 +101,102 @@ class ActiviteController extends Controller
   
   
   
-  
-   /*
-  
+ 
+
     public function editAction($id, Request $request)
     {
-    // Ici, on récupérera l'activité correspondante à $id
-    // Même mécanisme que pour l'ajout
-        if ($request->isMethod('POST')) {
-            $request->getSession()->getFlashBag()->add('notice', 'Annonce bien modifiée.');
-            return $this->redirect($this->generateUrl('sc_activite_view', array('id' => 5)));
+        $em = $this->getDoctrine()->getManager();
+
+        // On récupère l'activité $id
+        $activite = $em->getRepository('SCActiviteBundle:Activite')->find($id);
+
+        if (null === $activite) {
+            throw new NotFoundHttpException("L'activité d'id ".$id." n'existe pas.");
         }
-        return $this->render('SCActiviteBundle:Activite:edit.html.twig');
+
+        $form = $this->createForm(new ActiviteEditType(), $activite);
+
+        if ($form->handleRequest($request)->isValid()) {
+        // Inutile de persister ici, Doctrine connait déjà notre activité
+        $em->flush();
+
+        $request->getSession()->getFlashBag()->add('info', 'Activité bien modifiée.');
+
+          return $this->redirect($this->generateUrl('sc_activite_view', array('id' => $activite->getId())));
+        }
+
+        return $this->render('SCActiviteBundle::edit.html.twig', array('form'   => $form->createView(),'activite' => $activite ));// Je passe également l'activité à la vue si jamais elle veut l'afficher))
     }
-  
+    
   
   
   
     public function deleteAction($id)
     {
-    // Ici, on récupérera l'activité correspondant à $id
-    // Ici, on gérera la suppression de l'activité en question
-        return $this->render('SCActiviteBundle:Activite:delete.html.twig');
+        //on recupere l'entity managere 
+        $em = $this->getDoctrine()->getManager();
+        $repository = $em->getRepository('SCActiviteBundle:Activite');
+        //on recupere l'activite
+        $activite = $repository->find($id);
+        
+        //si n'existe pas -> message d'erreur
+        if (is_null($activite)) {
+            $response = new Response;
+            $response->setContent("Error 404: not found");
+            $response->setStatusCode(Response::HTTP_NOT_FOUND);
+            return $response;          
+        }
+        else {
+            $em->remove($activite);
+            $em->flush();
+            $listeActivites = $em->getRepository('SCActiviteBundle:Activite')->findAll();
+            return $this->render('SCActiviteBundle::index.html.twig', array('listeActivites' => $listeActivites));
+        }    
     }
-    */
-  
-  
-} 
-  
-
-
-
-
+    
+    public function ajoutSortieAction($id,Request $request) {
+        
+        $sortie = new Sortie();
+        $activite = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Activite')->find($id);
+        
+        if (is_null($activite)==false) {
+            
+            $sortie = $sortie->setActivite($activite);        
+            $form = $this->get('form.factory')->create(new SortieType(), $sortie);
+            $form->handleRequest($request);
+            
+            // On vérifie que les valeurs entrées sont correctes
+            if ($form->isValid()) {
+                
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($sortie);                
+                //si le lieu est n'est pas gere par le manager, on l'ajoute a la base
+                $listLieu = $em->getRepository('SC\ActiviteBundle\Entity\Lieu')->findAll();
+                
+                foreach ($listLieu as $lieu) {
+                    if ($lieu->getNomLieu() === $sortie->getLieu()->getNomLieu()) {
+                        $sortie->setLieu($lieu);
+                        // on ne persist pas lieu il est deja dans la BD
+                        $em->flush();
+                        $listSortie = $em->getRepository('SC\ActiviteBundle\Entity\Sortie')->findAll();
+                        return $this->redirect($this->generateUrl('sc_activite_view', array('id' => $sortie->getActivite()->getId(), 'listSortie' => $listSortie)));                
+                    }    
+                } 
+                
+                $em->persist($sortie->getLieu());
+                $em->flush();
+                $listSortie = $em->getRepository('SC\ActiviteBundle\Entity\Sortie')->findAll();
+                return $this->redirect($this->generateUrl('sc_activite_view', array('id' => $sortie->getActivite()->getId(), 'listSortie' => $listSortie)));
+            }
+                return $this->render('SCActiviteBundle::add.html.twig', array(
+                    'form' => $form->createView(),
+                ));
+        }
+        else {
+                $response = new Response;
+                $response->setContent("Error 404: not found");
+                $response->setStatusCode(Response::HTTP_NOT_FOUND);
+                return $response;                
+        }
+    }
+}

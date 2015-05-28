@@ -7,7 +7,7 @@ sc_activite_homepage:
         page: \d* 
 
 sc_activite_view:
-    path:      /{id}
+    path:      /view/{id}
     defaults:  { _controller: SCActiviteBundle:Activite:view }
     requirements:
         id: \d+
@@ -22,5 +22,10 @@ sc_activite_edit:
 sc_activite_delete:
     path:      /delete/{id}
     defaults:  { _controller: SCActiviteBundle:Activite:delete }
+    requirements:
+        id: \d+ 
+sc_activite_ajoutSortie:
+    path:      /ajoutSortie/{id}
+    defaults:  { _controller: SCActiviteBundle:Activite:ajoutSortie }
     requirements:
         id: \d+ 

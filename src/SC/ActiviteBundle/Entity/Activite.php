@@ -4,6 +4,7 @@ namespace SC\ActiviteBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
+
 /**
  * Activite
  *
@@ -24,23 +25,23 @@ class Activite
     /**
      * @var string
      *
-     * @ORM\Column(name="nomactivite", type="string", length=255)
+     * @ORM\Column(name="nomActivite", type="string", length=255)
      */
-    private $nomactivite;
+    private $nomActivite;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="description", type="text")
+     * 
+     * @ORM\Column(nullable=true,name="description", type="text")
      */
     private $description;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="prixactivite", type="integer")
+     * @ORM\Column(name="prixActivite", type="integer")
      */
-    private $prixactivite;
+    private $prixActivite;
     
     
     /**
@@ -49,7 +50,14 @@ class Activite
      * 
      */
     private $user; 
-
+    
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="SC\LicenceBundle\Entity\Licence")
+     * @ORM\JoinColumn(nullable=true,name="typeLicence",referencedColumnName="typeLicence")
+     */ 
+    private $licence; 
+    
 
     /**
      * Get id
@@ -62,26 +70,26 @@ class Activite
     }
 
     /**
-     * Set nomactivite
+     * Set nomActivite
      *
-     * @param string $nomactivite
+     * @param string $nomActivite
      * @return Activite
      */
-    public function setNomactivite($nomactivite)
+    public function setNomActivite($nomActivite)
     {
-        $this->nomactivite = $nomactivite;
+        $this->nomActivite = $nomActivite;
 
         return $this;
     }
 
     /**
-     * Get nomactivite
+     * Get nomActivite
      *
      * @return string 
      */
     public function getNomactivite()
     {
-        return $this->nomactivite;
+        return $this->nomActivite;
     }
 
     /**
@@ -90,7 +98,7 @@ class Activite
      * @param string $description
      * @return Activite
      */
-    public function setDescription($description)
+    public function setDescription($description )
     {
         $this->description = $description;
 
@@ -106,30 +114,6 @@ class Activite
     {
         return $this->description;
     }
-
-    /**
-     * Set prixactivite
-     *
-     * @param integer $prixactivite
-     * @return Activite
-     */
-    public function setPrixactivite($prixactivite)
-    {
-        $this->prixactivite = $prixactivite;
-
-        return $this;
-    }
-
-    /**
-     * Get prixactivite
-     *
-     * @return integer 
-     */
-    public function getPrixactivite()
-    {
-        return $this->prixactivite;
-    }
-
 
     /**
      * Set user
@@ -153,4 +137,52 @@ class Activite
     {
         return $this->user;
     }
+
+    /**
+     * Set prixActivite
+     *
+     * @param integer $prixActivite
+     * @return Activite
+     */
+    public function setPrixActivite($prixActivite)
+    {
+        $this->prixActivite = $prixActivite;
+
+        return $this;
+    }
+
+    /**
+     * Get prixActivite
+     *
+     * @return integer 
+     */
+    public function getPrixActivite()
+    {
+        return $this->prixActivite;
+    }
+
+    /**
+     * Set licence
+     *
+     * @param \SC\LicenceBundle\Entity\Licence $licence
+     * @return Activite
+     */
+    public function setLicence(\SC\LicenceBundle\Entity\Licence $licence = null)
+    {
+        $this->licence = $licence;
+
+        return $this;
+    }
+
+    /**
+     * Get licence
+     *
+     * @return \SC\LicenceBundle\Entity\Licence 
+     */
+    public function getLicence()
+    {
+        return $this->licence;
+    }
+
+
 }

@@ -17,61 +17,61 @@ class Licence
     /**
      * @var string
      *
-     * @ORM\Column(name="typelicence", type="string", length=255)
+     * @ORM\Column(name="typeLicence", type="string", length=255)
      * @ORM\Id
      */
-    private $typelicence;
+    private $typeLicence;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="prixlicence", type="integer")
+     * @ORM\Column(name="prixLicence", type="integer")
      */
-    private $prixlicence;
+    private $prixLicence;
 
     /**
-     * Set typelicence
+     * Set typeLicence
      *
-     * @param string $typelicence
+     * @param string $typeLicence
      * @return Licence
      */
-    public function setTypelicence($typelicence)
+    public function setTypeLicence($typeLicence)
     {
-        $this->typelicence = $typelicence;
+        $this->typeLicence = $typeLicence;
 
         return $this;
     }
 
     /**
-     * Get typelicence
+     * Get typeLicence
      *
      * @return string 
      */
-    public function getTypelicence()
+    public function getTypeLicence()
     {
-        return $this->typelicence;
+        return $this->typeLicence;
     }
 
     /**
-     * Set prixlicence
+     * Set prixLicence
      *
-     * @param integer $prixlicence
+     * @param integer $prixLicence
      * @return Licence
      */
-    public function setPrixlicence($prixlicence)
+    public function setPrixLicence($prixLicence)
     {
-        $this->prixlicence = $prixlicence;
+        $this->prixLicence = $prixLicence;
 
         return $this;
     }
 
     /**
-     * Get prixlicence
+     * Get prixLicence
      *
      * @return integer 
      */
-    public function getPrixlicence()
+    public function getPrixLicence()
     {
-        return $this->prixlicence;
+        return $this->prixLicence;
     }
 }

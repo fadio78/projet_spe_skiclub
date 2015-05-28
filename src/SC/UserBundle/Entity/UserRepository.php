@@ -8,6 +8,7 @@ use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
+use Doctrine\ORM\QueryBuilder;
 
 /**
  * UserRepository
@@ -57,4 +58,21 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     {
         return $this->getEntityName() === $class || is_subclass_of($class, $this->getEntityName());
     }
+    
+    
+    
+    public function getUser($email)
+    {
+        $qb = $this->createQueryBuilder('u');
+        $qb->where('u.email = :email');
+    
+        return $qb
+          ->getQuery()
+          ->getResult();
+ 
+    } 
+    
+  
+  
+  
 }
