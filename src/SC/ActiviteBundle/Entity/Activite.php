@@ -54,7 +54,7 @@ class Activite
     
     /**
      * @ORM\ManyToOne(targetEntity="SC\LicenceBundle\Entity\Licence")
-     * @ORM\JoinColumn(name="typeLicence",referencedColumnName="typeLicence")
+     * @ORM\JoinColumn(nullable=true,name="typeLicence",referencedColumnName="typeLicence")
      */ 
     private $licence; 
     
