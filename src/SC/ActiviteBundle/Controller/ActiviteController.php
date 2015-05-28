@@ -39,7 +39,7 @@ class ActiviteController extends Controller
           ->getRepository('SCActiviteBundle:Activite');
         $listeActivites = $repository->findAll();  
         
-        return $this->render('SCActiviteBundle::index.html.twig',array('listeActivites' => $listeActivites ));
+        return $this->render('SCActiviteBundle:Activite:index.html.twig',array('listeActivites' => $listeActivites ));
     }
     
     
@@ -58,7 +58,7 @@ class ActiviteController extends Controller
           throw new NotFoundHttpException("L'activité d'id ".$id." n'existe pas.");
         }
 
-        return $this->render('SCActiviteBundle::view.html.twig', array('activite' => $activite));
+        return $this->render('SCActiviteBundle:Activite:view.html.twig', array('activite' => $activite));
     }
     
     
@@ -78,7 +78,7 @@ class ActiviteController extends Controller
         
         $form = $this->get('form.factory')->create(new ActiviteType(), $activite);
         // On fait le lien Requête <-> Formulaire
-        // À partir de maintenant, la variable $activite contient les valeurs entrées dans le formulaire par le visiteur
+        // À partir de maintenant, la variable $activite contient les valeurs entrées dans le formulaire par l'e visiteur l'admin
         $form->handleRequest($request);
         // On vérifie que les valeurs entrées sont correctes
         if ($form->isValid()) {
@@ -86,14 +86,14 @@ class ActiviteController extends Controller
         $em = $this->getDoctrine()->getManager();
         $em->persist($activite);
         $em->flush();
-        $request->getSession()->getFlashBag()->add('info', 'User bien enregistrée');
-        // On redirige vers la page de visualisation de l'annonce nouvellement créée
-        return $this->redirect($this->generateUrl('sc_user_homepage'));
+        $request->getSession()->getFlashBag()->add('info', 'Activité bien enregistrée');
+        // On redirige vers la page de visualisation de l'activité nouvellement créée
+        return $this->redirect($this->generateUrl('sc_activite_view', array('id' => $activite->getId())));
         }
         // À ce stade, le formulaire n'est pas valide car :
         // - Soit la requête est de type GET, donc l'admin vient d'arriver sur la page et veut voir le formulaire
         // - Soit la requête est de type POST, mais le formulaire contient des valeurs invalides, donc on l'affiche de nouveau
-        return $this->render('SCActiviteBundle::add.html.twig', array(
+        return $this->render('SCActiviteBundle:Activite:add.html.twig', array(
         'form' => $form->createView(),
         ));
     
@@ -125,7 +125,7 @@ class ActiviteController extends Controller
           return $this->redirect($this->generateUrl('sc_activite_view', array('id' => $activite->getId())));
         }
 
-        return $this->render('SCActiviteBundle::edit.html.twig', array('form'   => $form->createView(),'activite' => $activite ));// Je passe également l'activité à la vue si jamais elle veut l'afficher))
+        return $this->render('SCActiviteBundle:Activite:edit.html.twig', array('form'   => $form->createView(),'activite' => $activite ));// Je passe également l'activité à la vue si jamais elle veut l'afficher))
     }
     
   
@@ -150,7 +150,35 @@ class ActiviteController extends Controller
             $em->remove($activite);
             $em->flush();
             $listeActivites = $em->getRepository('SCActiviteBundle:Activite')->findAll();
-            return $this->render('SCActiviteBundle::index.html.twig', array('listeActivites' => $listeActivites));
+            return $this->render('SCActiviteBundle:Activite:index.html.twig', array('listeActivites' => $listeActivites));
         }    
     }
+
+    public function ajoutSortieAction($id,Request $request) {
+        
+        $sortie = new Sortie();
+        $sortie->setActivite($this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Activite')->find($id));
+            
+        // On crée le FormBuilder grâce au service form factory
+        $form = $this->get('form.factory')->createBuilder('form', $sortie)
+          ->add('dateSortie','text')
+          ->add('lieu','text')
+          ->add('enregistrer','submit')
+          ->getForm();
+        // On fait le lien Requête <-> Formulaire
+        // À partir de maintenant, la variable $activite contient les valeurs entrées dans le formulaire par le visiteur
+        $form->handleRequest($request);
+        // On vérifie que les valeurs entrées sont correctes
+        if ($form->isValid()) {
+            // On l'enregistre notre objet $activite dans la base de données, par exemple
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($sortie);
+            $em->flush();
+            return $this->redirect($this->generateUrl('sc_activite_view', array('id' => $activite->getId())));
+        }
+            return $this->render('SCActiviteBundle:Activite:add.html.twig', array(
+            'form' => $form->createView(),
+            ));
+    } 
+
 }
