@@ -1,7 +1,9 @@
+{% extends "SCUserBundle::layout.html.twig" %}
 
 {# src/SC/ActiviteBundle/Resources/views/Activite/form.html.twig #}
 
-<h3>Formulaire d'inscription</h3>
 
+{% block user_body %}
+    <h2>Formulaire d'inscription</h2>
   {{ form(form) }}
-
+{% endblock %}
