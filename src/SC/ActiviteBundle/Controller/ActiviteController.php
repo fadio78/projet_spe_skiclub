@@ -33,7 +33,7 @@ class ActiviteController extends Controller
           ->getRepository('SCActiviteBundle:Activite');
         $listeActivites = $repository->findAll();  
         
-        return $this->render('SCActiviteBundle::index.html.twig',array('listeActivites' => $listeActivites ));
+        return $this->render('SCActiviteBundle:Activite:index.html.twig',array('listeActivites' => $listeActivites ));
     }
     
     
@@ -52,7 +52,7 @@ class ActiviteController extends Controller
           throw new NotFoundHttpException("L'activité d'id ".$id." n'existe pas.");
         }
 
-        return $this->render('SCActiviteBundle::view.html.twig', array('activite' => $activite));
+        return $this->render('SCActiviteBundle:Activite:view.html.twig', array('activite' => $activite));
     }
     
     
@@ -72,7 +72,7 @@ class ActiviteController extends Controller
         
         $form = $this->get('form.factory')->create(new ActiviteType(), $activite);
         // On fait le lien Requête <-> Formulaire
-        // À partir de maintenant, la variable $activite contient les valeurs entrées dans le formulaire par le visiteur
+        // À partir de maintenant, la variable $activite contient les valeurs entrées dans le formulaire par l'e visiteur l'admin
         $form->handleRequest($request);
         // On vérifie que les valeurs entrées sont correctes
         if ($form->isValid()) {
@@ -87,7 +87,7 @@ class ActiviteController extends Controller
         // À ce stade, le formulaire n'est pas valide car :
         // - Soit la requête est de type GET, donc l'admin vient d'arriver sur la page et veut voir le formulaire
         // - Soit la requête est de type POST, mais le formulaire contient des valeurs invalides, donc on l'affiche de nouveau
-        return $this->render('SCActiviteBundle::add.html.twig', array(
+        return $this->render('SCActiviteBundle:Activite:add.html.twig', array(
         'form' => $form->createView(),
         ));
     
@@ -119,7 +119,7 @@ class ActiviteController extends Controller
           return $this->redirect($this->generateUrl('sc_activite_view', array('id' => $activite->getId())));
         }
 
-        return $this->render('SCActiviteBundle::edit.html.twig', array('form'   => $form->createView(),'activite' => $activite ));// Je passe également l'activité à la vue si jamais elle veut l'afficher))
+        return $this->render('SCActiviteBundle:Activite:edit.html.twig', array('form'   => $form->createView(),'activite' => $activite ));// Je passe également l'activité à la vue si jamais elle veut l'afficher))
     }
     
   
@@ -142,7 +142,7 @@ class ActiviteController extends Controller
             $em->remove($activite);
             $em->flush();
             $listeActivites = $em->getRepository('SCActiviteBundle:Activite')->findAll();
-            return $this->render('SCActiviteBundle::index.html.twig', array('listeActivites' => $listeActivites));
+            return $this->render('SCActiviteBundle:Activite:index.html.twig', array('listeActivites' => $listeActivites));
         }    
     }
     
@@ -168,7 +168,7 @@ class ActiviteController extends Controller
             $em->flush();
             return $this->redirect($this->generateUrl('sc_activite_view', array('id' => $activite->getId())));
         }
-            return $this->render('SCActiviteBundle::add.html.twig', array(
+            return $this->render('SCActiviteBundle:Activite:add.html.twig', array(
             'form' => $form->createView(),
             ));
     } 

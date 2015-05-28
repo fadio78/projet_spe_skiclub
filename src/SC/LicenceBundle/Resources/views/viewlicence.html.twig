@@ -1,0 +1,39 @@
+{# src/SC/LicenceBundle/Resources/views/viewlicence.html.twig #}
+{% extends "SCLicenceBundle::layoutlicence.html.twig" %}
+{% block title %}
+  Afficher une licence- {{ parent() }}
+{% endblock %}
+{% block licence_body %}
+    
+      
+  <p>
+    {# On affiche tous les messages flash dont le nom est « info » #}
+      {% for message in app.session.flashbag.get('info') %}
+        <p>{{ message }}</p>
+      {% endfor %}
+  </p>
+    
+ 
+
+ 
+  <ul> Le type de la licence:{{ licence.typeLicence }} </ul>
+    
+    <br>
+    </br>
+
+  <ul> Le prix de la licence{{licence.prixLicence}} € <ul>
+  <p>
+    <a href="{{ path('sc_licence_homepage') }}" class="btn btn-default">
+      <i class="glyphicon glyphicon-chevron-left"></i>
+      Retour à la liste
+    </a>
+    <a href="{{ path('sc_licence_edit', {'typeLicence': licence.typeLicence}) }}" class="btn btn-default">
+      <i class="glyphicon glyphicon-edit"></i>
+      Modifier la licence
+    </a>    
+    <a href="{{ path('sc_licence_delete', {'typeLicence': licence.typeLicence}) }}" class="btn btn-danger">
+      <i class="glyphicon glyphicon-trash"></i>
+      Supprimer la licence
+    </a>
+  </p>
+{% endblock %} 

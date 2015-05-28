@@ -17,6 +17,7 @@ class LicenceType extends AbstractType
         $builder
             ->add('typeLicence')
             ->add('prixLicence')
+            ->add('enregistrer','submit');
         ;
     }
     
