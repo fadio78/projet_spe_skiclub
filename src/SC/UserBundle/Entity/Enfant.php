@@ -50,7 +50,7 @@ class Enfant
     /**
      * @var \DateTime 
      *
-     * @ORM\Column(name="dateNaissance", type="datetime")
+     * @ORM\Column(name="dateNaissance", type="date")
      * 
      */
     private $dateNaissance;

@@ -45,7 +45,9 @@ security:
             logout:
                 path: logout
                 target: /
-                
+       # admin_area:
+        #    pattern:    ^/admin
+         #   http_basic: ~
         
          # the login page has to be accessible for everybody
         demo_login:

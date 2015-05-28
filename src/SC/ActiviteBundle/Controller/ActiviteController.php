@@ -7,10 +7,16 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use SC\ActiviteBundle\Entity\Activite;
 use SC\ActiviteBundle\Form\ActiviteType;
+
+use SC\ActiviteBundle\Form\LieuType;
+use SC\ActiviteBundle\Form\SortieType;
+
 use SC\ActiviteBundle\Form\ActiviteEditType;
+
 use SC\UserBundle\Entity\User;
 use SC\UserBundle\Entity\Licence;
 use SC\ActiviteBundle\Entity\Sortie;
+use SC\ActiviteBundle\Entity\Lieu;
 
 
 
@@ -80,9 +86,9 @@ class ActiviteController extends Controller
         $em = $this->getDoctrine()->getManager();
         $em->persist($activite);
         $em->flush();
-        $request->getSession()->getFlashBag()->add('info', 'Activité bien enregistrée');
+        $request->getSession()->getFlashBag()->add('info', 'User bien enregistrée');
         // On redirige vers la page de visualisation de l'annonce nouvellement créée
-        return $this->redirect($this->generateUrl('sc_activite_view', array('id' => $activite->getId())));
+        return $this->redirect($this->generateUrl('sc_user_homepage'));
         }
         // À ce stade, le formulaire n'est pas valide car :
         // - Soit la requête est de type GET, donc l'admin vient d'arriver sur la page et veut voir le formulaire
@@ -135,8 +141,10 @@ class ActiviteController extends Controller
         
         //si n'existe pas -> message d'erreur
         if (is_null($activite)) {
-            // erreur a lance
-            //return new Response('probleme cette activite nexiste pas');
+            $response = new Response;
+            $response->setContent("Error 404: not found");
+            $response->setStatusCode(Response::HTTP_NOT_FOUND);
+            return $response;          
         }
         else {
             $em->remove($activite);
@@ -145,7 +153,7 @@ class ActiviteController extends Controller
             return $this->render('SCActiviteBundle:Activite:index.html.twig', array('listeActivites' => $listeActivites));
         }    
     }
-    
+
     public function ajoutSortieAction($id,Request $request) {
         
         $sortie = new Sortie();
@@ -172,8 +180,5 @@ class ActiviteController extends Controller
             'form' => $form->createView(),
             ));
     } 
-  
-
-
 
 }

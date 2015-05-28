@@ -2,3 +2,7 @@ services:
 #    sc_user.example:
 #        class: SC\UserBundle\Example
 #        arguments: [@service_id, "plain_value", %parameter%]
+    
+parameters:
+# Cette ligne permet de choisir ou l'on va rediriger l'utilisateur après une connection
+     security.exception_listener.class: SC\UserBundle\Security\Firewall\ExceptionListener

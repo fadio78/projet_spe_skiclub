@@ -1,0 +1,22 @@
+{# src/SC/UserBundle/Resources/views/Security/monCompte.html.twig #}
+
+{#{% extends "OCCoreBundle::layout.html.twig" %}#}
+
+{% block body %}
+
+  
+
+  <h1> Hello {{nom}}<h1/>
+    
+   <h2><a href="{{ path('sc_enfant_ajouter') }}">Ajouter un Enfant</a><h2/>
+  <h2> Enfant(s) inscrit(s) :
+      <ul>
+      {% for enfant in listEnfants %}
+        
+          {{ enfant.prenomEnfant }}
+        
+        <br>
+        <ul/>
+        {% endfor %}
+   <h2/>
+{% endblock %}

@@ -7,8 +7,9 @@ sc_activite:
     prefix:   /activite
 
 sc_user:
-    pattern:   /user
-    defaults:  { _controller: SCUserBundle:Default:index }
+    resource: "@SCUserBundle/Resources/config/routing.yml"
+    prefix:   /
+
 
 app:
     resource: "@AppBundle/Controller/"
@@ -19,7 +20,7 @@ login:
     defaults:  { _controller: SCUserBundle:Security:login }
 
 login_check:
-    pattern:   user/login_check
+    pattern:   /login_check
 
 logout:
-    pattern:   user/logout  
+    pattern:   /logout  

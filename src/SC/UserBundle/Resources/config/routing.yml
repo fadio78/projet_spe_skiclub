@@ -1,4 +1,16 @@
 sc_user_homepage:
-    path:     /hello/{name}
+    path:     /
     defaults: { _controller: SCUserBundle:Default:index }
 
+sc_user_compte:
+    path:     /monCompte
+    defaults: { _controller: SCUserBundle:Security:compte }
+
+
+sc_user_register:
+    path:     /register
+    defaults: { _controller: SCUserBundle:Security:register }
+    
+sc_enfant_ajouter:
+    path:     /ajoutEnfant
+    defaults: { _controller: SCUserBundle:Enfant:ajouter }
