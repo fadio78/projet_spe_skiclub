@@ -2,3 +2,6 @@ sc_user_homepage:
     path:     /
     defaults: { _controller: SCUserBundle:Default:index }
 
+sc_user_compte:
+    path:     /monCompte
+    defaults: { _controller: SCUserBundle:Security:compte }
