@@ -96,6 +96,7 @@ class SortieController extends Controller
             return $this->render('SCActiviteBundle::viewSortie.html.twig',array('listSortie' => $listSortie, 'activite' => $activite ));            
         }
         else {
+            //envoyer les emails aux utilisateurs inscrits
             $em->remove($sortie);
             $em->flush();
             $listSortie = $em->getRepository('SC\ActiviteBundle\Entity\Sortie')->findAll();
