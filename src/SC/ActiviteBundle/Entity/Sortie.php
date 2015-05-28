@@ -16,14 +16,14 @@ class Sortie
     /**
      * @var string
      *
-     * @ORM\Column(name="dateSortie", type="datetime")
+     * @ORM\Column(name="dateSortie", type="string")
      * @ORM\Id
      */
     private $dateSortie;
 
 
     /**
-     * @ORM\ManyToOne(targetEntity="SC\ActiviteBundle\Entity\Lieu")
+     * @ORM\ManyToOne(targetEntity="SC\ActiviteBundle\Entity\Lieu",cascade={"remove"})
      * @ORM\JoinColumn(nullable=false, name="nomLieu", referencedColumnName="nomLieu")
      */
     private $lieu;

@@ -7,9 +7,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use SC\ActiviteBundle\Entity\Activite;
 use SC\ActiviteBundle\Form\ActiviteType;
+use SC\ActiviteBundle\Form\LieuType;
+use SC\ActiviteBundle\Form\SortieType;
 use SC\UserBundle\Entity\User;
 use SC\UserBundle\Entity\Licence;
 use SC\ActiviteBundle\Entity\Sortie;
+use SC\ActiviteBundle\Entity\Lieu;
 
 
 
@@ -121,8 +124,10 @@ class ActiviteController extends Controller
         
         //si n'existe pas -> message d'erreur
         if (is_null($activite)) {
-            // erreur a lance
-            //return new Response('probleme cette activite nexiste pas');
+            $response = new Response;
+            $response->setContent("Error 404: not found");
+            $response->setStatusCode(Response::HTTP_NOT_FOUND);
+            return $response;          
         }
         else {
             $em->remove($activite);
@@ -135,31 +140,39 @@ class ActiviteController extends Controller
     public function ajoutSortieAction($id,Request $request) {
         
         $sortie = new Sortie();
-        $sortie->setActivite($this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Activite')->find($id));
+        $activite = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Activite')->find($id);
+        
+        if (is_null($activite)==false) {
             
-        // On crée le FormBuilder grâce au service form factory
-        $form = $this->get('form.factory')->createBuilder('form', $sortie)
-          ->add('dateSortie','text')
-          ->add('lieu','text')
-          ->add('enregistrer','submit')
-          ->getForm();
-        // On fait le lien Requête <-> Formulaire
-        // À partir de maintenant, la variable $activite contient les valeurs entrées dans le formulaire par le visiteur
-        $form->handleRequest($request);
-        // On vérifie que les valeurs entrées sont correctes
-        if ($form->isValid()) {
-            // On l'enregistre notre objet $activite dans la base de données, par exemple
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($sortie);
-            $em->flush();
-            return $this->redirect($this->generateUrl('sc_activite_view', array('id' => $activite->getId())));
+            $sortie = $sortie->setActivite($activite);
+        
+            $form = $this->get('form.factory')->create(new SortieType(), $sortie);
+
+            $form->handleRequest($request);
+            // On vérifie que les valeurs entrées sont correctes
+            if ($form->isValid()) {
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($sortie);
+                
+                //si le lieu est n'est pas gere par le manager, on l'ajoute a la base
+                /*if(is_null($em->getRepository('SC\ActiviteBundle\Entity\Sortie')->findByLieu($sortie->getLieu()))==true) {
+                    $em->persist($sortie->getLieu());
+                }    
+                */
+                $em->flush();
+                //on recupere toutes les sorties
+                $listSortie = $activite = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Sortie')->findAll();
+                return $this->redirect($this->generateUrl('sc_activite_view', array('id' => $sortie->getActivite()->getId(), 'sorties' => $listSortie)));
+            }
+                return $this->render('SCActiviteBundle::add.html.twig', array(
+                    'form' => $form->createView(),
+                ));
         }
-            return $this->render('SCActiviteBundle::add.html.twig', array(
-            'form' => $form->createView(),
-            ));
-    } 
-  
-
-
-
+        else {
+                $response = new Response;
+                $response->setContent("Error 404: not found");
+                $response->setStatusCode(Response::HTTP_NOT_FOUND);
+                return $response;                
+        }
+    }
 }
