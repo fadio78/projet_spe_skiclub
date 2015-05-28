@@ -23,15 +23,15 @@ class Sortie
 
 
     /**
-     * @ORM\ManyToOne(targetEntity="SC\ActiviteBundle\Entity\Lieu",cascade={"remove"})
-     * @ORM\JoinColumn(nullable=false, name="nomLieu", referencedColumnName="nomLieu")
+     * @ORM\ManyToOne(targetEntity="SC\ActiviteBundle\Entity\Lieu")
+     * @ORM\JoinColumn(nullable=false, name="nomLieu", referencedColumnName="nomLieu",onDelete="CASCADE")
      */
     private $lieu;
 
 
     /**
      * @ORM\ManyToOne(targetEntity="SC\ActiviteBundle\Entity\Activite")
-     * @ORM\JoinColumn(nullable=false, name="idActivite", referencedColumnName="id")
+     * @ORM\JoinColumn(nullable=false, name="idActivite", referencedColumnName="id",onDelete="CASCADE")
      * @ORM\Id
      */
     private $activite;
