@@ -161,25 +161,32 @@ class ActiviteController extends Controller
         
         if (is_null($activite)==false) {
             
-            $sortie = $sortie->setActivite($activite);
-        
+            $sortie = $sortie->setActivite($activite);        
             $form = $this->get('form.factory')->create(new SortieType(), $sortie);
-
             $form->handleRequest($request);
+            
             // On vérifie que les valeurs entrées sont correctes
             if ($form->isValid()) {
-                $em = $this->getDoctrine()->getManager();
-                $em->persist($sortie);
                 
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($sortie);                
                 //si le lieu est n'est pas gere par le manager, on l'ajoute a la base
-                /*if(is_null($em->getRepository('SC\ActiviteBundle\Entity\Sortie')->findByLieu($sortie->getLieu()))==true) {
-                    $em->persist($sortie->getLieu());
-                }    
-                */
+                $listLieu = $em->getRepository('SC\ActiviteBundle\Entity\Lieu')->findAll();
+                
+                foreach ($listLieu as $lieu) {
+                    if ($lieu->getNomLieu() === $sortie->getLieu()->getNomLieu()) {
+                        $sortie->setLieu($lieu);
+                        // on ne persist pas lieu il est deja dans la BD
+                        $em->flush();
+                        $listSortie = $em->getRepository('SC\ActiviteBundle\Entity\Sortie')->findAll();
+                        return $this->redirect($this->generateUrl('sc_activite_view', array('id' => $sortie->getActivite()->getId(), 'listSortie' => $listSortie)));                
+                    }    
+                } 
+                
+                $em->persist($sortie->getLieu());
                 $em->flush();
-                //on recupere toutes les sorties
-                $listSortie = $activite = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Sortie')->findAll();
-                return $this->redirect($this->generateUrl('sc_activite_view', array('id' => $sortie->getActivite()->getId(), 'sorties' => $listSortie)));
+                $listSortie = $em->getRepository('SC\ActiviteBundle\Entity\Sortie')->findAll();
+                return $this->redirect($this->generateUrl('sc_activite_view', array('id' => $sortie->getActivite()->getId(), 'listSortie' => $listSortie)));
             }
                 return $this->render('SCActiviteBundle::add.html.twig', array(
                     'form' => $form->createView(),
