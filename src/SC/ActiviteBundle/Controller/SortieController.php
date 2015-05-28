@@ -18,7 +18,7 @@ use SC\ActiviteBundle\Entity\Lieu;
 
 class SortieController extends Controller 
 {
-    
+    //permet d'ajouter une nouvelle sortie
     public function ajoutSortieAction($id,Request $request) {
         
         $sortie = new Sortie();
@@ -35,7 +35,7 @@ class SortieController extends Controller
                 
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($sortie);                
-                //si le lieu est n'est pas gere par le manager, on l'ajoute a la base
+                //si le lieu est n'est pas gere par le manager, on l'ajoute 
                 $listLieu = $em->getRepository('SC\ActiviteBundle\Entity\Lieu')->findAll();
                 
                 foreach ($listLieu as $lieu) {
@@ -65,6 +65,7 @@ class SortieController extends Controller
         }
     }
     
+    //permet d'afficher toutes les sorties pour l'activite id
     public function voirSortieAction($id) {
      
         $activite = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Activite')->find($id);   
@@ -80,5 +81,27 @@ class SortieController extends Controller
             throw new NotFoundHttpException("L'activité d'id ".$id." n'existe pas.");
         }
   
+    }
+    
+    //supprime une sortie de l'activite id, la date est passée dans l'url
+    public function deleteSortieAction($id, Request $request) {
+        
+        $em = $this->getDoctrine()->getManager();
+        $date = $request->query->get('date');
+        $activite = $em->getRepository('SC\ActiviteBundle\Entity\Activite')->find($id);
+        $sortie = $em->getRepository('SC\ActiviteBundle\Entity\Sortie')
+                                                        ->findOneBy(array('dateSortie' => $date,'activite' =>  $activite));
+        if (isset($sortie)==FALSE) {
+            $listSortie = $em->getRepository('SC\ActiviteBundle\Entity\Sortie')->findAll();
+            return $this->render('SCActiviteBundle::viewSortie.html.twig',array('listSortie' => $listSortie, 'activite' => $activite ));            
+        }
+        else {
+            $em->remove($sortie);
+            $em->flush();
+            $listSortie = $em->getRepository('SC\ActiviteBundle\Entity\Sortie')->findAll();
+            return $this->render('SCActiviteBundle::viewSortie.html.twig',array('listSortie' => $listSortie, 'activite' => $activite ));
+        }
+
+
     }
 }
