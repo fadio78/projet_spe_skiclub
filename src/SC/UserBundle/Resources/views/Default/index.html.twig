@@ -4,13 +4,23 @@
 
 {% block title %}
   Accueil - {{ parent() }}
+  
 {% endblock %}
 
 {% block user_body %}
 
   <h2>Liste des annonces</h2>
   <ul>
+      
+  <a href="{{ path('login') }}">Se connecter</a>
+  
       <li>Pas (encore !) d'annonces</li>
   </ul>
+  
+<html>
+  <body>
+    
+  </body>
+</html>
 
 {% endblock %}
