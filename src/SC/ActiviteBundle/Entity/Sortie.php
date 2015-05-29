@@ -12,12 +12,19 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Sortie
 {
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="idSortie", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $idSortie;    
 
     /**
-     * @var string
+     * @var \DateTime    
      *
-     * @ORM\Column(name="dateSortie", type="string")
-     * @ORM\Id
+     * @ORM\Column(name="dateSortie", type="datetime")
      */
     private $dateSortie;
 
@@ -32,32 +39,9 @@ class Sortie
     /**
      * @ORM\ManyToOne(targetEntity="SC\ActiviteBundle\Entity\Activite")
      * @ORM\JoinColumn(nullable=false, name="idActivite", referencedColumnName="id",onDelete="CASCADE")
-     * @ORM\Id
      */
     private $activite;
 
-    /**
-     * Set dateSortie
-     *
-     * @param \DateTime $dateSortie
-     * @return \DateTime
-     */
-    public function setDateSortie($dateSortie)
-    {
-        $this->dateSortie = $dateSortie;
-
-        return $this;
-    }
-
-    /**
-     * Get dateSortie
-     *
-     * @return \DateTime
-     */
-    public function getDateSortie()
-    {
-        return $this->dateSortie;
-    }
 
     /**
      * Set lieu
@@ -104,5 +88,40 @@ class Sortie
     {
         return $this->activite;
     }
-}
 
+
+
+
+    /**
+     * Set dateSortie
+     *
+     * @param \DateTime $dateSortie
+     * @return Sortie
+     */
+    public function setDateSortie($dateSortie)
+    {
+        $this->dateSortie = $dateSortie;
+
+        return $this;
+    }
+
+    /**
+     * Get dateSortie
+     *
+     * @return \DateTime 
+     */
+    public function getDateSortie()
+    {
+        return $this->dateSortie;
+    }
+
+    /**
+     * Get idSortie
+     *
+     * @return integer 
+     */
+    public function getIdSortie()
+    {
+        return $this->idSortie;
+    }
+}
