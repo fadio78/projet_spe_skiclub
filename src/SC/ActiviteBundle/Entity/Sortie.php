@@ -12,15 +12,15 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Sortie
 {
-
+   
     /**
-     * @var string
+     * @var string    
      *
-     * @ORM\Column(name="dateSortie", type="string")
+     * @ORM\Column(name="dateSortie", type="string", length=255)
      * @ORM\Id
      */
     private $dateSortie;
-
+    
 
     /**
      * @ORM\ManyToOne(targetEntity="SC\ActiviteBundle\Entity\Lieu")
@@ -37,10 +37,24 @@ class Sortie
     private $activite;
 
     /**
+     * @ORM\ManyToOne(targetEntity="SC\UserBundle\Entity\User")
+     * @ORM\JoinColumn(nullable=false, name="email", referencedColumnName="email")
+     * 
+     */
+    private $user;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="SC\ActiviteBundle\Entity\Saison")
+     * @ORM\JoinColumn(nullable=false, name="annee", referencedColumnName="annee")
+     * @ORM\Id
+     */
+    private $saison;    
+
+    /**
      * Set dateSortie
      *
-     * @param \DateTime $dateSortie
-     * @return \DateTime
+     * @param string $dateSortie
+     * @return Sortie
      */
     public function setDateSortie($dateSortie)
     {
@@ -52,7 +66,7 @@ class Sortie
     /**
      * Get dateSortie
      *
-     * @return \DateTime
+     * @return string 
      */
     public function getDateSortie()
     {
@@ -62,12 +76,12 @@ class Sortie
     /**
      * Set lieu
      *
-     * @param Lieu $venue
+     * @param \SC\ActiviteBundle\Entity\Lieu $lieu
      * @return Sortie
      */
-    public function setLieu($venue)
+    public function setLieu(\SC\ActiviteBundle\Entity\Lieu $lieu)
     {
-        $this->lieu = $venue;
+        $this->lieu = $lieu;
 
         return $this;
     }
@@ -75,7 +89,7 @@ class Sortie
     /**
      * Get lieu
      *
-     * @return Lieu 
+     * @return \SC\ActiviteBundle\Entity\Lieu 
      */
     public function getLieu()
     {
@@ -85,12 +99,12 @@ class Sortie
     /**
      * Set activite
      *
-     * @param Activite $activity
+     * @param \SC\ActiviteBundle\Entity\Activite $activite
      * @return Sortie
      */
-    public function setActivite(Activite $activity)
+    public function setActivite(\SC\ActiviteBundle\Entity\Activite $activite)
     {
-        $this->activite = $activity;
+        $this->activite = $activite;
 
         return $this;
     }
@@ -98,11 +112,56 @@ class Sortie
     /**
      * Get activite
      *
-     * @return Activite 
+     * @return \SC\ActiviteBundle\Entity\Activite 
      */
     public function getActivite()
     {
         return $this->activite;
     }
-}
 
+    /**
+     * Set User
+     *
+     * @param \SC\UserBundle\Entity\User $user
+     * @return Sortie
+     */
+    public function setUser(\SC\UserBundle\Entity\User $user)
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * Get User
+     *
+     * @return \SC\UserBundle\Entity\User 
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * Set saison
+     *
+     * @param \SC\ActiviteBundle\Entity\Saison $saison
+     * @return Sortie
+     */
+    public function setSaison(\SC\ActiviteBundle\Entity\Saison $saison)
+    {
+        $this->saison = $saison;
+
+        return $this;
+    }
+
+    /**
+     * Get saison
+     *
+     * @return \SC\ActiviteBundle\Entity\Saison 
+     */
+    public function getSaison()
+    {
+        return $this->saison;
+    }
+}

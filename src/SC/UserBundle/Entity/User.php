@@ -20,6 +20,15 @@ class User implements AdvancedUserInterface
      * )
      */
     private $email;
+    
+    
+        /**
+     * @var string
+     * 
+     * @ORM\Column(name="emailPrimaire", type="string", length=255, nullable=true)
+     * )
+     */
+    private $emailPrimaire;
 
     /**
      * @var string
@@ -78,7 +87,12 @@ class User implements AdvancedUserInterface
      */
     private $isActive;
 
-
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="isPrimaire", type="boolean")
+     */
+    private $isPrimaire;
 
     /**
      * @var string
@@ -100,6 +114,18 @@ class User implements AdvancedUserInterface
    
     private $roles = array();*/
     /**
+     * Set emailPrimaire
+     *
+     * @param string $emailPrimaire
+     * @return User
+     */
+    public function setEmailPrimaire($emailPrimaire)
+    {
+        $this->emailPrimaire = $emailPrimaire;
+
+        return $this;
+    }
+       /**
      * Set email
      *
      * @param string $email
@@ -120,6 +146,16 @@ class User implements AdvancedUserInterface
     public function getEmail()
     {
         return $this->email;
+    }
+    
+        /**
+     * Get emailPrimaire
+     *
+     * @return string 
+     */
+    public function getEmailPrimaire()
+    {
+        return $this->emailPrimaire;
     }
 
     /**
@@ -284,14 +320,26 @@ class User implements AdvancedUserInterface
     }
 
     /**
-     * Set validite
+     * Set isActive
      *
-     * @param boolean $validite
+     * @param boolean $IsActive
      * @return User
      */
     public function setIsActive($isActive)
     {
         $this->isActive = $isActive;
+
+        return $this;
+    }
+        /**
+     * Set isPrimaire
+     *
+     * @param boolean $isPrimaire
+     * @return User
+     */
+    public function setIsPrimaire($isPrimaire)
+    {
+        $this->isPrimaire = $isPrimaire;
 
         return $this;
     }
@@ -305,6 +353,15 @@ class User implements AdvancedUserInterface
     {
         return $this->isActive;
     }
+        /**
+     * Get isPrimaire
+     *
+     * @return boolean 
+     */
+    public function getIsPrimaire()
+    {
+        return $this->isPrimaire;
+    }
     
     //Afin de pouvoir utiliser l'interface user on implemente ces méthodes
     
@@ -313,6 +370,10 @@ class User implements AdvancedUserInterface
      */
     public function getRoles()
     {
+        
+       if ($this->type == 'admin'){
+            return array('ROLE_ADMIN');
+        }
         return array('ROLE_USER');
         
     }

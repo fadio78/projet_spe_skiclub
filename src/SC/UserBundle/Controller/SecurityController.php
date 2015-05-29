@@ -43,12 +43,33 @@ class SecurityController extends Controller
   }
   public function compteAction(Request $request)
   {
+      
+      
         $session = $request->getSession();
         $usr= $this->get('security.context')->getToken()->getUser();
         $email = $usr->getUsername();
         $type = $usr->getType();
+        $isPrimaire = $usr->getIsprimaire();
+        
+        // si l'utilisateur n'est pas primaire on stock l'email primaire dans session
+        if (!$isPrimaire){
+            $emailSecondaire = $email;
+            $repository = $this
+            ->getDoctrine()
+            ->getManager()
+            ->getRepository('SCUserBundle:User')
+             ;
+            
+            
+        $user = $repository->find($email);
+        $email = $user->getEmailPrimaire();
+        $session->set('emailSecondaire',$emailSecondaire );
+        }
+        
+        
         $session->set('email',$email );
         $session->set('type',$type );
+        $session->set('isPrimaire',$isPrimaire );
         
         $repository = $this
             ->getDoctrine()
@@ -66,14 +87,20 @@ class SecurityController extends Controller
   }
   public function registerAction(Request $request){
     // Si le visiteur est déjà identifié, on le redirige vers son compte
-    if ($this->get('security.context')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
       
+    if ($this->get('security.context')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
       return $this->redirect($this->generateUrl('sc_user_compte'));
     }
+       
+      
       $user = new User;
-      $user->setSalt('voir plus tard' );
+      $user->setSalt('' );
       $user->setType('user');
       $user->setIsActive(true);
+      
+      $user->setIsPrimaire(true);
+      
+     
       $form = $this->get('form.factory')->create(new UserType(), $user);
       
       // On fait le lien Requête <-> Formulaire
@@ -91,6 +118,43 @@ class SecurityController extends Controller
         }
         
         return $this->render('SCUserBundle:Security:register.html.twig', array(
+        'form' => $form->createView(),
+        ));
+  }
+  //permet d'ajouter un utilisateur secondaire
+    public function ajouterAction(Request $request){
+      
+    // Si le visiteur n'est pas primaire 
+         $session = $request->getSession();
+      if ($this->get('security.context')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+        if ($session->get('isPrimaire')== false){
+           return $this->redirect($this->generateUrl('sc_user_compte'));
+        }    
+    }      
+      $user = new User;
+      $user->setSalt('' );
+      $user->setType('user');
+      $user->setIsActive(true);     
+      $user->setIsPrimaire(false);
+      $user->setEmailPrimaire($session->get('email'));
+      
+      $form = $this->get('form.factory')->create(new UserType(), $user);
+      
+      // On fait le lien Requête <-> Formulaire
+        // À partir de maintenant, la variable $user contient les valeurs entrées dans le formulaire par le visiteur
+        $form->handleRequest($request);
+        // On vérifie que les valeurs entrées sont correctes
+        if ($form->isValid()) {
+        // On l'enregistre notre objet $activite dans la base de données, par exemple
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($user);
+        $em->flush();
+        $request->getSession()->getFlashBag()->add('info', 'User secondaire bien enregistré');
+        // On redirige vers la page de visualisation de l'annonce nouvellement créée
+        return $this->redirect($this->generateUrl('sc_user_compte'));
+        }
+        
+        return $this->render('SCUserBundle:Security:ajouterUser.html.twig', array(
         'form' => $form->createView(),
         ));
   }
