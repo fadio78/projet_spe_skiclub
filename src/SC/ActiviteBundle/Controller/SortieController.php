@@ -25,9 +25,7 @@ class SortieController extends Controller
         
         $sortie = new Sortie();
         $activite = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Activite')->find($id);
-        //$saison = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Saison')->findOneBy($this->connaitreSaison());
-        $saison =  new Saison();
-        $saison->setAnnee((Integer)2015);
+        $saison = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Saison')->findOneByAnnee($this->connaitreSaison());
         $user = $this->getDoctrine()->getManager()
                                             ->getRepository('SC\UserBundle\Entity\User')
                                                 ->findOneByEmail(array('email' => $request->getSession()->get('email')));
@@ -94,7 +92,7 @@ class SortieController extends Controller
             
         }
         else {
-             throw new NotFoundHttpException("Il y a deja une sortie prévu à cette date pour cette activité");
+             $this->pageErreur("Une date identique a déjà été validée : deux sorties ne peuvent avoir même date");
         }
         
     }
@@ -112,7 +110,7 @@ class SortieController extends Controller
         
         }
         else {
-            throw new NotFoundHttpException("L'activité d'id ".$id." n'existe pas.");
+            $this->pageErreur("l'activité demandée n'existe pas");
         }
   
     }
@@ -128,6 +126,9 @@ class SortieController extends Controller
                                                         //->findOneBy(array('idSortie' => $idSortie,'activite' =>  $activite));
                                                         ->findOneBy(array('dateSortie' => $dateSortie,'activite' =>  $activite));
         //au cas ou les paramètres seraient modifiés à la main par quelqu'un
+        if (is_null($activite)==false) {
+            $this->pageErreur("l'activité demandée n'existe pas");
+        }
         if (isset($sortie)==FALSE) {
             $listSortie = $em->getRepository('SC\ActiviteBundle\Entity\Sortie')->findAll();
             return $this->render('SCActiviteBundle::viewSortie.html.twig',array('listSortie' => $listSortie, 'activite' => $activite ));            
@@ -140,16 +141,11 @@ class SortieController extends Controller
             return $this->render('SCActiviteBundle::viewSortie.html.twig',array('listSortie' => $listSortie, 'activite' => $activite ));
         }
     }
-     
-    public function getAdmin(Request $request) {
-        
-        $users = $this->getDoctrine()->getManager()->getRepository('SC\UserBundle\Entity\User')->findAll();
-        $email = $request->getSession()->get('email');
-      
-        foreach ($users as $user) {
-            if (strcmp($user->getEmail(),'sfr@hotmail.com') == 0) {
-                 return $user;
-            }
-        }
+    
+    public function pageErreur($message) {
+        $response = new Response;
+        $response->setContent($erreur);
+        $response->setStatusCode(Response::HTTP_NOT_FOUND);
+        return $response;
     }
 }
