@@ -1,0 +1,21 @@
+{# src/SC/ActiviteBundle/Resources/views/Stage/index.html.twig #}
+{% extends "SCActiviteBundle::layout.html.twig" %}
+{% block title %}{{ parent() }} - Index{% endblock %}
+{% block activité_body %}
+<ul>
+ 
+    {% for stage in listeStages %}
+        <a href="{{ path('sc_activite_viewsStage') }}">
+          {{ stage.nomStage }}
+        </a> 
+        <br>
+    {% endfor %}
+        <br>
+        <a href="{{ path('sc_activite_viewsStage_add')}}">
+          Ajouter un stage
+        </a>
+        
+
+</ul> 
+ 
+{% endblock %}

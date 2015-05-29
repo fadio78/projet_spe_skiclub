@@ -41,4 +41,22 @@ sc_activite_deleteSortie:
     path:      /deleteSortie/{id}
     defaults:  { _controller: SCActiviteBundle:Sortie:deleteSortie}
     requirements:
-        id: \d+         
+        id: \d+
+        
+sc_activite_addStage:
+    path:      /addStage/{id}
+    defaults:  { _controller: SCActiviteBundle:Stage:add }
+    requirements:
+        id: \d+
+        
+sc_activite_viewStage:
+    path:      /viewStage/{id}
+    defaults:  { _controller: SCActiviteBundle:Stage:view }
+    requirements:
+        id: \d+ 
+        
+sc_activite_deleteStage:
+    path:      /deleteStage/{id}
+    defaults:  { _controller: SCActiviteBundle:Sortie:delete}
+    requirements:
+        id: \d+
