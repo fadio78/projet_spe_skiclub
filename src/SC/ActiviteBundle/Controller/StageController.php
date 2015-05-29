@@ -133,21 +133,32 @@ class StageController extends Controller {
         }
     }
     
-    public function viewAction($id) {
-     
-        $activite = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Activite')->find($id);   
+    public function deleteAction($id, $debutStage, $finStage, Request $request) {
         
-        if (is_null($activite)==false) {
-            
-            //on recupere tous les stages
-            $listeStages = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Stage')->findAll();
-            return $this->render('SCActiviteBundle:Stage:view.html.twig',array('listeStages' => $listeStages, 'activite' => $activite ));
-        
+        // on verifie que les parametres sont bons
+        if (isset($id) == false || isset($debutStage) || isset($finStage)) {
+           $response = new Response;
+           $response->setContent("Error 404: not found");
+           $response->setStatusCode(Response::HTTP_NOT_FOUND);
+           return $response; 
+        }
+        $em = $this->getDoctrine()->getManager();
+        $activite = $em->getRepository('SC\ActiviteBundle\Entity\Activite')->find($id);
+        $stage = $em->getRepository('SC\ActiviteBundle\Entity\Stage')
+                ->findOneBy(array('activite' =>  $activite, 'debutStage'=> $debutStage,
+                    'finStage'=>$finStage));
+        // A VOIR
+        if (isset($stage) == FALSE) {
+            $listeStages = $em->getRepository('SC\ActiviteBundle\Entity\Stage')->findAll();
+            return $this->render('SCActiviteBundle:Stage:view.html.twig',array('listeStage' => $listeStages, 'activite' => $activite ));            
         }
         else {
-            throw new NotFoundHttpException("L'activité d'id ".$id." n'existe pas.");
+            //envoyer les emails aux utilisateurs inscrits
+            $em->remove($stage);
+            $em->flush();
+            $listSortie = $em->getRepository('SC\ActiviteBundle\Entity\Stage')->findAll();
+            return $this->render('SCActiviteBundle:Stage:view.html.twig',array('listeStages' => $listeStages, 'activite' => $activite ));
         }
-  
     }
     
 }
