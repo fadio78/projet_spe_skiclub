@@ -29,6 +29,7 @@ class LoadUser extends AbstractFixture implements OrderedFixtureInterface
       $user->setPassword('azerty');
       $user->setType('ok');
       $user->setIsActive(1);
+      $user->setIsPrimaire(1);
       
      
       // On ne se sert pas du sel pour l'instant
