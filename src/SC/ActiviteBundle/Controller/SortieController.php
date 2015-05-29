@@ -14,6 +14,8 @@ use SC\UserBundle\Entity\User;
 use SC\UserBundle\Entity\Licence;
 use SC\ActiviteBundle\Entity\Sortie;
 use SC\ActiviteBundle\Entity\Lieu;
+use SC\ActiviteBundle\Entity\Saison;
+
 
 
 class SortieController extends Controller 
@@ -23,14 +25,19 @@ class SortieController extends Controller
         
         $sortie = new Sortie();
         $activite = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Activite')->find($id);
-        $saison = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Saison')->findOneBy($this->connaitreSaison());
-        $admin = $this->getDoctrine()->getManager()
+        //$saison = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Saison')->findOneBy($this->connaitreSaison());
+        $saison =  new Saison();
+        $saison->setAnnee((Integer)203);
+        $user = $this->getDoctrine()->getManager()
                                             ->getRepository('SC\UserBundle\Entity\User')
-                                                ->findOneBy(array('email' => $request->getSession()->get('email')));
-        
+                                                ->findOneByEmail(array('email' => $request->getSession()->get('email')));
+         
         if (is_null($activite)==false) {
             
-            $sortie = $sortie->setActivite($activite);        
+            $sortie->setActivite($activite);        
+            $sortie->setSaison($saison);        
+            $sortie->setUser($user);
+             
             $form = $this->get('form.factory')->create(new SortieType(), $sortie);
             $form->handleRequest($request);
             
@@ -40,10 +47,13 @@ class SortieController extends Controller
                 $date = $sortie->getDateSortie();
                 $string = $date->format('Y').'-'.$date->format('m').'-'.$date->format('d').' '.$date->format('H').':'.$date->format('i').':'.$date->format('s');
                 $sortie->setDateSortie($string);
-
+                
                 
                 $em = $this->getDoctrine()->getManager();
+                $em->persist($saison); 
+                $em->flush(); 
                 $em->persist($sortie);                
+                               
                 //si le lieu est n'est pas gere par le manager, on l'ajoute 
                 $listLieu = $em->getRepository('SC\ActiviteBundle\Entity\Lieu')->findAll();
                 
@@ -148,6 +158,18 @@ class SortieController extends Controller
         }
         else {
             return $annee-1;
+        }
+    }
+    
+    public function getAdmin(Request $request) {
+        
+        $users = $this->getDoctrine()->getManager()->getRepository('SC\UserBundle\Entity\User')->findAll();
+        $email = $request->getSession()->get('email');
+      
+        foreach ($users as $user) {
+            if (strcmp($user->getEmail(),'sfr@hotmail.com') == 0) {
+                 return $user;
+            }
         }
     }
 }

@@ -127,7 +127,7 @@ class Sortie
      */
     public function setUser(\SC\UserBundle\Entity\User $user)
     {
-        $this->User = $user;
+        $this->user = $user;
 
         return $this;
     }
@@ -139,7 +139,7 @@ class Sortie
      */
     public function getUser()
     {
-        return $this->User;
+        return $this->user;
     }
 
     /**
