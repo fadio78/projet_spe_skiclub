@@ -28,7 +28,10 @@ class ActiviteController extends Controller
     public function indexAction(Request $request)
     {
         $em = $this -> getDoctrine() ->getManager();
-        $year = $this->connaitreSaison();
+        $season = new Saison;
+        $year = $season->connaitreSaison();
+        $request->getSession()->set('year', $year);
+        unset($season);
         $saison = $em -> getRepository('SCActiviteBundle:Saison') -> find($year);
         
         if (null === $saison) {
@@ -88,8 +91,9 @@ class ActiviteController extends Controller
         $session = $request->getSession();
         $email = $session->get('email');
         $type=$session->get('type');
-        $date = new \Datetime;
-        $year = $date ->format('Y');
+        $season = new Saison;
+        $year = $season->connaitreSaison();
+        unset($season);
         if ($type == "admin") {
             $user = $this->getDoctrine()->getManager()->getRepository('SC\UserBundle\Entity\User')->find($email);
             // On crée un objet Activite
@@ -156,13 +160,14 @@ class ActiviteController extends Controller
     public function deleteAction($id,Request $request)
     {
         
-        $year = $this->connaitreSaison();
+        $season = new Saison;
+        $year = $season->connaitreSaison();
+        unset($season);
         $session = $request->getSession();
         $type=$session->get('type');
-        //on recupere l'entity managere 
         $em = $this->getDoctrine()->getManager();
         $repository = $em->getRepository('SCActiviteBundle:Activite');
-        //on recupere l'activite
+ 
         $activite = $repository->find($id);
         
         //si n'existe pas -> message d'erreur
@@ -207,20 +212,5 @@ class ActiviteController extends Controller
             return $this->render('SCActiviteBundle:Activite:add.html.twig', array(
             'form' => $form->createView(),
             ));
-    }
-    
-    // permet de connaitre la saison courante
-    public function connaitreSaison() {
-        
-        $date = new \DateTime();
-        $annee = $date->format('Y');
-        $mois = $date->format('m');
-        
-        if ($mois > 8) {
-            return $annee;
-        }
-        else {
-            return $annee-1;
-        }
     }
 }

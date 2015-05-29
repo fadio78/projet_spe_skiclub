@@ -23,9 +23,11 @@ class SortieController extends Controller
     //permet d'ajouter une nouvelle sortie
     public function ajoutSortieAction($id,Request $request) {
         
+        
+        $year = $request->getSession()->get('year');
         $sortie = new Sortie();
         $activite = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Activite')->find($id);
-        $saison = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Saison')->findOneByAnnee($this->connaitreSaison());
+        $saison = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Saison')->findOneByAnnee($year);
         $user = $this->getDoctrine()->getManager()
                                             ->getRepository('SC\UserBundle\Entity\User')
                                                 ->findOneByEmail(array('email' => $request->getSession()->get('email')));
@@ -44,10 +46,13 @@ class SortieController extends Controller
 
                 $date = $sortie->getDateSortie();
                 $string = $date->format('Y').'-'.$date->format('m').'-'.$date->format('d').' '.$date->format('H').':'.$date->format('i').':'.$date->format('s');
-                // si il ya deja une meme date -> erreur
-                $this->dateExiste($string); 
-                $sortie->setDateSortie($string);
                 
+                // si il ya deja une meme date -> erreur                
+                if ($this->dateExiste($string) == true) {
+                    return $this->pageErreur("Une date identique a déjà été validée : deux sorties ne peuvent avoir même date");
+                }
+                
+                $sortie->setDateSortie($string);                
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($saison); 
                 $em->flush(); 
@@ -80,19 +85,17 @@ class SortieController extends Controller
     }
     // teste si la date existe deja dans la BD
     // return true si la date est dans la BD, false sinon
-    // $id -> identifiant de l'activite
-    // $sortie -> la sortie à la date considerée
     public function dateExiste($date) {
         
         if($this->getDoctrine()->getManager()
                                     ->getRepository('SC\ActiviteBundle\Entity\Sortie')
                                             ->findOneByDateSortie($date) === null) {
             
-            return;
+            return false;
             
         }
         else {
-             $this->pageErreur("Une date identique a déjà été validée : deux sorties ne peuvent avoir même date");
+            return true;
         }
         
     }
@@ -110,7 +113,7 @@ class SortieController extends Controller
         
         }
         else {
-            $this->pageErreur("l'activité demandée n'existe pas");
+            return $this->pageErreur("l'activité demandée n'existe pas");
         }
   
     }
@@ -126,8 +129,8 @@ class SortieController extends Controller
                                                         //->findOneBy(array('idSortie' => $idSortie,'activite' =>  $activite));
                                                         ->findOneBy(array('dateSortie' => $dateSortie,'activite' =>  $activite));
         //au cas ou les paramètres seraient modifiés à la main par quelqu'un
-        if (is_null($activite)==false) {
-            $this->pageErreur("l'activité demandée n'existe pas");
+        if (is_null($activite)==true) {
+            return $this->pageErreur("l'activité demandée n'existe pas");
         }
         if (isset($sortie)==FALSE) {
             $listSortie = $em->getRepository('SC\ActiviteBundle\Entity\Sortie')->findAll();
@@ -144,7 +147,7 @@ class SortieController extends Controller
     
     public function pageErreur($message) {
         $response = new Response;
-        $response->setContent($erreur);
+        $response->setContent($message);
         $response->setStatusCode(Response::HTTP_NOT_FOUND);
         return $response;
     }
