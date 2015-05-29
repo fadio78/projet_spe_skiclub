@@ -3,6 +3,9 @@
 {% block title %}{{ parent() }} - Index{% endblock %}
 {% block activité_body %}
 <ul>
+    
+   
+    <center> <h2> Saison: {{ date|date('Y') }} </h2> </center>
  
     {% for activite in listeActivites %}
         <a href="{{ path('sc_activite_view', {'id': activite.id}) }}">

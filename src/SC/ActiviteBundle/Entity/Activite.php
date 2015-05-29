@@ -58,23 +58,38 @@ class Activite
      */ 
     private $licence; 
     
+    
+    
+    
+    
+    
+    
+    
+    
     /**
-    * @ORM\ManyToMany(targetEntity="SC\ActiviteBundle\Entity\Saison", cascade={"persist"})
-    * @ORM\JoinColumn(nullable=true, name="annee",referencedColumnName="annee") 
-    */
-    
-    
+     * @ORM\ManyToOne(targetEntity="SC\UserBundle\Entity\Enfant")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $enfant;
     
     /**
-     * @ORM\ManyToMany(targetEntity="SC\ActiviteBundle\Entity\Saison", cascade={"persist"})
-     * @JoinTable(name="saisonsAc",
-     *      joinColumns={@JoinColumn(name="annee", referencedColumnName="annee")},
-     *      inverseJoinColumns={@JoinColumn(name="id", referencedColumnName="id")}
-     *      )
-     **/
-    /*
-    private $saisons;
-    */
+     * @ORM\ManyToOne(targetEntity="SC\ActiviteBundle\Entity\Saison")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    
+    
+     private $saison;
+     
+    /**
+     * @ORM\ManyToOne(targetEntity="OC\PlatformBundle\Entity\PrixPayeActivite")
+     * @ORM\JoinColumn(nullable=false)
+     */
+  
+    private $prixPayeActivite;
+     
+  
+  
+
 
     /**
      * Get id
@@ -201,6 +216,4 @@ class Activite
         return $this->licence;
     }
 
-
- 
 }
