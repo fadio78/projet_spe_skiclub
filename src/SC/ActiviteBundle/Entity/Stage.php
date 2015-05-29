@@ -14,15 +14,15 @@ class Stage
 {
     /**
      * @ORM\ManyToOne(targetEntity="SC\ActiviteBundle\Entity\Activite")
-     * @ORM\JoinColumn(name="id", referencedColumnName="id")
+     * @ORM\JoinColumn(nullable=false, name="id", referencedColumnName="id")
      * @ORM\Id
      */
-    private $id;
+    private $activite;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="debutStage", type="datetime")
+     * @ORM\Column(name="debutStage", type="string", length=255)
      * @ORM\Id
      */
     private $debutStage;
@@ -30,7 +30,7 @@ class Stage
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="finStage", type="datetime")
+     * @ORM\Column(name="finStage", type="string", length=255)
      * @ORM\Id
      */
     private $finStage;
@@ -117,7 +117,7 @@ class Stage
     /**
      * Get finStage
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getFinStage()
     {
@@ -260,6 +260,29 @@ class Stage
     public function getSaison()
     {
         return $this->saison;
+    }
+
+    /**
+     * Set activite
+     *
+     * @param Activite $activity
+     * @return Stage
+     */
+    public function setActivite(Activite $activity)
+    {
+        $this->activite = $activity;
+
+        return $this;
+    }
+
+    /**
+     * Get activite
+     *
+     * @return Activite 
+     */
+    public function getActivite()
+    {
+        return $this->activite;
     }
 
 }
