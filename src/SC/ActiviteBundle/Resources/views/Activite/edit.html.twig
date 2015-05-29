@@ -7,9 +7,9 @@
 {% block activité_body %}
     
     
- 
+  {% if type == "admin" %}
   <p> Si la licence de l'activité n'existe pas ci-dessous veuillez d'abord la créer </p> 
-   <a href="{{('sc_licence_add'}}">
+   <a href="{{('sc_licence_add')}}">
      créer licence
    </a>
      
@@ -22,4 +22,6 @@
       Retour à l'activite
     </a>
   </p>
+  {% endif %}
+  
 {% endblock %} 

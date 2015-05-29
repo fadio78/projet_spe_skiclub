@@ -6,7 +6,11 @@
 
 
 {% block licence_body %}
+    
+    
 
-  {{ include("SCLicenceBundle::formlicence.html.twig") }}
+    {% if type =="admin" %}
+    {{ include("SCLicenceBundle::formlicence.html.twig") }}
+    {% endif %}
  
 {% endblock %} 

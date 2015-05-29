@@ -11,6 +11,7 @@
         <br>
     {% endfor %}
         <br>
+        {% if type == "admin" %}
         <a href="{{ path('sc_activite_add')}}">
           Ajouter une activité
         </a>
@@ -19,6 +20,8 @@
         <a href="{{ path('sc_licence_homepage')}}">
           Voir la liste des licences  
         </a>
+          
+        {% endif %}
         
         
 

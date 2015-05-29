@@ -15,7 +15,7 @@ use SC\LicenceBundle\Form\LicenceEditType;
 class LicenceController extends Controller 
 {
     
-    public function indexAction()
+    public function indexAction(Request $request)
     {
             // On ne sait pas combien de pages il y a
     // Mais on sait qu'une page doit être supérieure ou égale à 1
@@ -29,17 +29,21 @@ class LicenceController extends Controller
           ->getDoctrine()
           ->getManager()
           ->getRepository('SCLicenceBundle:Licence');
-        $listeLicences = $repository->findAll();  
+        $listeLicences = $repository->findAll(); 
+        $session = $request->getSession();
+        $type = $session->get('type');
         
-        return $this->render('SCLicenceBundle::indexlicence.html.twig',array('listeLicences' => $listeLicences ));
+        return $this->render('SCLicenceBundle::indexlicence.html.twig',array('listeLicences' => $listeLicences ,'type' => $type ));
         
     }
     
     
     
         
-    public function viewAction($typeLicence)
+    public function viewAction($typeLicence,Request $request)
     {
+        $session = $request->getSession();
+        $type = $session->get('type');
         // Ici, on récupérera la licence correspondant à typeLicence
         $repository = $this
           ->getDoctrine()
@@ -50,8 +54,8 @@ class LicenceController extends Controller
         if (null === $licence) {
           throw new NotFoundHttpException("La licence de type ".$typeLicence." n'existe pas.");
         }
-
-        return $this->render('SCLicenceBundle::viewlicence.html.twig', array('licence' => $licence));
+        
+        return $this->render('SCLicenceBundle::viewlicence.html.twig', array('licence' => $licence,'type' => $type));
     }
     
     
@@ -60,7 +64,8 @@ class LicenceController extends Controller
     public function addAction(Request $request)
     {
 
-   
+        $session = $request->getSession();
+        $type = $session->get('type');
         // On crée un objet Licence
         $licence = new Licence();
         $form = $this->get('form.factory')->create(new LicenceType(), $licence);
@@ -75,19 +80,22 @@ class LicenceController extends Controller
         $em->flush();
         $request->getSession()->getFlashBag()->add('info', 'Licence bien enregistrée');
         // On redirige vers la page de visualisation de la licence nouvellement créée
-        return $this->redirect($this->generateUrl('sc_licence_view', array('typeLicence' => $licence->getTypeLicence())));
+        return $this->redirect($this->generateUrl('sc_licence_view', array('typeLicence' => $licence->getTypeLicence(),'type' => $type)));
         }
         // À ce stade, le formulaire n'est pas valide car :
         // - Soit la requête est de type GET, donc l'admin vient d'arriver sur la page et veut voir le formulaire
         // - Soit la requête est de type POST, mais le formulaire contient des valeurs invalides, donc on l'affiche de nouveau
         return $this->render('SCLicenceBundle::addlicence.html.twig', array(
-        'form' => $form->createView(),
+        'form' => $form->createView(),'type' => $type
         ));
         
     }
     
     public function editAction($typeLicence , Request $request)
     {
+        
+        $session = $request->getSession();
+        $type = $session->get('type');
         $em = $this->getDoctrine()->getManager();
 
         // On récupère la licence de type typeLicence
@@ -108,14 +116,16 @@ class LicenceController extends Controller
           return $this->redirect($this->generateUrl('sc_licence_view', array('typeLicence' => $licence->getTypeLicence())));
         }
 
-        return $this->render('SCLicenceBundle::editlicence.html.twig', array('form'   => $form->createView(),'licence' => $licence ));
+        return $this->render('SCLicenceBundle::editlicence.html.twig', array('form'   => $form->createView(),'licence' => $licence, 'type' =>$type ));
     }
     
   
   
   
-    public function deleteAction($typeLicence )
+    public function deleteAction($typeLicence ,Request $request )
     {
+        $session = $request->getSession();
+        $type = $session->get('type');
         //on recupere l'entity manager
         $em = $this->getDoctrine()->getManager();
         $repository = $em->getRepository('SCLicenceBundle:Licence');
@@ -131,7 +141,7 @@ class LicenceController extends Controller
             $em->remove($licence);
             $em->flush();
             $listeLicences = $em->getRepository('SCLicenceBundle:Licence')->findAll();
-            return $this->render('SCLicenceBundle::indexlicence.html.twig', array('listeLicences' => $listeLicences));
+            return $this->render('SCLicenceBundle::indexlicence.html.twig', array('listeLicences' => $listeLicences,'type' => $type));
         }    
     }
     

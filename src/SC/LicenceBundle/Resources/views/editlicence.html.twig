@@ -6,7 +6,8 @@
 
 {% block licence_body %}
     
-
+    
+  {% if type =="admin" %}
   {{ include("SCLicenceBundle::formlicence.html.twig") }}
 
   <p>
@@ -15,4 +16,5 @@
       Retour à la licence
     </a>
   </p>
+  {% endif %}
 {% endblock %} 
