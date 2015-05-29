@@ -1,9 +1,15 @@
 {# src/OC/UserBundle/Resources/views/Security/login.html.twig #}
 
-{#{% extends "OCCoreBundle::layout.html.twig" %}#}
+{% extends "SCUserBundle::layout.html.twig" %}
 
-{% block body %}
 
+
+
+
+    
+{% block user_body %}
+          <h2>Connexion</h2>
+  
   {# S'il y a une erreur, on l'affiche dans un joli cadre #}
   {% if error %}
     <div class="alert alert-danger">{{ error.message }}</div>
@@ -20,5 +26,4 @@
     <input type="hidden" name="_target_path" value="sc_user_compte" />
     <input type="submit" value="Connexion" />
   </form>
-
-{% endblock %}
+    {% endblock %}
