@@ -28,15 +28,14 @@ class ActiviteController extends Controller
     public function indexAction(Request $request)
     {
         $em = $this -> getDoctrine() ->getManager();
-        $date = new \Datetime;
-        $year = $date ->format('Y');
-    
+        $year = $this->connaitreSaison();
         $saison = $em -> getRepository('SCActiviteBundle:Saison') -> find($year);
+        
         if (null === $saison) {
-            $saison = new Saison ();
-            $saison -> setAnnee ($year) ;
-            $em ->persist ($saison);
-            $em -> flush () ;
+            $saison = new Saison();
+            $saison->setAnnee($year);
+            $em->persist($saison);
+            $em->flush();
         }
 
      
@@ -54,7 +53,7 @@ class ActiviteController extends Controller
         $session = $request->getSession();
         $type = $session->get('type');
         
-        return $this->render('SCActiviteBundle:Activite:index.html.twig',array('listeActivites' => $listeActivites,'type' => $type, 'date' =>$date
+        return $this->render('SCActiviteBundle:Activite:index.html.twig',array('listeActivites' => $listeActivites,'type' => $type, 'year' =>$year
         ));
     }
     
@@ -208,6 +207,20 @@ class ActiviteController extends Controller
             return $this->render('SCActiviteBundle:Activite:add.html.twig', array(
             'form' => $form->createView(),
             ));
-    } 
-
+    }
+    
+    // permet de connaitre la saison courante
+    public function connaitreSaison() {
+        
+        $date = new \DateTime();
+        $annee = $date->format('Y');
+        $mois = $date->format('m');
+        
+        if ($mois > 8) {
+            return $annee;
+        }
+        else {
+            return $annee-1;
+        }
+    }
 }
