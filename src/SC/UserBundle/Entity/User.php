@@ -370,6 +370,10 @@ class User implements AdvancedUserInterface
      */
     public function getRoles()
     {
+        
+       if ($this->type == 'admin'){
+            return array('ROLE_ADMIN');
+        }
         return array('ROLE_USER');
         
     }

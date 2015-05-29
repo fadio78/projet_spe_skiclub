@@ -43,11 +43,30 @@ class SecurityController extends Controller
   }
   public function compteAction(Request $request)
   {
+      
+      
         $session = $request->getSession();
         $usr= $this->get('security.context')->getToken()->getUser();
         $email = $usr->getUsername();
         $type = $usr->getType();
         $isPrimaire = $usr->getIsprimaire();
+        
+        // si l'utilisateur n'est pas primaire on stock l'email primaire dans session
+        if (!$isPrimaire){
+            $emailSecondaire = $email;
+            $repository = $this
+            ->getDoctrine()
+            ->getManager()
+            ->getRepository('SCUserBundle:User')
+             ;
+            
+            
+        $user = $repository->find($email);
+        $email = $user->getEmailPrimaire();
+        $session->set('emailSecondaire',$emailSecondaire );
+        }
+        
+        
         $session->set('email',$email );
         $session->set('type',$type );
         $session->set('isPrimaire',$isPrimaire );
@@ -75,7 +94,7 @@ class SecurityController extends Controller
        
       
       $user = new User;
-      $user->setSalt('voir plus tard' );
+      $user->setSalt('' );
       $user->setType('user');
       $user->setIsActive(true);
       
@@ -113,7 +132,7 @@ class SecurityController extends Controller
         }    
     }      
       $user = new User;
-      $user->setSalt('voir plus tard' );
+      $user->setSalt('' );
       $user->setType('user');
       $user->setIsActive(true);     
       $user->setIsPrimaire(false);
