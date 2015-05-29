@@ -1,12 +1,13 @@
-{# src/SC/ActiviteBundle/Resources/views/index.html.twig #}
+{# src/SC/ActiviteBundle/Resources/views/Stage/index.html.twig #}
 {% extends "SCActiviteBundle::layout.html.twig" %}
 {% block title %}{{ parent() }} - Index{% endblock %}
 {% block activité_body %}
 <ul>
  
-    {% for sortie in listSortie %}
-       {{ sortie.dateSortie }} --- {{ sortie.lieu.nomLieu }}
-       
+    {% for stage in listeStages %}
+       {{ stage.nomStage }} --- {{ stage.saison.annee }} --- {{ stage.lieu.nomLieu }}
+       {{ stage.debutStage }} --- {{ stage.finStage }}
+       {{ stage.prixStage }} --- {{ stage.charges }}
         <a href="{{ path('sc_activite_deleteSortie', {'id': activite.id}) }}">
         </a>
         <br/>    

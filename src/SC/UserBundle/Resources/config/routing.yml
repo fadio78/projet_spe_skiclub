@@ -10,3 +10,11 @@ sc_user_compte:
 sc_user_register:
     path:     /register
     defaults: { _controller: SCUserBundle:Security:register }
+   
+sc_user_ajouter:
+    path:     /ajouterUser
+    defaults: { _controller: SCUserBundle:Security:ajouter }        
+        
+sc_enfant_ajouter:
+    path:     /ajoutEnfant
+    defaults: { _controller: SCUserBundle:Enfant:ajouter }

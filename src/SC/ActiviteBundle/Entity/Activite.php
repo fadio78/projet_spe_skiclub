@@ -58,6 +58,23 @@ class Activite
      */ 
     private $licence; 
     
+    /**
+    * @ORM\ManyToMany(targetEntity="SC\ActiviteBundle\Entity\Saison", cascade={"persist"})
+    * @ORM\JoinColumn(nullable=true, name="annee",referencedColumnName="annee") 
+    */
+    
+    
+    
+    /**
+     * @ORM\ManyToMany(targetEntity="SC\ActiviteBundle\Entity\Saison", cascade={"persist"})
+     * @JoinTable(name="saisonsAc",
+     *      joinColumns={@JoinColumn(name="annee", referencedColumnName="annee")},
+     *      inverseJoinColumns={@JoinColumn(name="id", referencedColumnName="id")}
+     *      )
+     **/
+    /*
+    private $saisons;
+    */
 
     /**
      * Get id
@@ -185,4 +202,5 @@ class Activite
     }
 
 
+ 
 }

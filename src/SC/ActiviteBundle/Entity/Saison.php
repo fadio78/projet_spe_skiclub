@@ -19,6 +19,9 @@ class Saison
      * @ORM\Column(name="annee", type="integer")
      */
     private $annee;
+    
+    
+
 
     /**
      * Set annee
@@ -42,4 +45,6 @@ class Saison
     {
         return $this->annee;
     }
+
+    
 }

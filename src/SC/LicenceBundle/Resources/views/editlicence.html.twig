@@ -1,0 +1,20 @@
+{# src/SC/LicenceBundle/Resources/views/editlicence.html.twig #}
+{% extends "SCLicenceBundle::layoutlicence.html.twig" %}
+{% block title %}
+  Modifier une licence - {{ parent() }}
+{% endblock %}
+
+{% block licence_body %}
+    
+    
+  {% if app.session.get('type') =="admin" %}
+  {{ include("SCLicenceBundle::formlicence.html.twig") }}
+
+  <p>
+    <a href="{{ path('sc_licence_view', {'typeLicence': licence.typeLicence}) }}" class="btn btn-default">
+      <i class="glyphicon glyphicon-chevron-left"></i>
+      Retour à la licence
+    </a>
+  </p>
+  {% endif %}
+{% endblock %} 

@@ -39,7 +39,7 @@ sc_activite_voirSortie:
         
 sc_activite_deleteSortie:
     path:      /deleteSortie/{id}
-    defaults:  { _controller: SCActiviteBundle:Sortie:deleterSortie }
+    defaults:  { _controller: SCActiviteBundle:Sortie:deleteSortie}
     requirements:
         id: \d+
         

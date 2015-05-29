@@ -1,5 +1,5 @@
-{# src/SC/ActiviteBundle/Resources/views/view.html.twig #}
-{% extends "SCActiviteBundle::layout.html.twig" %}
+{# src/SC/ActiviteBundle/Resources/views/Activite/view.html.twig #}
+{% extends "SCActiviteBundle:Activite:layout.html.twig" %}
 {% block title %}
   Afficher une activité - {{ parent() }}
 {% endblock %}
@@ -21,13 +21,18 @@
     <br>
     </br>
     
-    <ul> Le prix de l'activité est: {{activite.prixActivite}} € <ul>
+    <ul> Le prix de l'activité est: {{activite.prixActivite}} € </ul>
+    
+    {% if activite.licence  != null %}
+    <ul> Le type de la licence est: {{activite.licence.typeLicence}} et son prix est: {{activite.licence.prixLicence}} €  </ul>
+    {% endif %}
   <p>
     <a href="{{ path('sc_activite_homepage') }}" class="btn btn-default">
       <i class="glyphicon glyphicon-chevron-left"></i>
       Retour à la liste
     </a>
       <br><br/>
+    {% if app.session.get('type') =="admin" %}
     <a href="{{ path('sc_activite_edit', {'id': activite.id}) }}" class="btn btn-default">
       <i class="glyphicon glyphicon-edit"></i>
       Modifier l'activité
@@ -55,6 +60,12 @@
     <a href="{{ path('sc_activite_addStage', {'id': activite.id}) }}" class="btn btn-default">
       <i class="glyphicon glyphicon-edit"></i>
       Ajouter un stage 
-    </a>
+    </a> 
+      
+    {% endif %}
+    
+>>>>>>> 956f64ee534b2e9c7f4ae9f85e22303e11aa67ae:src/SC/ActiviteBundle/Resources/views/Activite/view.html.twig
   </p>
 {% endblock %} 
+
+

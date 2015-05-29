@@ -1,5 +1,5 @@
-{# src/SC/ActiviteBundle/Resources/views/index.html.twig #}
-{% extends "SCActiviteBundle::layout.html.twig" %}
+{# src/SC/ActiviteBundle/Resources/views/Activite/index.html.twig #}
+{% extends "SCActiviteBundle:Activite:layout.html.twig" %}
 {% block title %}{{ parent() }} - Index{% endblock %}
 {% block activité_body %}
 <ul>
@@ -11,9 +11,18 @@
         <br>
     {% endfor %}
         <br>
+        {% if app.session.get('type') == "admin" %}
         <a href="{{ path('sc_activite_add')}}">
           Ajouter une activité
         </a>
+          
+        <br>
+        <a href="{{ path('sc_licence_homepage')}}">
+          Voir la liste des licences  
+        </a>
+          
+        {% endif %}
+        
         
 
 </ul> 

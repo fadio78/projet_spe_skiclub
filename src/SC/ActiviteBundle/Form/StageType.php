@@ -6,10 +6,13 @@ namespace SC\ActiviteBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use SC\LicenceBundle\Form\LicenceType;
-use SC\LicenceBundle\Entity\Licence;
+use SC\ActiviteBundle\Entity\Lieu;
+use SC\ActiviteBundle\Form\LieuType;
+use SC\ActiviteBundle\Entity\Saison;
+use SC\ActiviteBundle\Entity\Activite;
+use SC\ActiviteBundle\Entity\Stage;
 
-class ActiviteType extends AbstractType
+class StageType extends AbstractType
 {
     /**
      * @param FormBuilderInterface $builder
@@ -18,11 +21,14 @@ class ActiviteType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('nomActivite')
+            ->add('debutStage')
+            ->add('finStage')
+            ->add('nomStage')
             ->add('description')
-            ->add('prixActivite') 
-            ->add('licence', 'entity', array('class'=> 'SCLicenceBundle:Licence','property' => 'typeLicence',
-          'multiple' => false,'expanded' => false,'required' => false))
+            ->add('prixStage')
+            ->add('charges')
+            ->add('lieu', new LieuType())
+            ->add('saison', new SaisonType())
             ->add('enregistrer','submit');
     }
     
@@ -32,7 +38,7 @@ class ActiviteType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'SC\ActiviteBundle\Entity\Activite'
+            'data_class' => 'SC\ActiviteBundle\Entity\Stage'
         ));
     }
 

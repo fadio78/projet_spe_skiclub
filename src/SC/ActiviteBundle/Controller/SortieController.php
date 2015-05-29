@@ -18,7 +18,7 @@ use SC\ActiviteBundle\Entity\Lieu;
 
 class SortieController extends Controller 
 {
-    
+    //permet d'ajouter une nouvelle sortie
     public function ajoutSortieAction($id,Request $request) {
         
         $sortie = new Sortie();
@@ -32,39 +32,68 @@ class SortieController extends Controller
             
             // On vérifie que les valeurs entrées sont correctes
             if ($form->isValid()) {
+
+                //Test ac datetime en ID
+
+                $date = $sortie->getDateSortie();
+                $string = $date->format('Y').'-'.$date->format('m').'-'.$date->format('d').' '.$date->format('H').':'.$date->format('i').':'.$date->format('s');
+                $sortie->setDateSortie($string);
+                //fin test
                 
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($sortie);                
-                //si le lieu est n'est pas gere par le manager, on l'ajoute a la base
+                //si le lieu est n'est pas gere par le manager, on l'ajoute 
                 $listLieu = $em->getRepository('SC\ActiviteBundle\Entity\Lieu')->findAll();
                 
-                foreach ($listLieu as $lieu) {
-                    if ($lieu->getNomLieu() === $sortie->getLieu()->getNomLieu()) {
-                        $sortie->setLieu($lieu);
-                        // on ne persist pas lieu il est deja dans la BD
-                        $em->flush();
-                        $listSortie = $em->getRepository('SC\ActiviteBundle\Entity\Sortie')->findAll();
-                        return $this->redirect($this->generateUrl('sc_activite_view', array('id' => $sortie->getActivite()->getId(), 'listSortie' => $listSortie)));                
-                    }    
-                } 
+               // if ($this->dateExiste($id,$sortie) == false) {
                 
-                $em->persist($sortie->getLieu());
-                $em->flush();
-                $listSortie = $em->getRepository('SC\ActiviteBundle\Entity\Sortie')->findAll();
-                return $this->redirect($this->generateUrl('sc_activite_view', array('id' => $sortie->getActivite()->getId(), 'listSortie' => $listSortie)));
-            }
-                return $this->render('SCActiviteBundle::add.html.twig', array(
-                    'form' => $form->createView(),
+                    // on ne persist pas lieu il est deja dans la BD
+                    foreach ($listLieu as $lieu) {
+                        if ($lieu->getNomLieu() === $sortie->getLieu()->getNomLieu()) {
+                            $sortie->setLieu($lieu);
+                            $em->flush();
+                            $request->getSession()->getFlashBag()->add('info', 'La sortie a bien été enregistrée');
+                            return $this->redirect($this->generateUrl('sc_activite_view', array('id' => $sortie->getActivite()->getId())));                
+                        }    
+                    } 
+                    
+                    $em->persist($sortie->getLieu());
+                    $em->flush();
+                    return $this->redirect($this->generateUrl('sc_activite_view', array('id' => $sortie->getActivite()->getId())));
+               /* }
+                else {
+                    throw new NotFoundHttpException("il y a deja une sortie prévue pour cette activité à cette date");
+                }*/
+                
+            } 
+            return $this->render('SCActiviteBundle:Activite:add.html.twig', array(
+                'form' => $form->createView(),
                 ));
         }
         else {
-                $response = new Response;
-                $response->setContent("Error 404: not found");
-                $response->setStatusCode(Response::HTTP_NOT_FOUND);
-                return $response;                
+            throw new NotFoundHttpException("Cette activité n'existe pas");               
         }
     }
+    // teste si la date existe deja dans la BD
+    // return true si la date est dans la BD, false sinon
+    // $id -> identifiant de l'activite
+    // $sortie -> la sortie à la date considerée
+    public function dateExiste($id,Sortie $sortie) {
+        
+        if($this->getDoctrine()->getManager()
+                                    ->getRepository('SC\ActiviteBundle\Entity\Sortie')
+                                            ->findOneByDateSortie($sortie->getDateSortie()) === null) {
+            
+            return false;
+            
+        }
+        else {
+            return true;
+        }
+        
+    }
     
+    //permet d'afficher toutes les sorties pour l'activite id
     public function voirSortieAction($id) {
      
         $activite = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Activite')->find($id);   
@@ -80,5 +109,29 @@ class SortieController extends Controller
             throw new NotFoundHttpException("L'activité d'id ".$id." n'existe pas.");
         }
   
+    }
+    
+    //supprime une sortie de l'activite id, la date est passée dans l'url
+    public function deleteSortieAction($id, Request $request) {
+        
+        $em = $this->getDoctrine()->getManager();
+        //$idSortie= $request->query->get('idSortie');
+        $dateSortie= $request->query->get('date');
+        $activite = $em->getRepository('SC\ActiviteBundle\Entity\Activite')->find($id);
+        $sortie = $em->getRepository('SC\ActiviteBundle\Entity\Sortie')
+                                                        //->findOneBy(array('idSortie' => $idSortie,'activite' =>  $activite));
+                                                        ->findOneBy(array('dateSortie' => $dateSortie,'activite' =>  $activite));
+        //au cas ou les paramètres seraient modifiés à la main par quelqu'un
+        if (isset($sortie)==FALSE) {
+            $listSortie = $em->getRepository('SC\ActiviteBundle\Entity\Sortie')->findAll();
+            return $this->render('SCActiviteBundle::viewSortie.html.twig',array('listSortie' => $listSortie, 'activite' => $activite ));            
+        }
+        else {
+            //envoyer les emails aux utilisateurs inscrits
+            $em->remove($sortie);
+            $em->flush();
+            $listSortie = $em->getRepository('SC\ActiviteBundle\Entity\Sortie')->findAll();
+            return $this->render('SCActiviteBundle::viewSortie.html.twig',array('listSortie' => $listSortie, 'activite' => $activite ));
+        }
     }
 }

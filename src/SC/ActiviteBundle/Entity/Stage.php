@@ -66,7 +66,7 @@ class Stage
     /**
      * 
      * @ORM\OneToOne(targetEntity="SC\ActiviteBundle\Entity\Lieu")
-     * @ORM\JoinColumn(nullable=false, name="nomLieu", referencedColumnName="nomLieu")
+     * @ORM\JoinColumn(nullable=false, name="nomLieu", referencedColumnName="nomLieu",onDelete="CASCADE")
      */
     private $lieu;
 

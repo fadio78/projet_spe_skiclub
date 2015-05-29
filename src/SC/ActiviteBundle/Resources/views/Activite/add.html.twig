@@ -1,0 +1,19 @@
+{# src/SC/ActiviteBundle/Resources/views/Activite/add.html.twig #}
+{% extends "SCActiviteBundle:Activite:layout.html.twig" %}
+{% block title %}
+  Ajouter une activité - {{ parent() }}
+{% endblock %}
+
+
+{% block activité_body %}
+    
+    
+   {% if app.session.get('type') == "admin" %}
+   <p> Si la licence de l'activité n'existe pas ci-dessous veuillez d'abord la créer </p> 
+    <a href="{{ path('sc_licence_add')}}">
+      Ajouter une licence
+    </a>
+  {{ include("SCActiviteBundle:Activite:form.html.twig") }}
+  {% endif %}
+ 
+{% endblock %} 

@@ -1,12 +1,12 @@
 <?php
 
-namespace SC\LicenceBundle\Form;
+namespace SC\UserBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class LicenceType extends AbstractType
+class EnfantType extends AbstractType
 {
     /**
      * @param FormBuilderInterface $builder
@@ -15,9 +15,11 @@ class LicenceType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('typeLicence')
-            ->add('prixLicence')
-            ->add('enregistrer','submit');
+            ->add('nomEnfant')
+            ->add('prenomEnfant')
+            ->add('niveauSki')
+            ->add('dateNaissance')
+            ->add('ajouter enfant', 'submit')
         ;
     }
     
@@ -27,7 +29,7 @@ class LicenceType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'SC\LicenceBundle\Entity\Licence'
+            'data_class' => 'SC\UserBundle\Entity\Enfant'
         ));
     }
 
@@ -36,6 +38,6 @@ class LicenceType extends AbstractType
      */
     public function getName()
     {
-        return 'sc_licencebundle_licence';
+        return 'sc_userbundle_enfant';
     }
 }

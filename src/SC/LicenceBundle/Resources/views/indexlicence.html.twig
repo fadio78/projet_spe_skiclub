@@ -1,0 +1,38 @@
+{# src/SC/LicenceBundle/Resources/views/indexlicence.html.twig #}
+{% extends "SCLicenceBundle::layoutlicence.html.twig" %}
+{% block title %}{{ parent() }} - Index{% endblock %}
+{% block licence_body %}
+    
+
+    {% if app.session.get('type') =="admin" %}
+  
+<ul>
+    
+    {% for licence in listeLicences %}
+         <a href="{{ path('sc_licence_view', {'typeLicence': licence.typeLicence}) }}">
+          {{ licence.typeLicence }}
+        </a>
+    <br>
+        
+    {% endfor %}
+    
+    
+    <br>
+    <a href="{{ path('sc_licence_add')}}">
+      Ajouter une licence
+    </a>
+      
+    <br>
+    
+    <a href="{{ path('sc_activite_homepage')}}">
+      Voir la liste des activités
+    </a>
+</ul>
+    
+    {% endif %}
+
+
+
+{% endblock %} 
+
+
