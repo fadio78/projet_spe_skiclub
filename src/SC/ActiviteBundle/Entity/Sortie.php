@@ -36,8 +36,19 @@ class Sortie
      */
     private $activite;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="SC\UserBundle\Entity\User")
+     * @ORM\JoinColumn(nullable=false, name="email", referencedColumnName="email")
+     * 
+     */
+    private $user;
 
-    
+    /**
+     * @ORM\ManyToOne(targetEntity="SC\ActiviteBundle\Entity\Saison")
+     * @ORM\JoinColumn(nullable=false, name="annee", referencedColumnName="annee")
+     * @ORM\Id
+     */
+    private $saison;    
 
     /**
      * Set dateSortie
@@ -106,5 +117,51 @@ class Sortie
     public function getActivite()
     {
         return $this->activite;
+    }
+
+    /**
+     * Set User
+     *
+     * @param \SC\UserBundle\Entity\User $user
+     * @return Sortie
+     */
+    public function setUser(\SC\UserBundle\Entity\User $user)
+    {
+        $this->User = $user;
+
+        return $this;
+    }
+
+    /**
+     * Get User
+     *
+     * @return \SC\UserBundle\Entity\User 
+     */
+    public function getUser()
+    {
+        return $this->User;
+    }
+
+    /**
+     * Set saison
+     *
+     * @param \SC\ActiviteBundle\Entity\Saison $saison
+     * @return Sortie
+     */
+    public function setSaison(\SC\ActiviteBundle\Entity\Saison $saison)
+    {
+        $this->saison = $saison;
+
+        return $this;
+    }
+
+    /**
+     * Get saison
+     *
+     * @return \SC\ActiviteBundle\Entity\Saison 
+     */
+    public function getSaison()
+    {
+        return $this->saison;
     }
 }

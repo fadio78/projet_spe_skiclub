@@ -23,6 +23,10 @@ class SortieController extends Controller
         
         $sortie = new Sortie();
         $activite = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Activite')->find($id);
+        $saison = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Saison')->findOneBy($this->connaitreSaison());
+        $admin = $this->getDoctrine()->getManager()
+                                            ->getRepository('SC\UserBundle\Entity\User')
+                                                ->findOneBy(array('email' => $request->getSession()->get('email')));
         
         if (is_null($activite)==false) {
             
@@ -33,12 +37,10 @@ class SortieController extends Controller
             // On vérifie que les valeurs entrées sont correctes
             if ($form->isValid()) {
 
-                //Test ac datetime en ID
-
                 $date = $sortie->getDateSortie();
                 $string = $date->format('Y').'-'.$date->format('m').'-'.$date->format('d').' '.$date->format('H').':'.$date->format('i').':'.$date->format('s');
                 $sortie->setDateSortie($string);
-                //fin test
+
                 
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($sortie);                
@@ -132,6 +134,20 @@ class SortieController extends Controller
             $em->flush();
             $listSortie = $em->getRepository('SC\ActiviteBundle\Entity\Sortie')->findAll();
             return $this->render('SCActiviteBundle::viewSortie.html.twig',array('listSortie' => $listSortie, 'activite' => $activite ));
+        }
+    }
+    
+    public function connaitreSaison() {
+        $date = new \DateTime();
+        $annee = $date->format('Y');
+        $mois = $date->format('m');
+        $jour = $date->format('d');
+        
+        if ($mois > 8) {
+            return $annee;
+        }
+        else {
+            return $annee-1;
         }
     }
 }
