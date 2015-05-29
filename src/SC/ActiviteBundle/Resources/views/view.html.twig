@@ -27,10 +27,12 @@
       <i class="glyphicon glyphicon-chevron-left"></i>
       Retour à la liste
     </a>
+      <br><br/>
     <a href="{{ path('sc_activite_edit', {'id': activite.id}) }}" class="btn btn-default">
       <i class="glyphicon glyphicon-edit"></i>
       Modifier l'activité
     </a>
+      <br><br/>
     <a href="{{ path('sc_activite_ajoutSortie', {'id': activite.id}) }}" class="btn btn-default">
       <i class="glyphicon glyphicon-edit"></i>
       Ajouter une sortie
@@ -43,6 +45,16 @@
     <a href="{{ path('sc_activite_voirSortie', {'id': activite.id}) }}" class="btn btn-default">
       <i class="glyphicon glyphicon-edit"></i>
       Sortie prévues
-    </a> 
+    </a>
+      <br><br/>
+    <a href="{{ path('sc_activite_viewStage', {'id': activite.id}) }}" class="btn btn-default">
+      <i class="glyphicon glyphicon-edit"></i>
+      Stages prévus
+    </a>
+      
+    <a href="{{ path('sc_activite_addStage', {'id': activite.id}) }}" class="btn btn-default">
+      <i class="glyphicon glyphicon-edit"></i>
+      Ajouter un stage 
+    </a>
   </p>
 {% endblock %} 
