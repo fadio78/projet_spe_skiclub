@@ -155,8 +155,8 @@ class ActiviteController extends Controller
   
     public function deleteAction($id,Request $request)
     {
-        $date = new \Datetime;
-        $year = $date ->format('Y');
+        
+        $year = $this->connaitreSaison();
         $session = $request->getSession();
         $type=$session->get('type');
         //on recupere l'entity managere 
@@ -178,7 +178,7 @@ class ActiviteController extends Controller
             $em->remove($activite);
             $em->flush();
             $listeActivites = $em->getRepository('SCActiviteBundle:Activite')->findAll();
-            return $this->render('SCActiviteBundle:Activite:index.html.twig', array('listeActivites' => $listeActivites,'type' =>$type,'date' => $date));
+            return $this->render('SCActiviteBundle:Activite:index.html.twig', array('listeActivites' => $listeActivites,'type' =>$type,'year' => $year));
         }    
     }
 
