@@ -27,7 +27,7 @@ class SortieController extends Controller
         $activite = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Activite')->find($id);
         //$saison = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Saison')->findOneBy($this->connaitreSaison());
         $saison =  new Saison();
-        $saison->setAnnee((Integer)203);
+        $saison->setAnnee((Integer)2015);
         $user = $this->getDoctrine()->getManager()
                                             ->getRepository('SC\UserBundle\Entity\User')
                                                 ->findOneByEmail(array('email' => $request->getSession()->get('email')));
@@ -46,8 +46,9 @@ class SortieController extends Controller
 
                 $date = $sortie->getDateSortie();
                 $string = $date->format('Y').'-'.$date->format('m').'-'.$date->format('d').' '.$date->format('H').':'.$date->format('i').':'.$date->format('s');
+                // si il ya deja une meme date -> erreur
+                $this->dateExiste($string); 
                 $sortie->setDateSortie($string);
-                
                 
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($saison); 
@@ -83,17 +84,17 @@ class SortieController extends Controller
     // return true si la date est dans la BD, false sinon
     // $id -> identifiant de l'activite
     // $sortie -> la sortie à la date considerée
-    public function dateExiste($id,Sortie $sortie) {
+    public function dateExiste($date) {
         
         if($this->getDoctrine()->getManager()
                                     ->getRepository('SC\ActiviteBundle\Entity\Sortie')
-                                            ->findOneByDateSortie($sortie->getDateSortie()) === null) {
+                                            ->findOneByDateSortie($date) === null) {
             
-            return false;
+            return;
             
         }
         else {
-            return true;
+             throw new NotFoundHttpException("Il y a deja une sortie prévu à cette date pour cette activité");
         }
         
     }
