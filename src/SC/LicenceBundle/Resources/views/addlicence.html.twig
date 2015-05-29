@@ -9,7 +9,7 @@
     
     
 
-    {% if type =="admin" %}
+    {% if app.session.get('type') =="admin" %}
     {{ include("SCLicenceBundle::formlicence.html.twig") }}
     {% endif %}
  

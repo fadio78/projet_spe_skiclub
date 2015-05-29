@@ -14,7 +14,7 @@ class LoadUser extends AbstractFixture implements OrderedFixtureInterface
   {
     // Les noms d'utilisateurs à créer
     $listNames = array('sgbd@hotmail.com', 'test@hotmail.com', 'sfr@hotmail.com');
-
+    $i = 0;
     foreach ($listNames as $name) {
       // On crée l'utilisateur
       $user = new User;
@@ -27,7 +27,13 @@ class LoadUser extends AbstractFixture implements OrderedFixtureInterface
       $user->setCommune('grenoble');
       $user->setTelephone('06125566333');
       $user->setPassword('azerty');
-      $user->setType('ok');
+      if ($i==2) {
+        $user->setType('admin');
+      }
+      else {
+          $user->setType('client');
+      }
+      $i = $i+1;
       $user->setIsActive(1);
       
      

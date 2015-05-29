@@ -12,22 +12,15 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Sortie
 {
+   
     /**
-     * @var integer
+     * @var string    
      *
-     * @ORM\Column(name="idSortie", type="integer")
+     * @ORM\Column(name="dateSortie", type="string", length=255)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $idSortie;    
-
-    /**
-     * @var \DateTime    
-     *
-     * @ORM\Column(name="dateSortie", type="datetime")
      */
     private $dateSortie;
-
+    
 
     /**
      * @ORM\ManyToOne(targetEntity="SC\ActiviteBundle\Entity\Lieu")
@@ -39,63 +32,17 @@ class Sortie
     /**
      * @ORM\ManyToOne(targetEntity="SC\ActiviteBundle\Entity\Activite")
      * @ORM\JoinColumn(nullable=false, name="idActivite", referencedColumnName="id",onDelete="CASCADE")
+     * @ORM\Id
      */
     private $activite;
 
 
-    /**
-     * Set lieu
-     *
-     * @param Lieu $venue
-     * @return Sortie
-     */
-    public function setLieu($venue)
-    {
-        $this->lieu = $venue;
-
-        return $this;
-    }
-
-    /**
-     * Get lieu
-     *
-     * @return Lieu 
-     */
-    public function getLieu()
-    {
-        return $this->lieu;
-    }
-
-    /**
-     * Set activite
-     *
-     * @param Activite $activity
-     * @return Sortie
-     */
-    public function setActivite(Activite $activity)
-    {
-        $this->activite = $activity;
-
-        return $this;
-    }
-
-    /**
-     * Get activite
-     *
-     * @return Activite 
-     */
-    public function getActivite()
-    {
-        return $this->activite;
-    }
-
-
-
+    
 
     /**
      * Set dateSortie
      *
-     * @param \DateTime $dateSortie
+     * @param string $dateSortie
      * @return Sortie
      */
     public function setDateSortie($dateSortie)
@@ -108,7 +55,7 @@ class Sortie
     /**
      * Get dateSortie
      *
-     * @return \DateTime 
+     * @return string 
      */
     public function getDateSortie()
     {
@@ -116,12 +63,48 @@ class Sortie
     }
 
     /**
-     * Get idSortie
+     * Set lieu
      *
-     * @return integer 
+     * @param \SC\ActiviteBundle\Entity\Lieu $lieu
+     * @return Sortie
      */
-    public function getIdSortie()
+    public function setLieu(\SC\ActiviteBundle\Entity\Lieu $lieu)
     {
-        return $this->idSortie;
+        $this->lieu = $lieu;
+
+        return $this;
+    }
+
+    /**
+     * Get lieu
+     *
+     * @return \SC\ActiviteBundle\Entity\Lieu 
+     */
+    public function getLieu()
+    {
+        return $this->lieu;
+    }
+
+    /**
+     * Set activite
+     *
+     * @param \SC\ActiviteBundle\Entity\Activite $activite
+     * @return Sortie
+     */
+    public function setActivite(\SC\ActiviteBundle\Entity\Activite $activite)
+    {
+        $this->activite = $activite;
+
+        return $this;
+    }
+
+    /**
+     * Get activite
+     *
+     * @return \SC\ActiviteBundle\Entity\Activite 
+     */
+    public function getActivite()
+    {
+        return $this->activite;
     }
 }

@@ -31,7 +31,7 @@
       <i class="glyphicon glyphicon-chevron-left"></i>
       Retour à la liste
     </a>
-    {% if type =="admin" %}
+    {% if app.session.get('type') =="admin" %}
     <a href="{{ path('sc_activite_edit', {'id': activite.id}) }}" class="btn btn-default">
       <i class="glyphicon glyphicon-edit"></i>
       Modifier l'activité

@@ -11,7 +11,7 @@
         <br>
     {% endfor %}
         <br>
-        {% if type == "admin" %}
+        {% if app.session.get('type') == "admin" %}
         <a href="{{ path('sc_activite_add')}}">
           Ajouter une activité
         </a>

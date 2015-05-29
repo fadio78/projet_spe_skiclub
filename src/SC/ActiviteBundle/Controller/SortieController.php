@@ -33,12 +33,19 @@ class SortieController extends Controller
             // On vérifie que les valeurs entrées sont correctes
             if ($form->isValid()) {
 
+                //Test ac datetime en ID
+
+                $date = $sortie->getDateSortie();
+                $string = $date->format('Y').'-'.$date->format('m').'-'.$date->format('d').' '.$date->format('H').':'.$date->format('i').':'.$date->format('s');
+                $sortie->setDateSortie($string);
+                //fin test
+                
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($sortie);                
                 //si le lieu est n'est pas gere par le manager, on l'ajoute 
                 $listLieu = $em->getRepository('SC\ActiviteBundle\Entity\Lieu')->findAll();
                 
-                if ($this->dateExiste($id,$sortie) == false) {
+               // if ($this->dateExiste($id,$sortie) == false) {
                 
                     // on ne persist pas lieu il est deja dans la BD
                     foreach ($listLieu as $lieu) {
@@ -53,10 +60,10 @@ class SortieController extends Controller
                     $em->persist($sortie->getLieu());
                     $em->flush();
                     return $this->redirect($this->generateUrl('sc_activite_view', array('id' => $sortie->getActivite()->getId())));
-                }
+               /* }
                 else {
                     throw new NotFoundHttpException("il y a deja une sortie prévue pour cette activité à cette date");
-                }
+                }*/
                 
             } 
             return $this->render('SCActiviteBundle:Activite:add.html.twig', array(
@@ -108,10 +115,12 @@ class SortieController extends Controller
     public function deleteSortieAction($id, Request $request) {
         
         $em = $this->getDoctrine()->getManager();
-        $idSortie= $request->query->get('idSortie');
+        //$idSortie= $request->query->get('idSortie');
+        $dateSortie= $request->query->get('date');
         $activite = $em->getRepository('SC\ActiviteBundle\Entity\Activite')->find($id);
         $sortie = $em->getRepository('SC\ActiviteBundle\Entity\Sortie')
-                                                        ->findOneBy(array('idSortie' => $idSortie,'activite' =>  $activite));
+                                                        //->findOneBy(array('idSortie' => $idSortie,'activite' =>  $activite));
+                                                        ->findOneBy(array('dateSortie' => $dateSortie,'activite' =>  $activite));
         //au cas ou les paramètres seraient modifiés à la main par quelqu'un
         if (isset($sortie)==FALSE) {
             $listSortie = $em->getRepository('SC\ActiviteBundle\Entity\Sortie')->findAll();

@@ -19,7 +19,8 @@ class SortieType extends AbstractType
     {
         $builder
             //->add($builder->create('dateSortie','datetime')->addViewTransformer(new DateTimeToStringTransformer())) 
-            ->add('dateSortie') 
+            //->add('dateSortie') 
+            ->add('dateSortie','datetime') 
             ->add('lieu', new LieuType())
             ->add('enregistrer','submit');
                    

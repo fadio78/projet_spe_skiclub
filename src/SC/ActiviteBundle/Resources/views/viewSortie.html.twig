@@ -5,9 +5,9 @@
 <ul>
  
     {% for sortie in listSortie %}
-       {{ sortie.dateSortie|date('Y-m-d H:i:s')  }} --- {{ sortie.lieu.nomLieu }}
+       {{ sortie.dateSortie  }} --- {{ sortie.lieu.nomLieu }}
        
-        <a href="{{ path('sc_activite_deleteSortie', {'id': activite.id}) }}?idSortie={{sortie.IdSortie }}" >
+        <a href="{{ path('sc_activite_deleteSortie', {'id': activite.id}) }}?date={{sortie.dateSortie}}" >
             Supprimer cette sortie
         </a>
         
