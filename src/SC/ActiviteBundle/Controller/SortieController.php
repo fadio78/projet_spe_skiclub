@@ -57,8 +57,6 @@ class SortieController extends Controller
                 //si le lieu est n'est pas gere par le manager, on l'ajoute 
                 $listLieu = $em->getRepository('SC\ActiviteBundle\Entity\Lieu')->findAll();
                 
-               // if ($this->dateExiste($id,$sortie) == false) {
-                
                     // on ne persist pas lieu il est deja dans la BD
                     foreach ($listLieu as $lieu) {
                         if ($lieu->getNomLieu() === $sortie->getLieu()->getNomLieu()) {
@@ -71,12 +69,7 @@ class SortieController extends Controller
                     
                     $em->persist($sortie->getLieu());
                     $em->flush();
-                    return $this->redirect($this->generateUrl('sc_activite_view', array('id' => $sortie->getActivite()->getId())));
-               /* }
-                else {
-                    throw new NotFoundHttpException("il y a deja une sortie prévue pour cette activité à cette date");
-                }*/
-                
+                    return $this->redirect($this->generateUrl('sc_activite_view', array('id' => $sortie->getActivite()->getId())));                
             } 
             return $this->render('SCActiviteBundle:Activite:add.html.twig', array(
                 'form' => $form->createView(),
