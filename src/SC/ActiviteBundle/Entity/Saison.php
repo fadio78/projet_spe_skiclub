@@ -21,7 +21,17 @@ class Saison
     private $annee;
     
     
+ 
+    /**
+     * @ORM\ManyToMany(targetEntity="SC\ActiviteBundle\Entity\Activite",cascade={"remove"})
+     * @ORM\JoinTable(name="activites_saisons",
+     *      joinColumns={@ORM\JoinColumn(name="annee", referencedColumnName="annee")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="id", referencedColumnName="id")}
+     *      )
+     **/
 
+    private $activites;
+    
 
     /**
      * Set annee
@@ -47,4 +57,44 @@ class Saison
     }
 
     
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->activites = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add activites
+     *
+     * @param \SC\ActiviteBundle\Entity\Activite $activites
+     * @return Saison
+     */
+    public function addActivite(\SC\ActiviteBundle\Entity\Activite $activite)
+    {
+        $this->activites[] = $activite;
+
+        return $this;
+    }
+
+    /**
+     * Remove activites
+     *
+     * @param \SC\ActiviteBundle\Entity\Activite $activites
+     */
+    public function removeActivite(\SC\ActiviteBundle\Entity\Activite $activite)
+    {
+        $this->activites->removeElement($activite);
+    }
+
+    /**
+     * Get activites
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getActivites()
+    {
+        return $this->activites;
+    }
 }
