@@ -81,7 +81,7 @@ class Activite
      private $saison;
      
     /**
-     * @ORM\ManyToOne(targetEntity="OC\PlatformBundle\Entity\PrixPayeActivite")
+     * @ORM\ManyToOne(targetEntity="SC\ActiviteBundle\Entity\PrixPayeActivite")
      * @ORM\JoinColumn(nullable=false)
      */
   
