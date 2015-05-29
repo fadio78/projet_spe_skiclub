@@ -12,15 +12,15 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Sortie
 {
-
+   
     /**
-     * @var string
+     * @var string    
      *
-     * @ORM\Column(name="dateSortie", type="string")
+     * @ORM\Column(name="dateSortie", type="string", length=255)
      * @ORM\Id
      */
     private $dateSortie;
-
+    
 
     /**
      * @ORM\ManyToOne(targetEntity="SC\ActiviteBundle\Entity\Lieu")
@@ -36,11 +36,14 @@ class Sortie
      */
     private $activite;
 
+
+    
+
     /**
      * Set dateSortie
      *
-     * @param \DateTime $dateSortie
-     * @return \DateTime
+     * @param string $dateSortie
+     * @return Sortie
      */
     public function setDateSortie($dateSortie)
     {
@@ -52,7 +55,7 @@ class Sortie
     /**
      * Get dateSortie
      *
-     * @return \DateTime
+     * @return string 
      */
     public function getDateSortie()
     {
@@ -62,12 +65,12 @@ class Sortie
     /**
      * Set lieu
      *
-     * @param Lieu $venue
+     * @param \SC\ActiviteBundle\Entity\Lieu $lieu
      * @return Sortie
      */
-    public function setLieu($venue)
+    public function setLieu(\SC\ActiviteBundle\Entity\Lieu $lieu)
     {
-        $this->lieu = $venue;
+        $this->lieu = $lieu;
 
         return $this;
     }
@@ -75,7 +78,7 @@ class Sortie
     /**
      * Get lieu
      *
-     * @return Lieu 
+     * @return \SC\ActiviteBundle\Entity\Lieu 
      */
     public function getLieu()
     {
@@ -85,12 +88,12 @@ class Sortie
     /**
      * Set activite
      *
-     * @param Activite $activity
+     * @param \SC\ActiviteBundle\Entity\Activite $activite
      * @return Sortie
      */
-    public function setActivite(Activite $activity)
+    public function setActivite(\SC\ActiviteBundle\Entity\Activite $activite)
     {
-        $this->activite = $activity;
+        $this->activite = $activite;
 
         return $this;
     }
@@ -98,11 +101,10 @@ class Sortie
     /**
      * Get activite
      *
-     * @return Activite 
+     * @return \SC\ActiviteBundle\Entity\Activite 
      */
     public function getActivite()
     {
         return $this->activite;
     }
 }
-

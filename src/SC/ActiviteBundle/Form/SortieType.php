@@ -7,7 +7,7 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Form\FormBuilderInterface;
 use SC\ActiviteBundle\Entity\Lieu;
 use SC\ActiviteBundle\Form\LieuType;
-
+use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 
 class SortieType extends AbstractType
 {
@@ -18,9 +18,12 @@ class SortieType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('dateSortie')
+            //->add($builder->create('dateSortie','datetime')->addViewTransformer(new DateTimeToStringTransformer())) 
+            //->add('dateSortie') 
+            ->add('dateSortie','datetime') 
             ->add('lieu', new LieuType())
             ->add('enregistrer','submit');
+                   
     }
     
     /**
@@ -29,7 +32,7 @@ class SortieType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'SC\ActiviteBundle\Entity\Sortie'
+            'data_class' => 'SC\ActiviteBundle\Entity\Sortie',
         ));
     }
 

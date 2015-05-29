@@ -21,12 +21,17 @@
     <br>
     </br>
     
-    <ul> Le prix de l'activité est: {{activite.prixActivite}} € <ul>
+    <ul> Le prix de l'activité est: {{activite.prixActivite}} € </ul>
+    
+    {% if activite.licence  != null %}
+    <ul> Le type de la licence est: {{activite.licence.typeLicence}} et son prix est: {{activite.licence.prixLicence}} €  </ul>
+    {% endif %}
   <p>
     <a href="{{ path('sc_activite_homepage') }}" class="btn btn-default">
       <i class="glyphicon glyphicon-chevron-left"></i>
       Retour à la liste
     </a>
+    {% if app.session.get('type') =="admin" %}
     <a href="{{ path('sc_activite_edit', {'id': activite.id}) }}" class="btn btn-default">
       <i class="glyphicon glyphicon-edit"></i>
       Modifier l'activité
@@ -44,5 +49,10 @@
       <i class="glyphicon glyphicon-edit"></i>
       Sortie prévues
     </a> 
+      
+    {% endif %}
+    
   </p>
 {% endblock %} 
+
+

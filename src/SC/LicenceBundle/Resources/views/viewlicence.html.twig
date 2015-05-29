@@ -5,7 +5,7 @@
 {% endblock %}
 {% block licence_body %}
     
-      
+  {% if app.session.get('type') =="admin" %}    
   <p>
     {# On affiche tous les messages flash dont le nom est « info » #}
       {% for message in app.session.flashbag.get('info') %}
@@ -36,4 +36,6 @@
       Supprimer la licence
     </a>
   </p>
+  
+  {% endif %}
 {% endblock %} 

@@ -3,18 +3,11 @@
 {% block title %}{{ parent() }} - Index{% endblock %}
 {% block licence_body %}
     
-    
-<p>
-    {# On affiche tous les messages flash dont le nom est « info » #}
-      {% for message in app.session.flashbag.get('info') %}
-        <p>{{ message }}</p>
-      {% endfor %}
-</p>
-  
-  
+
+    {% if app.session.get('type') =="admin" %}
   
 <ul>
- 
+    
     {% for licence in listeLicences %}
          <a href="{{ path('sc_licence_view', {'typeLicence': licence.typeLicence}) }}">
           {{ licence.typeLicence }}
@@ -35,6 +28,8 @@
       Voir la liste des activités
     </a>
 </ul>
+    
+    {% endif %}
 
 
 
