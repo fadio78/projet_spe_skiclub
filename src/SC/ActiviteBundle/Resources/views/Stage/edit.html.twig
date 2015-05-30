@@ -1,0 +1,27 @@
+{# src/SC/ActiviteBundle/Resources/views/Activite/edit.html.twig #}
+{% extends "SCActiviteBundle:Activite:layout.html.twig" %}
+{% block title %}
+  Modifier une activité - {{ parent() }}
+{% endblock %}
+
+{% block activité_body %}
+    
+    
+  {% if type == "admin" %}
+  <p> Si la licence de l'activité n'existe pas ci-dessous veuillez d'abord la créer </p> 
+   <a href="{{('sc_licence_add')}}">
+     créer licence
+   </a>
+     
+  
+  {{ include("SCActiviteBundle:Activite:form.html.twig") }}
+
+  <p>
+    <a href="{{ path('sc_activite_view', {'id': activite.id}) }}" class="btn btn-default">
+      <i class="glyphicon glyphicon-chevron-left"></i>
+      Retour à l'activite
+    </a>
+  </p>
+  {% endif %}
+  
+{% endblock %} 
