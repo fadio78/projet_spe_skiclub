@@ -12,7 +12,12 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Sortie
 {
-   
+    /*
+     * @ORM\ManyToMany(targetEntity="SC\UserBundle\Entity\Enfant",mappedBy="sorties")
+     * 
+     
+    private $enfants;    
+    */
     /**
      * @var string    
      *
@@ -36,9 +41,20 @@ class Sortie
      */
     private $activite;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="SC\UserBundle\Entity\User")
+     * @ORM\JoinColumn(nullable=false, name="email", referencedColumnName="email")
+     * 
+     */
+    private $user;
 
-    
-
+    /**
+     * @ORM\ManyToOne(targetEntity="SC\ActiviteBundle\Entity\Saison")
+     * @ORM\JoinColumn(nullable=false, name="annee", referencedColumnName="annee")
+     * @ORM\Id
+     */
+    private $saison;    
+       
     /**
      * Set dateSortie
      *
@@ -107,4 +123,52 @@ class Sortie
     {
         return $this->activite;
     }
+
+    /**
+     * Set User
+     *
+     * @param \SC\UserBundle\Entity\User $user
+     * @return Sortie
+     */
+    public function setUser(\SC\UserBundle\Entity\User $user)
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * Get User
+     *
+     * @return \SC\UserBundle\Entity\User 
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * Set saison
+     *
+     * @param \SC\ActiviteBundle\Entity\Saison $saison
+     * @return Sortie
+     */
+    public function setSaison(\SC\ActiviteBundle\Entity\Saison $saison)
+    {
+        $this->saison = $saison;
+
+        return $this;
+    }
+
+    /**
+     * Get saison
+     *
+     * @return \SC\ActiviteBundle\Entity\Saison 
+     */
+    public function getSaison()
+    {
+        return $this->saison;
+    }
+    
+  
 }

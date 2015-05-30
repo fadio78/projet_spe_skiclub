@@ -17,6 +17,8 @@ use SC\UserBundle\Entity\User;
 use SC\UserBundle\Entity\Licence;
 use SC\ActiviteBundle\Entity\Sortie;
 use SC\ActiviteBundle\Entity\Lieu;
+use SC\ActiviteBundle\Entity\Saison;
+use SC\ActiviteBundle\Entity\SaisonRepository;
 
 
 
@@ -25,6 +27,22 @@ class ActiviteController extends Controller
     
     public function indexAction(Request $request)
     {
+        $em = $this -> getDoctrine() ->getManager();
+        $season = new Saison;
+        $year = $season->connaitreSaison();
+        $request->getSession()->set('year', $year);
+        unset($season);
+        $saison = $em -> getRepository('SCActiviteBundle:Saison') -> find($year);
+        
+        if (null === $saison) {
+            $saison = new Saison();
+            $saison->setAnnee($year);
+            $em->persist($saison);
+            $em->flush();
+        }
+
+     
+     
     // On ne sait pas combien de pages il y a
     // Mais on sait qu'une page doit être supérieure ou égale à 1
        /*if ($page < 1) {
@@ -33,15 +51,13 @@ class ActiviteController extends Controller
             throw new NotFoundHttpException('Page "'.$page.'" inexistante.');
         } */
       // Ici, on récupérera la liste des activités, puis on la passera au template
-        $repository = $this
-          ->getDoctrine()
-          ->getManager()
-          ->getRepository('SCActiviteBundle:Activite');
+        $repository = $em ->getRepository('SCActiviteBundle:Activite');
         $listeActivites = $repository->findAll();  
         $session = $request->getSession();
         $type = $session->get('type');
         
-        return $this->render('SCActiviteBundle:Activite:index.html.twig',array('listeActivites' => $listeActivites,'type' => $type ));
+        return $this->render('SCActiviteBundle:Activite:index.html.twig',array('listeActivites' => $listeActivites,'type' => $type, 'year' =>$year
+        ));
     }
     
     
@@ -75,6 +91,11 @@ class ActiviteController extends Controller
         $session = $request->getSession();
         $email = $session->get('email');
         $type=$session->get('type');
+
+        $season = new Saison;
+        $year = $season->connaitreSaison();
+        unset($season);
+
         if ($type == "admin") {
             $user = $this->getDoctrine()->getManager()->getRepository('SC\UserBundle\Entity\User')->find($email);
             // On crée un objet Activite
@@ -86,6 +107,8 @@ class ActiviteController extends Controller
             $form->handleRequest($request);
             // On vérifie que les valeurs entrées sont correctes
             if ($form->isValid()) {
+                $saison = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Saison')->find($year);
+                $saison -> addActivite($activite);
             // On l'enregistre notre objet $activite dans la base de données, par exemple
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($activite);
@@ -102,7 +125,7 @@ class ActiviteController extends Controller
         }
     } 
   
-  
+ 
   
  
 
@@ -138,12 +161,15 @@ class ActiviteController extends Controller
   
     public function deleteAction($id,Request $request)
     {
+        
+        $season = new Saison;
+        $year = $season->connaitreSaison();
+        unset($season);
         $session = $request->getSession();
         $type=$session->get('type');
-        //on recupere l'entity managere 
         $em = $this->getDoctrine()->getManager();
         $repository = $em->getRepository('SCActiviteBundle:Activite');
-        //on recupere l'activite
+ 
         $activite = $repository->find($id);
         
         //si n'existe pas -> message d'erreur
@@ -154,10 +180,12 @@ class ActiviteController extends Controller
             return $response;          
         }
         else {
+            $saison = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Saison')->find($year);
+            $saison -> removeActivite($activite);
             $em->remove($activite);
             $em->flush();
             $listeActivites = $em->getRepository('SCActiviteBundle:Activite')->findAll();
-            return $this->render('SCActiviteBundle:Activite:index.html.twig', array('listeActivites' => $listeActivites,'type' =>$type));
+            return $this->render('SCActiviteBundle:Activite:index.html.twig', array('listeActivites' => $listeActivites,'type' =>$type,'year' => $year));
         }    
     }
 
@@ -186,6 +214,5 @@ class ActiviteController extends Controller
             return $this->render('SCActiviteBundle:Activite:add.html.twig', array(
             'form' => $form->createView(),
             ));
-    } 
-
+    }
 }

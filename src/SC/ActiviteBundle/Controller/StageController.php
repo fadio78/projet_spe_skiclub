@@ -37,6 +37,21 @@ class StageController extends Controller {
         return $this->render('SCActiviteBundle:Stage:index.html.twig',array('listeStages' => $listeStages ));
     }
     
+        public function viewAction($id) {
+            
+            $activite = $this->GetDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Activite')->find($id);
+	
+            if(is_null($activite) == false) {
+                // on recupere tous les stages
+                $listeStages = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Stage')->findAll();
+                return $this->render('SCActiviteBundle:Stage:view.html.twig', array('listeStages' => $listeStages, 'activite' => $activite));
+            } else {
+                $response = new Response;
+                $response->setContent("Error 404: not found");
+                $response->setStatusCode(Response::HTTP_NOT_FOUND);
+                return $response;
+            }
+        }
     
     public function addAction($id,Request $request) {
         
@@ -52,8 +67,37 @@ class StageController extends Controller {
             // On vérifie que les valeurs entrées sont correctes
             if ($form->isValid()) {
                 
+                $debut = $stage->getDebutStage();
+                $fin = $stage->getFinStage();
+                // On cast les dates : datetime -> String
+                $stringDebut = $debut->format('Y').'-'.$debut->format('m').'-'.
+                        $debut->format('d');
+                $stringFin = $fin->format('Y').'-'.$fin->format('m').'-'.
+                        $fin->format('d');
+                $stage->setDebutStage($stringDebut);
+                $stage->setFinStage($stringFin);
+                
+                // On vérifie que le stage n'existe pas déjà dans la BD
                 $em = $this->getDoctrine()->getManager();
-                $em->persist($stage);                
+                $listeStages = $em->getRepository('SC\ActiviteBundle\Entity\Stage')->findAll();
+                foreach($listeStages as $stageSeul) {
+                    if ($stage->getActivite()->getId() == $stageSeul->getActivite()->getId()
+                            && $stage->getDebutStage() == $stageSeul->getDebutStage()
+                            && $stage->getFinStage() == $stageSeul->getFinStage()) {
+                        $request->getSession()->getFlashBag()->add('info','Le stage existe déjà !');
+                        return $this->redirect($this->generateUrl('sc_activite_addStage', array('id' => $activite->getId())));
+                    }
+                }
+                
+                // On récupère l'email de l'utilisateur en question
+                $email = $request->getSession()->get('email');
+                // On récupère l'utilisateur grâce à son email
+                $user = $this->getDoctrine()->getManager()->getRepository('SC\UserBundle\Entity\User')->find($email);
+                // On met l'utilisateur dans $stage
+                $stage->setUser($user);
+                
+                $em->persist($stage);
+                
                 //si le lieu est n'est pas gere par le manager, on l'ajoute a la base
                 $listLieu = $em->getRepository('SC\ActiviteBundle\Entity\Lieu')->findAll();
                 $listeSaison = $em->getRepository('SC\ActiviteBundle\Entity\Saison')->findAll();
@@ -77,19 +121,19 @@ class StageController extends Controller {
                         $booleanSaison = true;
                     }
                 }
-                
-                if (booleanLieu == false) {
+                // Si le lieu n'existe pas , on le crée
+                if ($booleanLieu === false) {                
                     // on persist lieu car il n'est pas dans la base
                     $em->persist($stage->getLieu());
                 }
-                if (booleanSaison == false) {
+                // Si la saison n'existe pas, on la crée
+                if ($booleanSaison === false) {
                     // on persist saison car il n'est pas dans la base
                     $em->persist($stage->getSaison());
                 }
                 
                 $em->flush();
-                $listeStages = $em->getRepository('SC\ActiviteBundle\Entity\Stage')->findAll();
-                return $this->redirect($this->generateUrl('sc_activite_viewsStage', 
+                return $this->redirect($this->generateUrl('sc_activite_viewStage', 
                         array('id' => $stage->getActivite()->getId(), 'listeStages' => $listeStages)));
             }
                 return $this->render('SCActiviteBundle:Stage:add.html.twig', array(
@@ -100,25 +144,40 @@ class StageController extends Controller {
                 $response = new Response;
                 $response->setContent("Error 404: not found");
                 $response->setStatusCode(Response::HTTP_NOT_FOUND);
-                return $response;                
+                return $response;
         }
     }
     
-    public function viewAction($id) {
-     
-        $activite = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Activite')->find($id);   
+    public function deleteAction($id, $debutStage, $finStage, Request $request) {
         
-        if (is_null($activite)==false) {
-            
-            //on recupere tous les stages
-            $listeStages = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Stage')->findAll();
-            return $this->render('SCActiviteBundle:Stage:view.html.twig',array('listeStages' => $listeStages, 'activite' => $activite ));
+        // on verifie que les parametres sont bons
+        if (isset($id) == false || isset($debutStage) == false || isset($finStage) == false ) {
+           $response = new Response;
+           $response->setContent("Error 404: not found");
+           $response->setStatusCode(Response::HTTP_NOT_FOUND);
+           return $response; 
+        }
+        $em = $this->getDoctrine()->getManager();
+        $activite = $em->getRepository('SC\ActiviteBundle\Entity\Activite')->find($id);
+        $stage = $em->getRepository('SC\ActiviteBundle\Entity\Stage')
+                ->findOneBy(array('activite' =>  $activite, 'debutStage'=> $debutStage,
+                    'finStage'=>$finStage));
         
+        if (isset($stage) == FALSE) {
+            $listeStages = $em->getRepository('SC\ActiviteBundle\Entity\Stage')->findAll();
+            return $this->render('SCActiviteBundle:Stage:view.html.twig',array('listeStage' => $listeStages, 'activite' => $activite ));            
         }
         else {
-            throw new NotFoundHttpException("L'activité d'id ".$id." n'existe pas.");
+            $request->getSession()->getFlashBag()->add('info', 'Le stage a bien été supprimé, et un mail a été envoyé aux personnes inscrites');
+            //envoyer les emails aux utilisateurs inscrits
+            $em->remove($stage);
+            $em->flush();
+            $listeStages = $em->getRepository('SC\ActiviteBundle\Entity\Stage')->findAll();
+            if ($listeStages == null) {
+                $request->getSession()->getFlashBag()->add('info', 'Il n\'y a pas de stage pour cette activité');
+            }
+            return $this->render('SCActiviteBundle:Stage:view.html.twig',array('listeStages' => $listeStages, 'activite' => $activite ));
         }
-  
     }
     
 }

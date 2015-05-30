@@ -12,8 +12,12 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Enfant
 {
-    
-
+    /*
+     * @ORM\ManyToMany(targetEntity="SC\ActiviteBundle\Entity\Sortie",inversedBy="enfants")
+     * 
+     
+    private $sorties;      
+    */
     /**
     * @ORM\ManyToOne(targetEntity="SC\UserBundle\Entity\User")
     * @ORM\JoinColumn(nullable=false, name="email", referencedColumnName="email")
@@ -169,4 +173,5 @@ class Enfant
     {
         return $this->userParent;
     }
+
 }
