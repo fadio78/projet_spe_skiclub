@@ -80,9 +80,10 @@ class SortieController extends Controller
                 ));
         }
         else {
-            throw new NotFoundHttpException("Cette activité n'existe pas");               
+            return $this->pageErreur("l'activité demandée n'existe pas");               
         }
     }
+    
     // teste si la date existe deja dans la BD
     // return true si la date est dans la BD, false sinon
     public function dateExiste($date) {
@@ -140,6 +141,7 @@ class SortieController extends Controller
             //envoyer les emails aux utilisateurs inscrits
             $em->remove($sortie);
             $em->flush();
+            $request->getSession()->getFlashBag()->add('info', 'La sortie a bien été supprimée, et un mail a été envoyé aux personnes inscrites');
             $listSortie = $em->getRepository('SC\ActiviteBundle\Entity\Sortie')->findAll();
             return $this->render('SCActiviteBundle::viewSortie.html.twig',array('listSortie' => $listSortie, 'activite' => $activite ));
         }

@@ -4,6 +4,10 @@
 {% block activité_body %}
 <ul>
  
+    {% for message in app.session.flashbag.get('info') %}
+        <p>{{ message }}</p>
+    {% endfor %}
+    
     {% for sortie in listSortie %}
        {{ sortie.dateSortie  }} --- {{ sortie.lieu.nomLieu }}
        

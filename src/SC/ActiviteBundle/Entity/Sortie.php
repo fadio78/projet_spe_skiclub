@@ -12,7 +12,12 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Sortie
 {
-   
+    /*
+     * @ORM\ManyToMany(targetEntity="SC\UserBundle\Entity\Enfant",mappedBy="sorties")
+     * 
+     
+    private $enfants;    
+    */
     /**
      * @var string    
      *
@@ -49,7 +54,7 @@ class Sortie
      * @ORM\Id
      */
     private $saison;    
-
+       
     /**
      * Set dateSortie
      *
@@ -164,4 +169,6 @@ class Sortie
     {
         return $this->saison;
     }
+    
+  
 }
