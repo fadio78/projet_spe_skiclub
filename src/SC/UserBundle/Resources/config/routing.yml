@@ -22,3 +22,13 @@ sc_enfant_ajouter:
 sc_admin_homepage:
     path:     /admin
     defaults: { _controller: SCUserBundle:Admin:index }
+    
+sc_admin_listUsers:
+    path:     /admin/listUsers
+    defaults: { _controller: SCUserBundle:Admin:listUsers }
+
+sc_admin_activerCompte:
+    path:     /admin/activationCompte/{email}
+    defaults: { _controller: SCUserBundle:Admin:activerCompte }
+    requirements : 
+        email : "[^/]+"

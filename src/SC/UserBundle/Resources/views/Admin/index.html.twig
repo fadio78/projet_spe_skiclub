@@ -1,0 +1,13 @@
+{# src/SC/UserBundle/Resources/views/Admin/index.html.twig #}
+
+{% extends "SCUserBundle::layout.html.twig" %}
+
+
+{% block user_body %}
+
+    
+    <h2><a href="{{ path('sc_activite_add') }}">Ajouter une activite</a><h2/>
+    <h2><a href="{{ path('sc_admin_listUsers') }}">Liste des utilisateurs </a><h2/>
+    
+    
+{% endblock %}
