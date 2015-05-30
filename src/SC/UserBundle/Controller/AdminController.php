@@ -24,13 +24,26 @@ class AdminController extends Controller
           ->getDoctrine()
           ->getManager()
           ->getRepository('SCUserBundle:User');
-          $listUsers = $repository->findAll(); 
+           
           $listUsersInactif = $repository->compteInactif();
         
         return $this->render('SCUserBundle:Admin:listUsersInactif.html.twig',
-                array('listUsers' => $listUsers,
-                      'listUsersInactif'=>$listUsersInactif
-                )
+                array('listUsersInactif'=>$listUsersInactif )
+                );
+        
+        
+    }
+        public function listNoAdminAction(Request $request)
+    {
+        $repository = $this
+          ->getDoctrine()
+          ->getManager()
+          ->getRepository('SCUserBundle:User');
+           
+          $listNoAdmin = $repository->noAdmin();
+        
+        return $this->render('SCUserBundle:Admin:listNoAdmin.html.twig',
+                array('listNoAdmin'=>$listNoAdmin )
                 );
         
         
@@ -49,7 +62,19 @@ class AdminController extends Controller
         
     }
 
-    
+           public function activerAdminAction(Request $request, $email)
+    {
+        $repository = $this
+          ->getDoctrine()
+          ->getManager()
+          ->getRepository('SCUserBundle:User');
+           
+           $repository->activerAdmin($email);
+        $request->getSession()->getFlashBag()->add('info', 'new Admin ! ');
+        return $this->redirect($this->generateUrl('sc_admin_listNoAdmin'));
+        
+        
+    } 
     
     
     

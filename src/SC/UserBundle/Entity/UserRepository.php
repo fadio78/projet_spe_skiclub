@@ -94,7 +94,30 @@ class UserRepository extends EntityRepository implements UserProviderInterface
   
       
     }
+   // Permet de récuperer les adresse non active  
+    public function noAdmin()
+    {
+        $qb = $this->createQueryBuilder('a');
+
+        $qb->where('a.type = :type')
+            ->setParameter('type', 'client')            
+        ;
+
+        return $qb
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+        //permet de rendre un client admin
+        public function activerAdmin($email)
+    {
+      $query = $this->_em->createQuery('UPDATE SCUserBundle:User a SET a.type = :admin where a.email = :email ')
+                       ->setParameter('email', $email)
+                       ->setParameter('admin', 'admin');
+       $query->execute();
   
+      
+    }
   
   
 }
