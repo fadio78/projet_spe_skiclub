@@ -21,6 +21,7 @@ use SC\ActiviteBundle\Entity\Saison;
 use SC\ActiviteBundle\Entity\SaisonRepository;
 use SC\ActiviteBundle\Entity\InscriptionActivite;
 use SC\UserBundle\Entity\Enfant;
+use Doctrine\ORM\EntityRepository;
 
 
 
@@ -95,10 +96,6 @@ class ActiviteController extends Controller
         // On fait le lien Requête <-> Formulaire
         // À partir de maintenant, la variable $activite contient les valeurs entrées dans le formulaire par l'e visiteur l'admin
         $form->handleRequest($request);
-        // On vérifie que les valeurs entrées sont correctes
-        if ($form->isValid()) {
-            $saison = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Saison')->find($year);
-            $saison -> addActivite($activite);
 
 
         $season = new Saison;
@@ -133,7 +130,7 @@ class ActiviteController extends Controller
         return $this->render('SCActiviteBundle:Activite:add.html.twig', array('form' => $form->createView()
         ));
         
-        } 
+         
     
     }
   
@@ -245,7 +242,7 @@ class ActiviteController extends Controller
         }
     }
     
-    /*
+    
     public function inscriptionActiviteAction($id,Request $request) 
     {
         $em = $this->getDoctrine()->getManager();
@@ -262,15 +259,18 @@ class ActiviteController extends Controller
         $inscriptionActivite -> setSaison($saison);
     
         $enfant = new Enfant ();
-        $form = $this->get('form.factory')->createBuilder('form', $enfant)
-          ->add('prenomEnfant', 'entity', array('class'=> 'SCUserBundle:Enfant','property' => 'PrenomEnfant','query_builder' => function(EntityRepository $er) {
-        return $er->createQueryBuilder('e')
-          ->orderBy('u.username', 'ASC')},
-          'multiple' => false,'expanded' => false,'required' => true))
+        $repository = $em->getRepository('SC\UserBundle\Entity\Enfant') ;
+        $form = $this->get('form.factory')->createBuilder('form', $inscriptionActivite)
+        
+          ->add('prenomEnfant', 'entity', array('class'=> 'SCUserBundle:Enfant','property' => 'PrenomEnfant',$repository ->
+            findby(['userParent' => $email]),
+    
+
+         ))
           ->add('enregistrer','submit')
           ->getForm();
 
-        // On fait le lien Requête <-> Formulaire
+      // On fait le lien Requête <-> Formulaire
         // À partir de maintenant, la variable $activite contient les valeurs entrées dans le formulaire par le visiteur
         $form->handleRequest($request);
         // On vérifie que les valeurs entrées sont correctes
@@ -280,7 +280,7 @@ class ActiviteController extends Controller
              //$prenomEnfant = $inscriptionActivite -> getPrenomEnfant();
              //$nomEnfant = $inscriptionActivite ->getNomEnfant();
              
-             $enfant=$em->getRepository('SC\ActiviteBundle\Entity\Activite')->find(array('email' => $email, 'prenomEnfant' => $prenomEnfant, 'nomEnfant' => $nomEnfant));
+             //$enfant=$em->getRepository('SC\ActiviteBundle\Entity\Activite')->find(array('email' => $email, 'prenomEnfant' => $prenomEnfant, 'nomEnfant' => $nomEnfant));
              $inscriptionActivite ->setPrenomEnfant($enfant);
              $inscriptionActivite ->setNomEnfant($enfant);
              $inscriptionActivite ->setEmail($enfant);
@@ -297,7 +297,7 @@ class ActiviteController extends Controller
         
         
     }
-    */
+    
     
 
 }
