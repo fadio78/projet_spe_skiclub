@@ -10,11 +10,15 @@
     
     {% for sortie in listSortie %}
        {{ sortie.dateSortie  }} --- {{ sortie.lieu.nomLieu }}
-       
-        <a href="{{ path('sc_activite_deleteSortie', {'id': activite.id}) }}?date={{sortie.dateSortie}}" >
-            Supprimer cette sortie
-        </a>
-        
+       {% if is_granted('ROLE_ADMIN') %}
+            <a href="{{ path('sc_activite_deleteSortie', {'id': activite.id}) }}?date={{sortie.dateSortie}}" >
+                Supprimer cette sortie
+            </a>
+        {%else%}
+            <a href="{{ path('sc_activite_deleteSortie', {'id': activite.id}) }}?date={{sortie.dateSortie}}" >
+                Inscrire un enfant
+            </a>  
+        {%endif%}
         <br/>    
     {% endfor %}    
 </ul> 
