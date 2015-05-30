@@ -89,7 +89,7 @@ class ActiviteController extends Controller
         $email = $session->get('email');
         $type=$session->get('type');
         $date = new \Datetime;
-        $year = $date ->format('Y');
+        $year = $date ->format('Y') - 1;
         if ($type == "admin") {
             $user = $this->getDoctrine()->getManager()->getRepository('SC\UserBundle\Entity\User')->find($email);
             // On crée un objet Activite
