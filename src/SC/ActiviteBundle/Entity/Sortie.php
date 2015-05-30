@@ -12,12 +12,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Sortie
 {
-    /*
-     * @ORM\ManyToMany(targetEntity="SC\UserBundle\Entity\Enfant",mappedBy="sorties")
-     * 
-     
-    private $enfants;    
-    */
+ 
+    
     /**
      * @var string    
      *
