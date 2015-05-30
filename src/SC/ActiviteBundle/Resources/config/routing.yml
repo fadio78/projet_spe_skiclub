@@ -60,5 +60,13 @@ sc_activite_deleteStage:
     defaults:  { _controller: SCActiviteBundle:Stage:delete}
     requirements:
         id: \d+
-        debutStage: "[a-zA-Z0-9-]+"
-        finStage: "[a-zA-Z0-9-]+"
+        debutStage: "[0-9-]+"
+        finStage: "[0-9-]+"
+        
+sc_activite_editStage:
+    path:      /editStage/{id}/{debutStage}/{finStage}
+    defaults:  { _controller: SCActiviteBundle:Stage:edit}
+    requirements:
+        id: \d+
+        debutStage: "[0-9-]+"
+        finStage: "[0-9-]+"
