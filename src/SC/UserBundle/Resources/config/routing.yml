@@ -32,3 +32,15 @@ sc_admin_activerCompte:
     defaults: { _controller: SCUserBundle:Admin:activerCompte }
     requirements : 
         email : "[^/]+"
+        
+        
+sc_admin_listNoAdmin:
+    path:     /admin/listNoAdmin
+    defaults: { _controller: SCUserBundle:Admin:listNoAdmin }
+    
+    
+sc_admin_activerAdmin:
+    path:     /admin/activationAdmin/{email}
+    defaults: { _controller: SCUserBundle:Admin:activerAdmin }
+    requirements : 
+        email : "[^/]+"

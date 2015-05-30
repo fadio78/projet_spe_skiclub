@@ -70,3 +70,9 @@ sc_activite_editStage:
         id: \d+
         debutStage: "[0-9-]+"
         finStage: "[0-9-]+"
+
+sc_activite_inscriptionActivite:
+    path:      /inscriptionActivite/{id}
+    defaults:  { _controller: SCActiviteBundle:Activite:inscriptionActivite }
+    requirements:
+        id: \d+
