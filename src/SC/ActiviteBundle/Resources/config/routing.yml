@@ -62,3 +62,8 @@ sc_activite_deleteStage:
         id: \d+
         debutStage: \w+
         finStage: \w+
+sc_activite_inscriptionActivite:
+    path:      /inscriptionActivite/{id}
+    defaults:  { _controller: SCActiviteBundle:Activite:inscriptionActivite }
+    requirements:
+        id: \d+

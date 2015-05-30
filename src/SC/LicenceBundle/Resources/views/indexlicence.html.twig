@@ -4,7 +4,7 @@
 {% block licence_body %}
     
 
-    {% if app.session.get('type') =="admin" %}
+    {% if is_granted('ROLE_ADMIN') %}
   
 <ul>
     
