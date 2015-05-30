@@ -140,21 +140,7 @@ class SortieController extends Controller
             return $this->render('SCActiviteBundle::viewSortie.html.twig',array('listSortie' => $listSortie, 'activite' => $activite ));
         }
     }
-    
-    public function connaitreSaison() {
-        $date = new \DateTime();
-        $annee = $date->format('Y');
-        $mois = $date->format('m');
-        $jour = $date->format('d');
-        
-        if ($mois > 8) {
-            return $annee;
-        }
-        else {
-            return $annee-1;
-        }
-    }
-    
+     
     public function getAdmin(Request $request) {
         
         $users = $this->getDoctrine()->getManager()->getRepository('SC\UserBundle\Entity\User')->findAll();

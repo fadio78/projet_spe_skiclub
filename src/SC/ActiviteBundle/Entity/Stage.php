@@ -20,7 +20,7 @@ class Stage
     private $activite;
 
     /**
-     * @var \DateTime
+     * @var string
      *
      * @ORM\Column(name="debutStage", type="string", length=255)
      * @ORM\Id
@@ -28,7 +28,7 @@ class Stage
     private $debutStage;
 
     /**
-     * @var \DateTime
+     * @var string
      *
      * @ORM\Column(name="finStage", type="string", length=255)
      * @ORM\Id
@@ -45,7 +45,7 @@ class Stage
     /**
      * @var string
      *
-     * @ORM\Column(name="description", type="string", length=255)
+     * @ORM\Column(nullable=true, name="description", type="text")
      */
     private $description;
 
@@ -62,17 +62,24 @@ class Stage
      * @ORM\Column(name="charges", type="integer")
      */
     private $charges;
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="SC\UserBundle\Entity\User")
+     * @ORM\JoinColumn(nullable=false, name="email",referencedColumnName="email")
+     * 
+     */
+    private $user;
 
     /**
      * 
-     * @ORM\OneToOne(targetEntity="SC\ActiviteBundle\Entity\Lieu")
-     * @ORM\JoinColumn(nullable=false, name="nomLieu", referencedColumnName="nomLieu",onDelete="CASCADE")
+     * @ORM\ManyToOne(targetEntity="SC\ActiviteBundle\Entity\Lieu")
+     * @ORM\JoinColumn(nullable=false, name="nomLieu", referencedColumnName="nomLieu")
      */
     private $lieu;
 
     /**
      * 
-     * @ORM\OneToOne(targetEntity="SC\ActiviteBundle\Entity\Saison")
+     * @ORM\ManyToOne(targetEntity="SC\ActiviteBundle\Entity\Saison")
      * @ORM\JoinColumn(nullable=false, name="annee", referencedColumnName="annee")
      */
     private $saison;
@@ -81,7 +88,7 @@ class Stage
     /**
      * Set debutStage
      *
-     * @param \DateTime $debutStage
+     * @param string $debutStage
      * @return Stage
      */
     public function setDebutStage($debutStage)
@@ -94,7 +101,7 @@ class Stage
     /**
      * Get debutStage
      *
-     * @return \DateTime
+     * @return string
      */
     public function getDebutStage()
     {
@@ -104,7 +111,7 @@ class Stage
     /**
      * Set finStage
      *
-     * @param \DateTime $finStage
+     * @param string $finStage
      * @return Stage
      */
     public function setFinStage($finStage)
@@ -117,7 +124,7 @@ class Stage
     /**
      * Get finStage
      *
-     * @return \DateTime
+     * @return string
      */
     public function getFinStage()
     {
@@ -285,4 +292,27 @@ class Stage
         return $this->activite;
     }
 
+        /**
+     * Set user
+     *
+     * @param \SC\UserBundle\Entity\User $user
+     * @return Activite
+     */
+    public function setUser(\SC\UserBundle\Entity\User $user)
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * Get user
+     *
+     * @return \SC\UserBundle\Entity\User 
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+    
 }
