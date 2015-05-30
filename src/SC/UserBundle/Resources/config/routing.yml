@@ -23,9 +23,9 @@ sc_admin_homepage:
     path:     /admin
     defaults: { _controller: SCUserBundle:Admin:index }
     
-sc_admin_listUsers:
-    path:     /admin/listUsers
-    defaults: { _controller: SCUserBundle:Admin:listUsers }
+sc_admin_listUsersInactif:
+    path:     /admin/listUsersInactif
+    defaults: { _controller: SCUserBundle:Admin:listUsersInactif }
 
 sc_admin_activerCompte:
     path:     /admin/activationCompte/{email}

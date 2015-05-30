@@ -92,14 +92,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
                        ->setParameter('email', $email);
        $query->execute();
   
-      /* $qb = $this->em->createQueryBuilder();
-       $q = $qb->update('UPDATE SCUserBundle:User ', 'a')
-        ->set('a.isActive', '?1')
-        ->where('a.email = ?3')
-        ->setParameter(1, false)
-        ->setParameter(3, $email)
-        ->getQuery();
-        $p = $q->execute();   */  
+      
     }
   
   

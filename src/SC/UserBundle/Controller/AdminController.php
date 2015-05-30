@@ -18,7 +18,7 @@ class AdminController extends Controller
         
         
     }
-    public function listUsersAction(Request $request)
+    public function listUsersInactifAction(Request $request)
     {
         $repository = $this
           ->getDoctrine()
@@ -27,7 +27,7 @@ class AdminController extends Controller
           $listUsers = $repository->findAll(); 
           $listUsersInactif = $repository->compteInactif();
         
-        return $this->render('SCUserBundle:Admin:listUsers.html.twig',
+        return $this->render('SCUserBundle:Admin:listUsersInactif.html.twig',
                 array('listUsers' => $listUsers,
                       'listUsersInactif'=>$listUsersInactif
                 )
@@ -44,7 +44,7 @@ class AdminController extends Controller
            
            $repository->activerCompte($email);
         $request->getSession()->getFlashBag()->add('info', 'Compte bien activité ');
-        return $this->redirect($this->generateUrl('sc_admin_listUsers'));
+        return $this->redirect($this->generateUrl('sc_admin_listUsersInactif'));
         
         
     }
