@@ -1,0 +1,49 @@
+{# src/SC/UserBundle/Resources/views/Admin/listUsers.html.twig #}
+
+{% extends "SCUserBundle::layout.html.twig" %}
+
+
+{% block user_body %}
+
+    
+    <table>
+        <tr>
+        <td>  e-mail </td>  
+        <td>  nom </td>
+        <td>  prenom </td>
+        <td>  telephone </td>
+        <td>  isActive </td>
+        <td>  type </td>
+        <td>  Devenir Admin </td>
+        
+        
+        </tr>
+    {% for user in listNoAdmin %}
+        
+        <tr>
+        <td>  {{ user.email }}     </td>  
+        <td>  {{ user.nom }}       </td>
+        <td>  {{ user.prenom }}    </td>
+        <td>  {{ user.telephone}}  </td>
+        <td>  {{ user.isActive }}  </td>
+        <td>  {{ user.type }}  </td>
+        <td>   <a href="{{ path('sc_admin_activerAdmin', {'email': user.email}) }}" class="btn btn-default">
+      <i class="glyphicon glyphicon-edit"></i>
+      rendre Admin
+    </a> </td>
+        </tr>  
+         
+        
+    {% endfor %}
+    </table> 
+    
+    <h3><p>
+     {# On affiche tous les messages flash dont le nom est « info » #}
+      {% for message in app.session.flashbag.get('info') %}
+        <p>{{ message }}</p>
+      {% endfor %}
+       </p>
+      </h3>
+    
+    
+{% endblock %}
