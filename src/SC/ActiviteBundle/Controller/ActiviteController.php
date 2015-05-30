@@ -30,7 +30,10 @@ class ActiviteController extends Controller
     public function indexAction(Request $request)
     {
         $em = $this -> getDoctrine() ->getManager();
-        $year = $this->connaitreSaison();
+        $season = new Saison;
+        $year = $season->connaitreSaison();
+        $request->getSession()->set('year', $year);
+        unset($season);
         $saison = $em -> getRepository('SCActiviteBundle:Saison') -> find($year);
         
         if (null === $saison) {
@@ -83,7 +86,7 @@ class ActiviteController extends Controller
         // On récupère à partir de la session l'utilisateur
         $session = $request->getSession();
         $email = $session->get('email');
-        $year = $this->connaitreSaison();
+
         $user = $this->getDoctrine()->getManager()->getRepository('SC\UserBundle\Entity\User')->find($email);
         // On crée un objet Activite
         $activite = new Activite();
@@ -96,6 +99,26 @@ class ActiviteController extends Controller
         if ($form->isValid()) {
             $saison = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Saison')->find($year);
             $saison -> addActivite($activite);
+
+
+        $season = new Saison;
+        $year = $season->connaitreSaison();
+        unset($season);
+
+       
+            $user = $this->getDoctrine()->getManager()->getRepository('SC\UserBundle\Entity\User')->find($email);
+            // On crée un objet Activite
+            $activite = new Activite();
+            $activite->setUser($user);
+            $form = $this->get('form.factory')->create(new ActiviteType(), $activite);
+            // On fait le lien Requête <-> Formulaire
+            // À partir de maintenant, la variable $activite contient les valeurs entrées dans le formulaire par l'e visiteur l'admin
+            $form->handleRequest($request);
+            // On vérifie que les valeurs entrées sont correctes
+            if ($form->isValid()) {
+                $saison = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Saison')->find($year);
+                $saison -> addActivite($activite);
+
             // On l'enregistre notre objet $activite dans la base de données, par exemple
             $em = $this->getDoctrine()->getManager();
             $em->persist($activite);
@@ -110,7 +133,9 @@ class ActiviteController extends Controller
         return $this->render('SCActiviteBundle:Activite:add.html.twig', array('form' => $form->createView()
         ));
         
-    } 
+        } 
+    
+    }
   
  
   
@@ -145,11 +170,18 @@ class ActiviteController extends Controller
   
     public function deleteAction($id,Request $request)
     {
-        $year = $this->connaitreSaison();
+
         //on recupere l'entity managere 
+
+        
+        $season = new Saison;
+        $year = $season->connaitreSaison();
+        unset($season);
+        $session = $request->getSession();
+
         $em = $this->getDoctrine()->getManager();
         $repository = $em->getRepository('SCActiviteBundle:Activite');
-        //on recupere l'activite
+ 
         $activite = $repository->find($id);
         
         //si n'existe pas -> message d'erreur
@@ -165,7 +197,9 @@ class ActiviteController extends Controller
             $em->remove($activite);
             $em->flush();
             $listeActivites = $em->getRepository('SCActiviteBundle:Activite')->findAll();
+
             return $this->render('SCActiviteBundle:Activite:index.html.twig', array('listeActivites' => $listeActivites));
+
         }    
     }
 
@@ -265,4 +299,5 @@ class ActiviteController extends Controller
     }
     */
     
+
 }

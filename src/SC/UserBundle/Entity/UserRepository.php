@@ -70,8 +70,30 @@ class UserRepository extends EntityRepository implements UserProviderInterface
           ->getQuery()
           ->getResult();
  
-    } 
-    
+    }
+    // Permet de récuperer les adresse non active  
+    public function compteInactif()
+    {
+        $qb = $this->createQueryBuilder('a');
+
+        $qb->where('a.isActive = :isActive')
+            ->setParameter('isActive', false)            
+        ;
+
+        return $qb
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+    //permet d'activer le compte inactif
+        public function activerCompte($email)
+    {
+      $query = $this->_em->createQuery('UPDATE SCUserBundle:User a SET a.isActive = true where a.email = :email ')
+                       ->setParameter('email', $email);
+       $query->execute();
+  
+      
+    }
   
   
   

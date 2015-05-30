@@ -1,0 +1,4 @@
+services:
+#    sc_participation.example:
+#        class: SC\ParticipationBundle\Example
+#        arguments: [@service_id, "plain_value", %parameter%]

@@ -37,6 +37,21 @@ class StageController extends Controller {
         return $this->render('SCActiviteBundle:Stage:index.html.twig',array('listeStages' => $listeStages ));
     }
     
+        public function viewAction($id) {
+            
+            $activite = $this->GetDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Activite')->find($id);
+	
+            if(is_null($activite) == false) {
+                // on recupere tous les stages
+                $listeStages = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Stage')->findAll();
+                return $this->render('SCActiviteBundle:Stage:view.html.twig', array('listeStages' => $listeStages, 'activite' => $activite));
+            } else {
+                $response = new Response;
+                $response->setContent("Error 404: not found");
+                $response->setStatusCode(Response::HTTP_NOT_FOUND);
+                return $response;
+            }
+        }
     
     public function addAction($id,Request $request) {
         
@@ -136,7 +151,7 @@ class StageController extends Controller {
     public function deleteAction($id, $debutStage, $finStage, Request $request) {
         
         // on verifie que les parametres sont bons
-        if (isset($id) == false || isset($debutStage) || isset($finStage)) {
+        if (isset($id) == false || isset($debutStage) == false || isset($finStage) == false ) {
            $response = new Response;
            $response->setContent("Error 404: not found");
            $response->setStatusCode(Response::HTTP_NOT_FOUND);
@@ -147,16 +162,20 @@ class StageController extends Controller {
         $stage = $em->getRepository('SC\ActiviteBundle\Entity\Stage')
                 ->findOneBy(array('activite' =>  $activite, 'debutStage'=> $debutStage,
                     'finStage'=>$finStage));
-        // A VOIR
+        
         if (isset($stage) == FALSE) {
             $listeStages = $em->getRepository('SC\ActiviteBundle\Entity\Stage')->findAll();
             return $this->render('SCActiviteBundle:Stage:view.html.twig',array('listeStage' => $listeStages, 'activite' => $activite ));            
         }
         else {
+            $request->getSession()->getFlashBag()->add('info', 'Le stage a bien été supprimé, et un mail a été envoyé aux personnes inscrites');
             //envoyer les emails aux utilisateurs inscrits
             $em->remove($stage);
             $em->flush();
-            $listSortie = $em->getRepository('SC\ActiviteBundle\Entity\Stage')->findAll();
+            $listeStages = $em->getRepository('SC\ActiviteBundle\Entity\Stage')->findAll();
+            if ($listeStages == null) {
+                $request->getSession()->getFlashBag()->add('info', 'Il n\'y a pas de stage pour cette activité');
+            }
             return $this->render('SCActiviteBundle:Stage:view.html.twig',array('listeStages' => $listeStages, 'activite' => $activite ));
         }
     }

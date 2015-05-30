@@ -12,7 +12,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Sortie
 {
-   
+ 
+    
     /**
      * @var string    
      *
@@ -49,7 +50,7 @@ class Sortie
      * @ORM\Id
      */
     private $saison;    
-
+       
     /**
      * Set dateSortie
      *
@@ -164,4 +165,6 @@ class Sortie
     {
         return $this->saison;
     }
+    
+  
 }

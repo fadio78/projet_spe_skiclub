@@ -97,4 +97,19 @@ class Saison
     {
         return $this->activites;
     }
+    
+// permet de connaitre la saison courante
+    public function connaitreSaison() {
+        
+        $date = new \DateTime();
+        $annee = $date->format('Y');
+        $mois = $date->format('m');
+        
+        if ($mois > 8) {
+            return $annee;
+        }
+        else {
+            return $annee-1;
+        }
+    }    
 }

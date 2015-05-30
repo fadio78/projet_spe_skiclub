@@ -57,11 +57,20 @@ sc_activite_viewStage:
         
 sc_activite_deleteStage:
     path:      /deleteStage/{id}/{debutStage}/{finStage}
-    defaults:  { _controller: SCActiviteBundle:Sortie:delete}
+    defaults:  { _controller: SCActiviteBundle:Stage:delete}
     requirements:
         id: \d+
-        debutStage: \w+
-        finStage: \w+
+        debutStage: "[0-9-]+"
+        finStage: "[0-9-]+"
+        
+sc_activite_editStage:
+    path:      /editStage/{id}/{debutStage}/{finStage}
+    defaults:  { _controller: SCActiviteBundle:Stage:edit}
+    requirements:
+        id: \d+
+        debutStage: "[0-9-]+"
+        finStage: "[0-9-]+"
+
 sc_activite_inscriptionActivite:
     path:      /inscriptionActivite/{id}
     defaults:  { _controller: SCActiviteBundle:Activite:inscriptionActivite }

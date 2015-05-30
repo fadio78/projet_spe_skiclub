@@ -23,11 +23,11 @@ class SortieController extends Controller
     //permet d'ajouter une nouvelle sortie
     public function ajoutSortieAction($id,Request $request) {
         
+        
+        $year = $request->getSession()->get('year');
         $sortie = new Sortie();
         $activite = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Activite')->find($id);
-        //$saison = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Saison')->findOneBy($this->connaitreSaison());
-        $saison =  new Saison();
-        $saison->setAnnee((Integer)2015);
+        $saison = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Saison')->findOneByAnnee($year);
         $user = $this->getDoctrine()->getManager()
                                             ->getRepository('SC\UserBundle\Entity\User')
                                                 ->findOneByEmail(array('email' => $request->getSession()->get('email')));
@@ -46,10 +46,13 @@ class SortieController extends Controller
 
                 $date = $sortie->getDateSortie();
                 $string = $date->format('Y').'-'.$date->format('m').'-'.$date->format('d').' '.$date->format('H').':'.$date->format('i').':'.$date->format('s');
-                // si il ya deja une meme date -> erreur
-                $this->dateExiste($string); 
-                $sortie->setDateSortie($string);
                 
+                // si il ya deja une meme date -> erreur                
+                if ($this->dateExiste($string) == true) {
+                    return $this->pageErreur("Une date identique a déjà été validée : deux sorties ne peuvent avoir même date");
+                }
+                
+                $sortie->setDateSortie($string);                
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($saison); 
                 $em->flush(); 
@@ -77,24 +80,23 @@ class SortieController extends Controller
                 ));
         }
         else {
-            throw new NotFoundHttpException("Cette activité n'existe pas");               
+            return $this->pageErreur("l'activité demandée n'existe pas");               
         }
     }
+    
     // teste si la date existe deja dans la BD
     // return true si la date est dans la BD, false sinon
-    // $id -> identifiant de l'activite
-    // $sortie -> la sortie à la date considerée
     public function dateExiste($date) {
         
         if($this->getDoctrine()->getManager()
                                     ->getRepository('SC\ActiviteBundle\Entity\Sortie')
                                             ->findOneByDateSortie($date) === null) {
             
-            return;
+            return false;
             
         }
         else {
-             throw new NotFoundHttpException("Il y a deja une sortie prévu à cette date pour cette activité");
+            return true;
         }
         
     }
@@ -112,7 +114,7 @@ class SortieController extends Controller
         
         }
         else {
-            throw new NotFoundHttpException("L'activité d'id ".$id." n'existe pas.");
+            return $this->pageErreur("l'activité demandée n'existe pas");
         }
   
     }
@@ -128,6 +130,9 @@ class SortieController extends Controller
                                                         //->findOneBy(array('idSortie' => $idSortie,'activite' =>  $activite));
                                                         ->findOneBy(array('dateSortie' => $dateSortie,'activite' =>  $activite));
         //au cas ou les paramètres seraient modifiés à la main par quelqu'un
+        if (is_null($activite)==true) {
+            return $this->pageErreur("l'activité demandée n'existe pas");
+        }
         if (isset($sortie)==FALSE) {
             $listSortie = $em->getRepository('SC\ActiviteBundle\Entity\Sortie')->findAll();
             return $this->render('SCActiviteBundle::viewSortie.html.twig',array('listSortie' => $listSortie, 'activite' => $activite ));            
@@ -136,20 +141,16 @@ class SortieController extends Controller
             //envoyer les emails aux utilisateurs inscrits
             $em->remove($sortie);
             $em->flush();
+            $request->getSession()->getFlashBag()->add('info', 'La sortie a bien été supprimée, et un mail a été envoyé aux personnes inscrites');
             $listSortie = $em->getRepository('SC\ActiviteBundle\Entity\Sortie')->findAll();
             return $this->render('SCActiviteBundle::viewSortie.html.twig',array('listSortie' => $listSortie, 'activite' => $activite ));
         }
     }
-     
-    public function getAdmin(Request $request) {
-        
-        $users = $this->getDoctrine()->getManager()->getRepository('SC\UserBundle\Entity\User')->findAll();
-        $email = $request->getSession()->get('email');
-      
-        foreach ($users as $user) {
-            if (strcmp($user->getEmail(),'sfr@hotmail.com') == 0) {
-                 return $user;
-            }
-        }
+    
+    public function pageErreur($message) {
+        $response = new Response;
+        $response->setContent($message);
+        $response->setStatusCode(Response::HTTP_NOT_FOUND);
+        return $response;
     }
 }

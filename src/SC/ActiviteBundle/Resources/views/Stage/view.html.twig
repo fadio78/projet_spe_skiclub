@@ -2,10 +2,14 @@
 {% extends "SCActiviteBundle:Activite:layout.html.twig" %}
 {% block title %}{{ parent() }} - Index{% endblock %}
 {% block activité_body %}
+    <h3>Stages</h3>
 <ul>
- 
+    {% for message in app.session.flashbag.get('info') %}
+        <p>{{ message }}</p>
+    {% endfor %}
+
     {% for stage in listeStages %}
-        <b>{{ stage.nomStage }}</b>
+       <b>{{ stage.nomStage }}</b>
        <br><br/>
        Type d'activité : {{ activite.nomActivite }}
        <br/>
@@ -18,8 +22,12 @@
        Prix : {{ stage.prixStage }}
        <br/>
        Charges : {{ stage.charges }}
-       <br/>
-        <a href="{{ path('sc_activite_deleteStage', {'id': activite.id, 'debutStage' : stage.debutStage, 'finStage' : stage.debutStage}) }}" class="btn btn-danger">
+       <br><br/>
+       <a href="{{ path('sc_activite_editStage', {'id': activite.id, 'debutStage' : stage.debutStage, 'finStage' : stage.finStage}) }}" class="btn btn-default">
+       <i class="glyphicon glyphicon-edit"></i>
+            Modifier
+       </a>
+       <a href="{{ path('sc_activite_deleteStage', {'id': activite.id, 'debutStage' : stage.debutStage, 'finStage' : stage.finStage}) }}" class="btn btn-danger">
             <i class="glyphicon glyphicon-trash"></i>
             Supprimer
         </a>
