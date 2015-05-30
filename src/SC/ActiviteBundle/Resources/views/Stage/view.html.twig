@@ -23,7 +23,11 @@
        <br/>
        Charges : {{ stage.charges }}
        <br><br/>
-        <a href="{{ path('sc_activite_deleteStage', {'id': activite.id, 'debutStage' : stage.debutStage, 'finStage' : stage.finStage}) }}" class="btn btn-danger">
+       <a href="{{ path('sc_activite_editStage', {'id': activite.id, 'debutStage' : stage.debutStage, 'finStage' : stage.finStage}) }}" class="btn btn-default">
+       <i class="glyphicon glyphicon-edit"></i>
+            Modifier
+       </a>
+       <a href="{{ path('sc_activite_deleteStage', {'id': activite.id, 'debutStage' : stage.debutStage, 'finStage' : stage.finStage}) }}" class="btn btn-danger">
             <i class="glyphicon glyphicon-trash"></i>
             Supprimer
         </a>
