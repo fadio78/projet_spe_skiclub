@@ -58,13 +58,6 @@ class Activite
      */ 
     private $licence; 
     
-    
-    
-    
-    
- 
-  
-
 
     /**
      * Get id

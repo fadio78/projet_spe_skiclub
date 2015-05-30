@@ -91,9 +91,11 @@ class ActiviteController extends Controller
         $session = $request->getSession();
         $email = $session->get('email');
         $type=$session->get('type');
+
         $season = new Saison;
         $year = $season->connaitreSaison();
         unset($season);
+
         if ($type == "admin") {
             $user = $this->getDoctrine()->getManager()->getRepository('SC\UserBundle\Entity\User')->find($email);
             // On crée un objet Activite
