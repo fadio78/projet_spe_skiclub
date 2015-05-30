@@ -62,32 +62,7 @@ class Activite
     
     
     
-    
-    
-    
-    
-    /**
-     * @ORM\ManyToOne(targetEntity="SC\UserBundle\Entity\Enfant")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $enfant;
-    
-    /**
-     * @ORM\ManyToOne(targetEntity="SC\ActiviteBundle\Entity\Saison")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    
-    
-     private $saison;
-     
-    /**
-     * @ORM\ManyToOne(targetEntity="SC\ActiviteBundle\Entity\PrixPayeActivite")
-     * @ORM\JoinColumn(nullable=false)
-     */
-  
-    private $prixPayeActivite;
-     
-  
+ 
   
 
 
