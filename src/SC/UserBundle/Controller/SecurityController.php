@@ -96,7 +96,7 @@ class SecurityController extends Controller
       $user = new User;
       $user->setSalt('' );
       $user->setType('user');
-      $user->setIsActive(true);
+      $user->setIsActive(false);
       
       $user->setIsPrimaire(true);
       

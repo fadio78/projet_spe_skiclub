@@ -6,7 +6,9 @@
     <h1> email primaire :{{nom}}<h1/>
     <h2><a href="{{ path('sc_enfant_ajouter') }}">Ajouter un Enfant</a><h2/>
     <h2><a href="{{ path('sc_user_ajouter') }}">Ajouter utilisateur secondaire</a><h2/>
-    <h2><a href="{{ path('sc_activite_add') }}">Ajouter une activite</a><h2/>
+        {% if is_granted('ROLE_ADMIN') %}
+    <h2><a href="{{ path('sc_admin_homepage') }}">Gestion Activité/utilisateur</a><h2/>
+        {% endif %}
     <h2> Enfant(s) inscrit(s) :
         <ul> <li>{% for enfant in listEnfants %}
                 {{ enfant.prenomEnfant }}<li/>
