@@ -1,7 +1,3 @@
-sc_participation:
-    resource: "@SCParticipationBundle/Resources/config/routing.yml"
-    prefix:   /
-
 sc_licence:
     resource: "@SCLicenceBundle/Resources/config/routing.yml"
     prefix:   /licence

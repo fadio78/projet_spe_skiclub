@@ -11,5 +11,11 @@ use Doctrine\ORM\EntityRepository;
  * repository methods below.
  */
 class SortieRepository extends EntityRepository
-{
+{  
+    public function getPublishedQueryBuilder($act)
+    {
+    return $this->createQueryBuilder('a')
+      ->where('a.activite = :idAct')
+      ->setParameter('idAct', $act);
+    }
 }

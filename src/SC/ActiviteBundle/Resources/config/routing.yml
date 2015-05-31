@@ -76,3 +76,15 @@ sc_activite_inscriptionActivite:
     defaults:  { _controller: SCActiviteBundle:Activite:inscriptionActivite }
     requirements:
         id: \d+
+        
+sc_activite_inscriptionActivite:
+    path:      /inscriptionActivite/{id}
+    defaults:  { _controller: SCActiviteBundle:Activite:inscriptionActivite }
+    requirements:
+        id: \d+
+        
+sc_activite_choixSortie:
+    path:      /choixSortie/{id}
+    defaults:  { _controller: SCActiviteBundle:InscriptionSortie:choixSortie }
+    requirements:
+        id: \d+

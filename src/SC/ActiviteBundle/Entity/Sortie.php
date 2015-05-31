@@ -166,5 +166,8 @@ class Sortie
         return $this->saison;
     }
     
+    public function __toString() {
+        return $this->getDateSortie().' '.$this->getLieu()->getNomLieu();
+    }
   
 }

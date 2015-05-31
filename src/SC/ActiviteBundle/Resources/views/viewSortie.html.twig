@@ -3,7 +3,7 @@
 {% block title %}{{ parent() }} - Index{% endblock %}
 {% block activité_body %}
 <ul>
- 
+{%if (inscription is not defined or inscription != 1) and (enfant is not defined or enfant != 1) %} 
     {% for message in app.session.flashbag.get('info') %}
         <p>{{ message }}</p>
     {% endfor %}
@@ -14,13 +14,16 @@
             <a href="{{ path('sc_activite_deleteSortie', {'id': activite.id}) }}?date={{sortie.dateSortie}}" >
                 Supprimer cette sortie
             </a>
-        {%else%}
-            <a href="{{ path('sc_activite_deleteSortie', {'id': activite.id}) }}?date={{sortie.dateSortie}}" >
-                Inscrire un enfant
-            </a>  
         {%endif%}
-        <br/>    
+        <br/>        
     {% endfor %}    
 </ul> 
- 
+            <a href="{{path('sc_activite_choixSortie', {'id': activite.id}) }}" class="btn btn-default">
+                <i class="glyphicon glyphicon-edit"></i>
+                   Inscrire un enfant à une sortie 
+            </a> 
+{%else%}
+    {{ form(form) }}
+{%endif%}    
+            
 {% endblock %} 

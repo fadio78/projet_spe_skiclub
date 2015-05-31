@@ -168,5 +168,9 @@ class Enfant
     {
         return $this->userParent;
     }
+    
+    public function __toString() {
+        return $this->getNomEnfant().' '.$this->getPrenomEnfant();
+    }
 
 }
