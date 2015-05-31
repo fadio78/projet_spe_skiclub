@@ -54,12 +54,20 @@ class Enfant
      */
     private $dateNaissance;
     
+    
+    /**
+     * @var string
+     */
+    
+    private $prenomNom;
+    
     /**
      * Set nomEnfant
      *
      * @param string $nomEnfant
      * @return Enfant
      */
+    
     public function setNomEnfant($nomEnfant)
     {
         $this->nomEnfant = $nomEnfant;
@@ -173,4 +181,8 @@ class Enfant
         return $this->getNomEnfant().' '.$this->getPrenomEnfant();
     }
 
+    public function getPrenomNom()
+    {
+        return ($this -> prenomEnfant).' '.($this -> nomEnfant) ;
+    }
 }
