@@ -1,0 +1,35 @@
+{# src/SC/ActiviteBundle/Resources/views/index.html.twig #}
+{% extends "SCActiviteBundle:Activite:layout.html.twig" %}
+{% block title %}{{ parent() }} - Index{% endblock %}
+{% block activité_body %}
+<ul>
+{%if (inscription is not defined or inscription != 1) and (enfant is not defined or enfant != 1) %} 
+    {% for message in app.session.flashbag.get('info') %}
+        <p>{{ message }}</p>
+    {% endfor %}
+    
+    {% for sortie in listSortie %}
+        <a href="{{ path('sc_activite_actionSortie', {'id': activite.id, 'dateSortie': sortie.dateSortie, 'lieu': sortie.lieu.nomLieu}) }}" >
+                {{ sortie.dateSortie  }} {{ sortie.lieu.nomLieu }} 
+        </a>
+            {%if dateSortie is defined and lieu is defined and dateSortie == sortie.dateSortie and lieu == sortie.lieu.nomLieu %}
+                <a href="{{path('sc_activite_choixSortie', {'id': activite.id}) }}" class="btn btn-default">
+                    <i class="glyphicon glyphicon-edit"></i>
+                        Inscrire un enfant à une sortie 
+                </a>
+                {% if is_granted('ROLE_ADMIN') %}
+                   <a href="{{path('sc_activite_deleteSortie', {'id': activite.id, 'dateSortie': sortie.dateSortie, 'lieu': sortie.lieu.nomLieu}) }}" class="btn btn-default">
+                        <i class="glyphicon glyphicon-trash"></i>
+                            Supprimer cette sortie 
+                    </a>
+                {%endif%}
+            {%endif%}        
+        <br/>        
+    {% endfor %}    
+</ul> 
+ 
+{%else%}
+    {{ form(form) }}
+{%endif%}    
+            
+{% endblock %}

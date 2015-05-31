@@ -14,7 +14,8 @@
         <td>  telephone </td>
         <td>  isActive </td>
         <td>  type </td>
-        <td>  Devenir Admin </td>
+        
+        <td>  gestion paiement  </td>
         
         
         </tr>
@@ -27,10 +28,11 @@
         <td>  {{ user.telephone}}  </td>
         <td>  {{ user.isActive }}  </td>
         <td>  {{ user.type }}  </td>
-        <td>   <a href="{{ path('sc_admin_activerAdmin', {'email': user.email}) }}" class="btn btn-default">
+        
+    <td>  <a href="{{ path('sc_admin_gestionCompte', {'email': user.email}) }}" class="btn btn-default">
       <i class="glyphicon glyphicon-edit"></i>
-      rendre Admin
-    </a> </td>
+      gestionCompte
+    </a></td>
         </tr>  
          
         

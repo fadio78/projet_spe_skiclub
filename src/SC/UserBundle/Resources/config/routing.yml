@@ -44,3 +44,9 @@ sc_admin_activerAdmin:
     defaults: { _controller: SCUserBundle:Admin:activerAdmin }
     requirements : 
         email : "[^/]+"
+        
+sc_admin_gestionCompte:
+    path:     /admin/gestionCompte/{email}
+    defaults: { _controller: SCUserBundle:Admin:gestionCompte }
+    requirements : 
+        email : "[^/]+"        
