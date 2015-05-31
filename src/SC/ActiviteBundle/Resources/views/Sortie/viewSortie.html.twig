@@ -13,9 +13,9 @@
                 {{ sortie.dateSortie  }} {{ sortie.lieu.nomLieu }} 
         </a>
             {%if dateSortie is defined and lieu is defined and dateSortie == sortie.dateSortie and lieu == sortie.lieu.nomLieu %}
-                <a href="{{path('sc_activite_choixSortie', {'id': activite.id}) }}" class="btn btn-default">
+                <a href="{{path('sc_activite_getEnfant', {'id': activite.id, 'dateSortie': sortie.dateSortie, 'lieu': sortie.lieu.nomLieu}) }}" class="btn btn-default">
                     <i class="glyphicon glyphicon-edit"></i>
-                        Inscrire un enfant à une sortie 
+                        Inscrire un enfant à cette sortie 
                 </a>
                 {% if is_granted('ROLE_ADMIN') %}
                    <a href="{{path('sc_activite_deleteSortie', {'id': activite.id, 'dateSortie': sortie.dateSortie, 'lieu': sortie.lieu.nomLieu}) }}" class="btn btn-default">

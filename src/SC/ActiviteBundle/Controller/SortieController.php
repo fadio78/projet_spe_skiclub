@@ -136,7 +136,8 @@ class SortieController extends Controller
             return $this->render('SCActiviteBundle:Sortie:viewSortie.html.twig',array('listSortie' => $listSortie, 'activite' => $activite ));            
         }
         else {
-            //envoyer les emails aux utilisateurs inscrits
+            
+            $this->estInscrit($sortie->getDateSortie(),$id);
             $em->remove($sortie);
             $em->flush();
             $request->getSession()->getFlashBag()->add('info', 'La sortie a bien été supprimée, et un mail a été envoyé aux personnes inscrites');
@@ -164,6 +165,18 @@ class SortieController extends Controller
         $response->setContent($message);
         $response->setStatusCode(Response::HTTP_NOT_FOUND);
         return $response;
+    }
+    
+    public function estInscrit($dateSortie,$id) {
+        $em = $this->getDoctrine()->getManager();
+        $inscrits = $em->getRepository('SC\ActiviteBundle\Entity\InscriptionSortie')
+                            ->findBy(array('dateSortie'=>$dateSortie,'idActivite'=>$id));
+        
+        foreach ($inscrits as $enfant) {
+            //envoie du mail
+            $em->remove($enfant);
+        }
+        $em->flush();
     }
 }
 
