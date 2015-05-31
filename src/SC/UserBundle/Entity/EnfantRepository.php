@@ -19,5 +19,14 @@ class EnfantRepository extends EntityRepository
       ->where('a.userParent = :parents')
       ->setParameter('parents', $parent);
   }
+  
+  
+  public function getEnfant($email) 
+  {
+      return $this -> createQueryBuilder('e')
+        ->where('e.userParent = :email')
+        ->setParameter('email', $email);
+      
+  }
 
 }

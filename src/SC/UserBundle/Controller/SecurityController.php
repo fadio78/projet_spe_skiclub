@@ -9,6 +9,9 @@ use Symfony\Component\Security\Core\SecurityContext;
 use SC\UserBundle\Entity\User;
 use SC\UserBundle\Form\UserType;
 
+use SC\UserBundle\Entity\Adhesion;
+use \SC\ActiviteBundle\Entity\Saison;
+
 class SecurityController extends Controller
 {
   public function loginAction(Request $request)
@@ -97,11 +100,22 @@ class SecurityController extends Controller
       $user->setSalt('' );
       $user->setType('user');
       $user->setIsActive(false);
-      
       $user->setIsPrimaire(true);
-      
-     
       $form = $this->get('form.factory')->create(new UserType(), $user);
+      
+      
+      // il faut aussi remplir la table adheion de l'annee actuel 
+      
+      $adhesion = new Adhesion;
+      $adhesion->setAdhesionAnnuel(false);
+      $adhesion->setModalite(1);
+      $adhesion->setMontantPaye(0);
+      $adhesion->setRemise(0);
+      
+      $year = $request->getSession()->get('year');
+      $saison = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Saison')->findOneByAnnee(2014);
+      $adhesion->setSaison($saison);
+      $adhesion->setUser($user);
       
       // On fait le lien Requête <-> Formulaire
         // À partir de maintenant, la variable $user contient les valeurs entrées dans le formulaire par le visiteur
@@ -112,6 +126,9 @@ class SecurityController extends Controller
         $em = $this->getDoctrine()->getManager();
         $em->persist($user);
         $em->flush();
+        $ema = $this->getDoctrine()->getManager();
+        $ema->persist($adhesion);
+        $ema->flush();
         $request->getSession()->getFlashBag()->add('info', 'User bien enregistré');
         // On redirige vers la page de visualisation de l'annonce nouvellement créée
         return $this->redirect($this->generateUrl('sc_user_homepage'));

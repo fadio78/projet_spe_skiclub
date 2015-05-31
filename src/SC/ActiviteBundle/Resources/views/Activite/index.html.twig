@@ -5,6 +5,12 @@
 <ul>
     
    
+  <p>
+    {# On affiche tous les messages flash dont le nom est « info » #}
+      {% for message in app.session.flashbag.get('info') %}
+        <p>{{ message }}</p> 
+      {% endfor %}
+  </p>
 
     <center> <h2> Saison: {{ app.session.get('year') }} </h2> </center>
 
