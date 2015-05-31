@@ -154,7 +154,7 @@ class SortieController extends Controller
                 return $this->pageErreur("l'activité demandée n'existe pas");
             }
 
-        $listSortie = $em->getRepository('SC\ActiviteBundle\Entity\Sortie')->findAll();
+        $listSortie = $em->getRepository('SC\ActiviteBundle\Entity\Sortie')->findBy(array('activite'=>$activite));
         return $this->render('SCActiviteBundle:Sortie:viewSortie.html.twig',array('listSortie' => $listSortie, 'activite' => $activite, 'dateSortie'=>$dateSortie,'lieu'=>$lieu ));
     }
     

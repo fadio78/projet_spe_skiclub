@@ -17,7 +17,7 @@ use SC\ActiviteBundle\Entity\Lieu;
 use SC\ActiviteBundle\Entity\Saison;
 use SC\ActiviteBundle\Entity\InscriptionSortie;
 use SC\ActiviteBundle\Form\InscriptionSortieType;
-
+use Symfony\Component\HttpFoundation\Cookie;
 
 class InscriptionSortieController extends Controller 
 {
@@ -109,6 +109,8 @@ class InscriptionSortieController extends Controller
         //on persist
         $em->persist($inscriptionSortie);
         $em->flush();
+        $mesInscriptions = $em->getRepository('SC\ActiviteBundle\Entity\InscriptionSortie')->findBy(array('idActivite'=>$id));
+        $request->getSession()->set('mesInscriptions', $mesInscriptions);
         return $this->render('SCActiviteBundle:Activite:view.html.twig', array('activite'=> $activite));
     }
     
