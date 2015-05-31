@@ -1,0 +1,100 @@
+<?php
+
+namespace SC\ActiviteBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Saison
+ *
+ * @ORM\Table()
+ * @ORM\Entity(repositoryClass="SC\ActiviteBundle\Entity\SaisonRepository")
+ */
+class Saison
+{
+
+    /**
+     * @var integer
+     * @ORM\Id
+     * @ORM\Column(name="annee", type="integer")
+     */
+    private $annee;
+    
+    
+ 
+    /**
+     * @ORM\ManyToMany(targetEntity="SC\ActiviteBundle\Entity\Activite")
+     * @ORM\JoinTable(name="activites_saisons",
+     *      joinColumns={@ORM\JoinColumn(name="id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="annee", referencedColumnName="annee")}
+     *      )
+     **/
+
+    private $activites;
+    
+
+    /**
+     * Set annee
+     *
+     * @param integer $annee
+     * @return Saison
+     */
+    public function setAnnee($annee)
+    {
+        $this->annee = $annee;
+
+        return $this;
+    }
+
+    /**
+     * Get annee
+     *
+     * @return integer 
+     */
+    public function getAnnee()
+    {
+        return $this->annee;
+    }
+
+    
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->activites = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add activites
+     *
+     * @param \SC\ActiviteBundle\Entity\Activite $activites
+     * @return Saison
+     */
+    public function addActivite(\SC\ActiviteBundle\Entity\Activite $activites)
+    {
+        $this->activites[] = $activites;
+
+        return $this;
+    }
+
+    /**
+     * Remove activites
+     *
+     * @param \SC\ActiviteBundle\Entity\Activite $activites
+     */
+    public function removeActivite(\SC\ActiviteBundle\Entity\Activite $activites)
+    {
+        $this->activites->removeElement($activites);
+    }
+
+    /**
+     * Get activites
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getActivites()
+    {
+        return $this->activites;
+    }
+}
