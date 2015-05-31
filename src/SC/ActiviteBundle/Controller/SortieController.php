@@ -110,7 +110,7 @@ class SortieController extends Controller
             
             //on recupere toutes les sorties
             $listSortie = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Sortie')->findByActivite($activite);
-            return $this->render('SCActiviteBundle::viewSortie.html.twig',array('listSortie' => $listSortie, 'activite' => $activite ));
+            return $this->render('SCActiviteBundle:Sortie:viewSortie.html.twig',array('listSortie' => $listSortie, 'activite' => $activite ));
         
         }
         else {
@@ -133,7 +133,7 @@ class SortieController extends Controller
         }
         if (isset($sortie)==FALSE) {
             $listSortie = $em->getRepository('SC\ActiviteBundle\Entity\Sortie')->findAll();
-            return $this->render('SCActiviteBundle::viewSortie.html.twig',array('listSortie' => $listSortie, 'activite' => $activite ));            
+            return $this->render('SCActiviteBundle:Sortie:viewSortie.html.twig',array('listSortie' => $listSortie, 'activite' => $activite ));            
         }
         else {
             //envoyer les emails aux utilisateurs inscrits
@@ -141,7 +141,7 @@ class SortieController extends Controller
             $em->flush();
             $request->getSession()->getFlashBag()->add('info', 'La sortie a bien été supprimée, et un mail a été envoyé aux personnes inscrites');
             $listSortie = $em->getRepository('SC\ActiviteBundle\Entity\Sortie')->findAll();
-            return $this->render('SCActiviteBundle::viewSortie.html.twig',array('listSortie' => $listSortie, 'activite' => $activite ));
+            return $this->render('SCActiviteBundle:Sortie:viewSortie.html.twig',array('listSortie' => $listSortie, 'activite' => $activite ));
         }
     }
     
@@ -154,7 +154,7 @@ class SortieController extends Controller
             }
 
         $listSortie = $em->getRepository('SC\ActiviteBundle\Entity\Sortie')->findAll();
-        return $this->render('SCActiviteBundle::viewSortie.html.twig',array('listSortie' => $listSortie, 'activite' => $activite, 'dateSortie'=>$dateSortie,'lieu'=>$lieu ));
+        return $this->render('SCActiviteBundle:Sortie:viewSortie.html.twig',array('listSortie' => $listSortie, 'activite' => $activite, 'dateSortie'=>$dateSortie,'lieu'=>$lieu ));
     }
     
     
