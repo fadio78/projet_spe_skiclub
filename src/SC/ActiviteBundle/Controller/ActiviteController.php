@@ -22,6 +22,8 @@ use SC\ActiviteBundle\Entity\SaisonRepository;
 use SC\ActiviteBundle\Entity\InscriptionActivite;
 use SC\UserBundle\Entity\Enfant;
 use Doctrine\ORM\EntityRepository;
+use SC\UserBundle\Entity\EnfantRepository;
+
 
 
 
@@ -246,51 +248,35 @@ class ActiviteController extends Controller
     public function inscriptionActiviteAction($id,Request $request) 
     {
         $em = $this->getDoctrine()->getManager();
-        $enfant = new Enfant ();
         $session = $request->getSession();
         $email = $session->get('email');
         $inscriptionActivite = new InscriptionActivite();
         $activite = $em->getRepository('SC\ActiviteBundle\Entity\Activite')->find($id);
         $inscriptionActivite -> setActivite($activite);
         $inscriptionActivite -> setPrixPayeActivite(0);
-
         $year = $this->connaitreSaison();  
         $saison = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Saison')->find($year);
+        unset($season);
         $inscriptionActivite -> setSaison($saison);
-    
-        $enfant = new Enfant ();
-        $repository = $em->getRepository('SC\UserBundle\Entity\Enfant') ;
-        $form = $this->get('form.factory')->createBuilder('form', $inscriptionActivite)
-        
-          ->add('prenomEnfant', 'entity', array('class'=> 'SCUserBundle:Enfant','property' => 'PrenomEnfant',$repository ->
-            findby(['userParent' => $email]),
-    
-
-         ))
+        $defaultData = array('message' => 'Type your message here');
+        $form = $this->createFormBuilder($defaultData)
+           ->add('Enfant', 'entity', array('class'=> 'SC\UserBundle\Entity\Enfant','property' => 'prenomNom', 'multiple' => false,'expanded' => false,'required' => true, 'query_builder' => function (EnfantRepository $repository) use ($email) { return $repository->
+            getEnfant($email); },))
           ->add('enregistrer','submit')
           ->getForm();
-
-      // On fait le lien Requête <-> Formulaire
-        // À partir de maintenant, la variable $activite contient les valeurs entrées dans le formulaire par le visiteur
         $form->handleRequest($request);
-        // On vérifie que les valeurs entrées sont correctes
         if ($form->isValid()){
-            $prenomEnfant = $enfant ->getPrenomEnfant();
-            $nomEnfant =$enfant ->getNomEnfant();
-             //$prenomEnfant = $inscriptionActivite -> getPrenomEnfant();
-             //$nomEnfant = $inscriptionActivite ->getNomEnfant();
-             
-             //$enfant=$em->getRepository('SC\ActiviteBundle\Entity\Activite')->find(array('email' => $email, 'prenomEnfant' => $prenomEnfant, 'nomEnfant' => $nomEnfant));
-             $inscriptionActivite ->setPrenomEnfant($enfant);
-             $inscriptionActivite ->setNomEnfant($enfant);
-             $inscriptionActivite ->setEmail($enfant);
-            // On l'enregistre notre objet $activite dans la base de données, par exemple
+            $data = $form->getData();
+            $enfant = $data ['Enfant'];
+            $inscriptionActivite -> setEmail($enfant);
+            $inscriptionActivite ->setNomEnfant($enfant);
+            $inscriptionActivite ->setPrenomEnfant($enfant);
             $em->persist($inscriptionActivite);
             $em->flush();
             $request->getSession()->getFlashBag()->add('info', 'Inscription bien enregistrée');
             return $this->redirect($this->generateUrl('sc_activite_homepage'));
         }
-            return $this->render('SCActiviteBundle:InscriptionActivite:addinscriptionactivite.html.twig', array(
+            return $this->render('SCActiviteBundle:InscriptionActivite:addinscriactivite.html.twig', array(
             'form' => $form->createView(),
             ));
         

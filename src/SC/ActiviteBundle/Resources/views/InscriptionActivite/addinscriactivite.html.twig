@@ -1,0 +1,11 @@
+{# src/SC/ActiviteBundle/Resources/views/InscriptionActivite/addinscriactivite.html.twig #}
+{% extends "SCActiviteBundle:Activite:layout.html.twig" %}
+{% block title %}
+  Inscription à une activité - {{ parent() }}
+{% endblock %}
+
+
+{% block activité_body %}
+  {{ include("SCActiviteBundle:InscriptionActivite:forminscriactivite.html.twig") }}
+ 
+{% endblock %} 

@@ -8,7 +8,6 @@
 
     <center> <h2> Saison: {{ app.session.get('year') }} </h2> </center>
 
- 
     {% for activite in listeActivites %}
         <a href="{{ path('sc_activite_view', {'id': activite.id}) }}">
           {{ activite.nomActivite }}
