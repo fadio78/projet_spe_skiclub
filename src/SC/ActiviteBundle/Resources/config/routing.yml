@@ -73,13 +73,7 @@ sc_activite_editStage:
 
 sc_activite_inscriptionActivite:
     path:      /inscriptionActivite/{id}
-    defaults:  { _controller: SCActiviteBundle:Activite:inscriptionActivite }
-    requirements:
-        id: \d+
-        
-sc_activite_inscriptionActivite:
-    path:      /inscriptionActivite/{id}
-    defaults:  { _controller: SCActiviteBundle:Activite:inscriptionActivite }
+    defaults:  { _controller: SCActiviteBundle:InscriptionActivite:inscriptionActivite }
     requirements:
         id: \d+
         
@@ -94,3 +88,8 @@ sc_activite_actionSortie:
     defaults:  { _controller: SCActiviteBundle:Sortie:actionSortie }
     requirements:
         id: \d+    
+        
+sc_activite_listeEnfantsInscrits:
+    path:      /monCompte/viewInscription
+    defaults:  { _controller: SCActiviteBundle:InscriptionActivite:viewInscriActivite }
+    
