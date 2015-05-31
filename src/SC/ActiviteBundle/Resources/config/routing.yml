@@ -83,9 +83,9 @@ sc_activite_inscriptionActivite:
     requirements:
         id: \d+
         
-sc_activite_choixSortie:
-    path:      /choixSortie/{id}/
-    defaults:  { _controller: SCActiviteBundle:InscriptionSortie:choixSortie }
+sc_activite_getEnfant:
+    path:      /getEnfant/{id}/{dateSortie}/{lieu}
+    defaults:  { _controller: SCActiviteBundle:InscriptionSortie:getEnfant }
     requirements:
         id: \d+
         
@@ -93,4 +93,10 @@ sc_activite_actionSortie:
     path:      /actionSortie/{id}/{dateSortie}/{lieu}
     defaults:  { _controller: SCActiviteBundle:Sortie:actionSortie }
     requirements:
-        id: \d+    
+        id: \d+
+        
+sc_activite_inscrireEnfant:
+    path:      /inscrireEnfant/{id}/{userParent}/{nomEnfant}/{prenomEnfant}
+    defaults:  { _controller: SCActiviteBundle:InscriptionSortie:inscrireEnfant }
+    requirements:
+        id: \d+          
