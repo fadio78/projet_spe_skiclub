@@ -3,7 +3,7 @@
 namespace SC\ActiviteBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
-
+use SC\UserBundle\Entity\Enfant;
 /**
  * InscriptionActiviteRepository
  *
@@ -12,4 +12,19 @@ use Doctrine\ORM\EntityRepository;
  */
 class InscriptionActiviteRepository extends EntityRepository
 {
+    public function Est_inscrit($inscriptionActivite) 
+    {
+       $qb= $this->createQueryBuilder('i')
+         ->where('i.prenomEnfant = :prenomEnfant')
+         ->setParameter('prenomEnfant', $inscriptionActivite  -> getPrenomEnfant() )
+         -> andWhere  ('i.nomEnfant = :nomEnfant')
+         ->setParameter('nomEnfant', $inscriptionActivite -> getNomEnfant() )
+         ->andwhere('i.saison = :annee')
+         ->setParameter('annee', $inscriptionActivite -> getSaison() ->getAnnee()  )
+         ->andwhere('i.activite = :id')
+         ->setParameter('id', $inscriptionActivite -> getActivite() ->getId()  );
+        return $qb->getQuery()->getResult();
+
+    }
+
 }

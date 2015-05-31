@@ -40,26 +40,29 @@ class InscriptionActivite
     private $saison;
     
     /**
-     * @ORM\ManyToOne(targetEntity="SC\UserBundle\Entity\Enfant")
+     * @var string
      * @ORM\Id
-     * @ORM\JoinColumn(nullable=false, name="email", referencedColumnName = "email")
+     * @ORM\Column(name="email", type="string")
      */
     
     private $email;
     
     /**
-     * @ORM\ManyToOne(targetEntity="SC\UserBundle\Entity\Enfant")
+     * @var string
      * @ORM\Id
-     * @ORM\JoinColumn(nullable=false, name="nomEnfant", referencedColumnName = "nomEnfant")
+     * @ORM\Column(name="nomEnfant", type="string")
      */
+ 
     
     private $nomEnfant;
     
     /**
-     * @ORM\ManyToOne(targetEntity="SC\UserBundle\Entity\Enfant")
+     * @var string
      * @ORM\Id
-     * @ORM\JoinColumn(nullable=false, name="prenomEnfant", referencedColumnName = "prenomEnfant")
+     * @ORM\Column(name="prenomEnfant", type="string")
      */
+    
+
     
     private $prenomEnfant;
     
@@ -140,13 +143,15 @@ class InscriptionActivite
 
 
 
+    
+
     /**
      * Set email
      *
-     * @param \SC\UserBundle\Entity\Enfant $email
+     * @param string $email
      * @return InscriptionActivite
      */
-    public function setEmail(\SC\UserBundle\Entity\Enfant $email)
+    public function setEmail($email)
     {
         $this->email = $email;
 
@@ -156,7 +161,7 @@ class InscriptionActivite
     /**
      * Get email
      *
-     * @return \SC\UserBundle\Entity\Enfant 
+     * @return string 
      */
     public function getEmail()
     {
@@ -166,10 +171,10 @@ class InscriptionActivite
     /**
      * Set nomEnfant
      *
-     * @param \SC\UserBundle\Entity\Enfant $nomEnfant
+     * @param string $nomEnfant
      * @return InscriptionActivite
      */
-    public function setNomEnfant(\SC\UserBundle\Entity\Enfant $nomEnfant)
+    public function setNomEnfant($nomEnfant)
     {
         $this->nomEnfant = $nomEnfant;
 
@@ -179,7 +184,7 @@ class InscriptionActivite
     /**
      * Get nomEnfant
      *
-     * @return \SC\UserBundle\Entity\Enfant 
+     * @return string 
      */
     public function getNomEnfant()
     {
@@ -189,10 +194,10 @@ class InscriptionActivite
     /**
      * Set prenomEnfant
      *
-     * @param \SC\UserBundle\Entity\Enfant $prenomEnfant
+     * @param string $prenomEnfant
      * @return InscriptionActivite
      */
-    public function setPrenomEnfant(\SC\UserBundle\Entity\Enfant $prenomEnfant)
+    public function setPrenomEnfant($prenomEnfant)
     {
         $this->prenomEnfant = $prenomEnfant;
 
@@ -202,7 +207,7 @@ class InscriptionActivite
     /**
      * Get prenomEnfant
      *
-     * @return \SC\UserBundle\Entity\Enfant 
+     * @return string 
      */
     public function getPrenomEnfant()
     {
