@@ -170,9 +170,6 @@ class ActiviteController extends Controller
     public function deleteAction($id,Request $request)
     {
 
-        //on recupere l'entity managere 
-
-        
         $season = new Saison;
         $year = $season->connaitreSaison();
         unset($season);
@@ -193,6 +190,7 @@ class ActiviteController extends Controller
         else {
             $saison = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Saison')->find($year);
             $saison -> removeActivite($activite);
+            $this->suppSoritesEtInscrit($activite);
             $em->remove($activite);
             $em->flush();
             $listeActivites = $em->getRepository('SCActiviteBundle:Activite')->findAll();
@@ -200,6 +198,19 @@ class ActiviteController extends Controller
             return $this->render('SCActiviteBundle:Activite:index.html.twig', array('listeActivites' => $listeActivites));
 
         }    
+    }
+    
+    public function suppSoritesEtInscrit($activite) {
+        $em = $this->getDoctrine()->getManager();
+        $sorties = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Sortie')->findBy(array('activite'=> $activite));
+            foreach ($sorties as $sortie) {
+                $em->remove($sortie);
+            }
+        $inscrits = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\InscriptionSortie')->findBy(array('idActivite'=> $activite));    
+            foreach ($inscrits as $enfant) {
+                $em->remove($enfant);
+            }        
+        $em->flush();
     }
 
     public function ajoutSortieAction($id,Request $request) {
