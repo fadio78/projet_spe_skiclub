@@ -32,6 +32,10 @@ class Saison
 
     private $activites;
     
+    /**
+   * @ORM\ManyToMany(targetEntity="SC\UserBundle\Entity\User", cascade={"persist"})
+   */
+  private $users;
 
     /**
      * Set annee
@@ -112,7 +116,4 @@ class Saison
             return $annee-1;
         }
     }    
-
-
-
 }

@@ -75,7 +75,35 @@ class AdminController extends Controller
         
         
     } 
-    
+               public function gestionCompteAction(Request $request, $email)
+    {
+        $repository = $this
+          ->getDoctrine()
+          ->getManager()
+          ->getRepository('SCUserBundle:User');
+           
+           $user= $repository->findOneby(['email' => $email]);
+           
+        $repository = $this
+          ->getDoctrine()
+          ->getManager()
+          ->getRepository('SCUserBundle:Adhesion');
+           
+           $adhesion = $repository->findOneby(
+                   array('user' => $email,
+                         'saison'=> 2014
+                   ));
+              
+           
+        return $this->render('SCUserBundle:Admin:gestionCompte.html.twig',
+                array('user'=>$user ,
+                      'adhesion'=>$adhesion
+                )
+                
+                );
+        
+        
+    }
     
     
 }
