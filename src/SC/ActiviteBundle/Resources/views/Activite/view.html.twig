@@ -31,7 +31,17 @@
       <i class="glyphicon glyphicon-chevron-left"></i>
       Retour à la liste
     </a>
-    {% if app.session.get('type') =="admin" %}
+     
+    <a href="{{ path('sc_activite_inscriptionActivite' , {'id': activite.id})}}" class="btn btn-default">
+      <button type="submit" class="btn btn-primary pull-right">s'inscrire</button>
+    
+    </a>
+        <a href="{{ path('sc_activite_voirSortie', {'id': activite.id}) }}" class="btn btn-default">
+      <i class="glyphicon glyphicon-edit"></i>
+      Sortie prévues
+    </a> 
+      
+    {% if is_granted('ROLE_ADMIN') %}
     <a href="{{ path('sc_activite_edit', {'id': activite.id}) }}" class="btn btn-default">
       <i class="glyphicon glyphicon-edit"></i>
       Modifier l'activité
@@ -41,10 +51,6 @@
       Supprimer l'activité
     </a>
       <br><br/>
-    <a href="{{ path('sc_activite_voirSortie', {'id': activite.id}) }}" class="btn btn-default">
-      <i class="glyphicon glyphicon-edit"></i>
-      Sortie prévues
-    </a> 
     <a href="{{ path('sc_activite_ajoutSortie', {'id': activite.id}) }}" class="btn btn-default">
       <i class="glyphicon glyphicon-edit"></i>
       Ajouter une sortie

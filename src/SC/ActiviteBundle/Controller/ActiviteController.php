@@ -19,6 +19,11 @@ use SC\ActiviteBundle\Entity\Sortie;
 use SC\ActiviteBundle\Entity\Lieu;
 use SC\ActiviteBundle\Entity\Saison;
 use SC\ActiviteBundle\Entity\SaisonRepository;
+use SC\ActiviteBundle\Entity\InscriptionActivite;
+use SC\UserBundle\Entity\Enfant;
+use Doctrine\ORM\EntityRepository;
+use SC\UserBundle\Entity\EnfantRepository;
+
 
 
 
@@ -53,10 +58,7 @@ class ActiviteController extends Controller
       // Ici, on récupérera la liste des activités, puis on la passera au template
         $repository = $em ->getRepository('SCActiviteBundle:Activite');
         $listeActivites = $repository->findAll();  
-        $session = $request->getSession();
-        $type = $session->get('type');
-        
-        return $this->render('SCActiviteBundle:Activite:index.html.twig',array('listeActivites' => $listeActivites,'type' => $type, 'year' =>$year
+           return $this->render('SCActiviteBundle:Activite:index.html.twig',array('listeActivites' => $listeActivites,'year' =>$year
         ));
     }
     
@@ -75,10 +77,7 @@ class ActiviteController extends Controller
         if (null === $activite) {
           throw new NotFoundHttpException("L'activité d'id ".$id." n'existe pas.");
         }
-        $session = $request->getSession();
-        $type = $session->get('type');
-
-        return $this->render('SCActiviteBundle:Activite:view.html.twig', array('activite' => $activite,'type' => $type));
+        return $this->render('SCActiviteBundle:Activite:view.html.twig', array('activite' => $activite));
     }
     
     
@@ -90,13 +89,22 @@ class ActiviteController extends Controller
         // On récupère à partir de la session l'utilisateur
         $session = $request->getSession();
         $email = $session->get('email');
-        $type=$session->get('type');
+
+        $user = $this->getDoctrine()->getManager()->getRepository('SC\UserBundle\Entity\User')->find($email);
+        // On crée un objet Activite
+        $activite = new Activite();
+        $activite->setUser($user);
+        $form = $this->get('form.factory')->create(new ActiviteType(), $activite);
+        // On fait le lien Requête <-> Formulaire
+        // À partir de maintenant, la variable $activite contient les valeurs entrées dans le formulaire par l'e visiteur l'admin
+        $form->handleRequest($request);
+
 
         $season = new Saison;
         $year = $season->connaitreSaison();
         unset($season);
 
-        if ($type == "admin") {
+       
             $user = $this->getDoctrine()->getManager()->getRepository('SC\UserBundle\Entity\User')->find($email);
             // On crée un objet Activite
             $activite = new Activite();
@@ -109,21 +117,24 @@ class ActiviteController extends Controller
             if ($form->isValid()) {
                 $saison = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Saison')->find($year);
                 $saison -> addActivite($activite);
+
             // On l'enregistre notre objet $activite dans la base de données, par exemple
-                $em = $this->getDoctrine()->getManager();
-                $em->persist($activite);
-                $em->flush();
-                $request->getSession()->getFlashBag()->add('info', 'Activité bien enregistrée');
-                // On redirige vers la page de visualisation de l'activité nouvellement créée
-                return $this->redirect($this->generateUrl('sc_activite_view', array('id' => $activite->getId())));
-            }
-            // À ce stade, le formulaire n'est pas valide car :
-            // - Soit la requête est de type GET, donc l'admin vient d'arriver sur la page et veut voir le formulaire
-            // - Soit la requête est de type POST, mais le formulaire contient des valeurs invalides, donc on l'affiche de nouveau
-            return $this->render('SCActiviteBundle:Activite:add.html.twig', array('form' => $form->createView(),'type' => $type
-        ));
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($activite);
+            $em->flush();
+            $request->getSession()->getFlashBag()->add('info', 'Activité bien enregistrée');
+            // On redirige vers la page de visualisation de l'activité nouvellement créée
+            return $this->redirect($this->generateUrl('sc_activite_view', array('id' => $activite->getId())));
         }
-    } 
+        // À ce stade, le formulaire n'est pas valide car :
+        // - Soit la requête est de type GET, donc l'admin vient d'arriver sur la page et veut voir le formulaire
+        // - Soit la requête est de type POST, mais le formulaire contient des valeurs invalides, donc on l'affiche de nouveau
+        return $this->render('SCActiviteBundle:Activite:add.html.twig', array('form' => $form->createView()
+        ));
+        
+         
+    
+    }
   
  
   
@@ -131,8 +142,7 @@ class ActiviteController extends Controller
 
     public function editAction($id, Request $request)
     {
-        $session = $request->getSession();
-        $type=$session->get('type');
+     
         $em = $this->getDoctrine()->getManager();
 
         // On récupère l'activité $id
@@ -146,14 +156,12 @@ class ActiviteController extends Controller
 
         if ($form->handleRequest($request)->isValid()) {
         // Inutile de persister ici, Doctrine connait déjà notre activité
-        $em->flush();
-
-        $request->getSession()->getFlashBag()->add('info', 'Activité bien modifiée.');
-
-          return $this->redirect($this->generateUrl('sc_activite_view', array('id' => $activite->getId())));
+            $em->flush();
+            $request->getSession()->getFlashBag()->add('info', 'Activité bien modifiée');
+            return $this->redirect($this->generateUrl('sc_activite_view', array('id' => $activite->getId())));
         }
 
-        return $this->render('SCActiviteBundle:Activite:edit.html.twig', array('form'   => $form->createView(),'activite' => $activite,'type' =>$type ));// Je passe également l'activité à la vue si jamais elle veut l'afficher))
+        return $this->render('SCActiviteBundle:Activite:edit.html.twig', array('form'   => $form->createView(),'activite' => $activite));// Je passe également l'activité à la vue si jamais elle veut l'afficher))
     }
     
   
@@ -161,12 +169,15 @@ class ActiviteController extends Controller
   
     public function deleteAction($id,Request $request)
     {
+
+        //on recupere l'entity managere 
+
         
         $season = new Saison;
         $year = $season->connaitreSaison();
         unset($season);
         $session = $request->getSession();
-        $type=$session->get('type');
+
         $em = $this->getDoctrine()->getManager();
         $repository = $em->getRepository('SCActiviteBundle:Activite');
  
@@ -185,7 +196,9 @@ class ActiviteController extends Controller
             $em->remove($activite);
             $em->flush();
             $listeActivites = $em->getRepository('SCActiviteBundle:Activite')->findAll();
-            return $this->render('SCActiviteBundle:Activite:index.html.twig', array('listeActivites' => $listeActivites,'type' =>$type,'year' => $year));
+
+            return $this->render('SCActiviteBundle:Activite:index.html.twig', array('listeActivites' => $listeActivites));
+
         }    
     }
 
@@ -215,4 +228,62 @@ class ActiviteController extends Controller
             'form' => $form->createView(),
             ));
     }
+    
+    // permet de connaitre la saison courante
+    public function connaitreSaison() {
+        
+        $date = new \DateTime();
+        $annee = $date->format('Y');
+        $mois = $date->format('m');
+        
+        if ($mois > 8) {
+            return $annee;
+        }
+        else {
+            return $annee-1;
+        }
+    }
+    
+    
+    public function inscriptionActiviteAction($id,Request $request) 
+    {
+        $em = $this->getDoctrine()->getManager();
+        $session = $request->getSession();
+        $email = $session->get('email');
+        $inscriptionActivite = new InscriptionActivite();
+        $activite = $em->getRepository('SC\ActiviteBundle\Entity\Activite')->find($id);
+        $inscriptionActivite -> setActivite($activite);
+        $inscriptionActivite -> setPrixPayeActivite(0);
+        $year = $this->connaitreSaison();  
+        $saison = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Saison')->find($year);
+        unset($season);
+        $inscriptionActivite -> setSaison($saison);
+        $defaultData = array('message' => 'Type your message here');
+        $form = $this->createFormBuilder($defaultData)
+           ->add('Enfant', 'entity', array('class'=> 'SC\UserBundle\Entity\Enfant','property' => 'prenomNom', 'multiple' => false,'expanded' => false,'required' => true, 'query_builder' => function (EnfantRepository $repository) use ($email) { return $repository->
+            getEnfant($email); },))
+          ->add('enregistrer','submit')
+          ->getForm();
+        $form->handleRequest($request);
+        if ($form->isValid()){
+            $data = $form->getData();
+            $enfant = $data ['Enfant'];
+            $inscriptionActivite -> setEmail($enfant);
+            $inscriptionActivite ->setNomEnfant($enfant);
+            $inscriptionActivite ->setPrenomEnfant($enfant);
+            $em->persist($inscriptionActivite);
+            $em->flush();
+            $request->getSession()->getFlashBag()->add('info', 'Inscription bien enregistrée');
+            return $this->redirect($this->generateUrl('sc_activite_homepage'));
+        }
+            return $this->render('SCActiviteBundle:InscriptionActivite:addinscriactivite.html.twig', array(
+            'form' => $form->createView(),
+            ));
+        
+        
+        
+    }
+    
+    
+
 }

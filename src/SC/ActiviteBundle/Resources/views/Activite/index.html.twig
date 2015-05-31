@@ -5,8 +5,9 @@
 <ul>
     
    
+
     <center> <h2> Saison: {{ app.session.get('year') }} </h2> </center>
- 
+
     {% for activite in listeActivites %}
         <a href="{{ path('sc_activite_view', {'id': activite.id}) }}">
           {{ activite.nomActivite }}
@@ -14,7 +15,7 @@
         <br>
     {% endfor %}
         <br>
-        {% if app.session.get('type') == "admin" %}
+        {% if is_granted('ROLE_ADMIN') %}
         <a href="{{ path('sc_activite_add')}}">
           Ajouter une activité
         </a>

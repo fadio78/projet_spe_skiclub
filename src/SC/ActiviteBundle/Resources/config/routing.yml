@@ -38,7 +38,7 @@ sc_activite_voirSortie:
         id: \d+ 
         
 sc_activite_deleteSortie:
-    path:      /deleteSortie/{id}
+    path:      /deleteSortie/{id}/{dateSortie}/{lieu}
     defaults:  { _controller: SCActiviteBundle:Sortie:deleteSortie}
     requirements:
         id: \d+
@@ -70,3 +70,27 @@ sc_activite_editStage:
         id: \d+
         debutStage: "[0-9-]+"
         finStage: "[0-9-]+"
+
+sc_activite_inscriptionActivite:
+    path:      /inscriptionActivite/{id}
+    defaults:  { _controller: SCActiviteBundle:Activite:inscriptionActivite }
+    requirements:
+        id: \d+
+        
+sc_activite_inscriptionActivite:
+    path:      /inscriptionActivite/{id}
+    defaults:  { _controller: SCActiviteBundle:Activite:inscriptionActivite }
+    requirements:
+        id: \d+
+        
+sc_activite_choixSortie:
+    path:      /choixSortie/{id}/
+    defaults:  { _controller: SCActiviteBundle:InscriptionSortie:choixSortie }
+    requirements:
+        id: \d+
+        
+sc_activite_actionSortie:
+    path:      /actionSortie/{id}/{dateSortie}/{lieu}
+    defaults:  { _controller: SCActiviteBundle:Sortie:actionSortie }
+    requirements:
+        id: \d+    
