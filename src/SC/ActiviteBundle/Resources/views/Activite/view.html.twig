@@ -34,8 +34,13 @@
      
     <a href="{{ path('sc_activite_inscriptionActivite' , {'id': activite.id})}}" class="btn btn-default">
       <button type="submit" class="btn btn-primary pull-right">s'inscrire</button>
-    </a>
     
+    </a>
+        <a href="{{ path('sc_activite_voirSortie', {'id': activite.id}) }}" class="btn btn-default">
+      <i class="glyphicon glyphicon-edit"></i>
+      Sortie prévues
+    </a> 
+      
     {% if is_granted('ROLE_ADMIN') %}
     <a href="{{ path('sc_activite_edit', {'id': activite.id}) }}" class="btn btn-default">
       <i class="glyphicon glyphicon-edit"></i>
@@ -46,10 +51,6 @@
       Supprimer l'activité
     </a>
       <br><br/>
-    <a href="{{ path('sc_activite_voirSortie', {'id': activite.id}) }}" class="btn btn-default">
-      <i class="glyphicon glyphicon-edit"></i>
-      Sortie prévues
-    </a> 
     <a href="{{ path('sc_activite_ajoutSortie', {'id': activite.id}) }}" class="btn btn-default">
       <i class="glyphicon glyphicon-edit"></i>
       Ajouter une sortie

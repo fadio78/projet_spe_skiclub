@@ -109,7 +109,7 @@ class SortieController extends Controller
         if (is_null($activite)==false) {
             
             //on recupere toutes les sorties
-            $listSortie = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Sortie')->findAll();
+            $listSortie = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Sortie')->findByActivite($activite);
             return $this->render('SCActiviteBundle::viewSortie.html.twig',array('listSortie' => $listSortie, 'activite' => $activite ));
         
         }

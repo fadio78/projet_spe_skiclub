@@ -12,12 +12,12 @@ use Doctrine\ORM\EntityRepository;
  */
 class EnfantRepository extends EntityRepository
 {
-    
-    public function getEnfant($email)
-    {
-        $qb = $this->createQueryBuilder('e');
-        $qb->where('e.userParent = :email')
-	   ->setParameter('email', $email);
-        return $qb;
-    } 
+
+  public function getPublishedQueryBuilder($parent)
+  {
+    return $this->createQueryBuilder('a')
+      ->where('a.userParent = :parents')
+      ->setParameter('parents', $parent);
+  }
+
 }
