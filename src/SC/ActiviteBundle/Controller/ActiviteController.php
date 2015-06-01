@@ -170,9 +170,6 @@ class ActiviteController extends Controller
     public function deleteAction($id,Request $request)
     {
 
-        //on recupere l'entity managere 
-
-        
         $season = new Saison;
         $year = $season->connaitreSaison();
         unset($season);
@@ -193,6 +190,7 @@ class ActiviteController extends Controller
         else {
             $saison = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Saison')->find($year);
             $saison -> removeActivite($activite);
+            $this->suppSoritesEtInscrit($activite);
             $em->remove($activite);
             $em->flush();
             $listeActivites = $em->getRepository('SCActiviteBundle:Activite')->findAll();
@@ -200,6 +198,19 @@ class ActiviteController extends Controller
             return $this->render('SCActiviteBundle:Activite:index.html.twig', array('listeActivites' => $listeActivites));
 
         }    
+    }
+    
+    public function suppSoritesEtInscrit($activite) {
+        $em = $this->getDoctrine()->getManager();
+        $sorties = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Sortie')->findBy(array('activite'=> $activite));
+            foreach ($sorties as $sortie) {
+                $em->remove($sortie);
+            }
+        $inscrits = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\InscriptionSortie')->findBy(array('idActivite'=> $activite));    
+            foreach ($inscrits as $enfant) {
+                $em->remove($enfant);
+            }        
+        $em->flush();
     }
 
     public function ajoutSortieAction($id,Request $request) {
@@ -243,47 +254,6 @@ class ActiviteController extends Controller
             return $annee-1;
         }
     }
-    
-    
-    public function inscriptionActiviteAction($id,Request $request) 
-    {
-        $em = $this->getDoctrine()->getManager();
-        $session = $request->getSession();
-        $email = $session->get('email');
-        $inscriptionActivite = new InscriptionActivite();
-        $activite = $em->getRepository('SC\ActiviteBundle\Entity\Activite')->find($id);
-        $inscriptionActivite -> setActivite($activite);
-        $inscriptionActivite -> setPrixPayeActivite(0);
-        $year = $this->connaitreSaison();  
-        $saison = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Saison')->find($year);
-        unset($season);
-        $inscriptionActivite -> setSaison($saison);
-        $defaultData = array('message' => 'Type your message here');
-        $form = $this->createFormBuilder($defaultData)
-           ->add('Enfant', 'entity', array('class'=> 'SC\UserBundle\Entity\Enfant','property' => 'prenomNom', 'multiple' => false,'expanded' => false,'required' => true, 'query_builder' => function (EnfantRepository $repository) use ($email) { return $repository->
-            getEnfant($email); },))
-          ->add('enregistrer','submit')
-          ->getForm();
-        $form->handleRequest($request);
-        if ($form->isValid()){
-            $data = $form->getData();
-            $enfant = $data ['Enfant'];
-            $inscriptionActivite -> setEmail($enfant);
-            $inscriptionActivite ->setNomEnfant($enfant);
-            $inscriptionActivite ->setPrenomEnfant($enfant);
-            $em->persist($inscriptionActivite);
-            $em->flush();
-            $request->getSession()->getFlashBag()->add('info', 'Inscription bien enregistrée');
-            return $this->redirect($this->generateUrl('sc_activite_homepage'));
-        }
-            return $this->render('SCActiviteBundle:InscriptionActivite:addinscriactivite.html.twig', array(
-            'form' => $form->createView(),
-            ));
-        
-        
-        
-    }
-    
     
 
 }

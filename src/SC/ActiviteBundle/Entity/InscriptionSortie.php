@@ -19,23 +19,23 @@ class InscriptionSortie
     private $participation;
     
     /**
-     * @ORM\ManyToOne(targetEntity="SC\ActiviteBundle\Entity\Sortie")
-     * @ORM\JoinColumn(nullable=false, name="dateSortie", referencedColumnName="dateSortie")
+     * @var string
+     * @ORM\Column(name="dateSortie", type="string")
      * @ORM\Id
-     */    
-    private $sortie;
+     */   
+    private $dateSortie;
 
     /**
-     * @ORM\ManyToOne(targetEntity="SC\ActiviteBundle\Entity\Activite")
-     * @ORM\JoinColumn(nullable=false, name="idActivite", referencedColumnName="id")
+     * @var integer
+     * @ORM\Column(name="idActivite", type="integer")
      * @ORM\Id
      */   
     private $idActivite;  
     
     
     /**
-     * @ORM\ManyToOne(targetEntity="SC\UserBundle\Entity\Enfant")
-     * @ORM\JoinColumn(nullable=false, name="email", referencedColumnName="email")
+     * @var string
+     * @ORM\Column(name="email", type="string")
      * @ORM\Id
      */    
     private $emailParent;
@@ -54,6 +54,8 @@ class InscriptionSortie
      */    
     private $prenomEnfant;     
  
+
+
 
     /**
      * Set participation
@@ -78,8 +80,74 @@ class InscriptionSortie
         return $this->participation;
     }
 
+    /**
+     * Set dateSortie
+     *
+     * @param string $dateSortie
+     * @return InscriptionSortie
+     */
+    public function setDateSortie($dateSortie)
+    {
+        $this->dateSortie = $dateSortie;
 
-  
+        return $this;
+    }
+
+    /**
+     * Get dateSortie
+     *
+     * @return string 
+     */
+    public function getDateSortie()
+    {
+        return $this->dateSortie;
+    }
+
+    /**
+     * Set idActivite
+     *
+     * @param integer $idActivite
+     * @return InscriptionSortie
+     */
+    public function setIdActivite($idActivite)
+    {
+        $this->idActivite = $idActivite;
+
+        return $this;
+    }
+
+    /**
+     * Get idActivite
+     *
+     * @return integer 
+     */
+    public function getIdActivite()
+    {
+        return $this->idActivite;
+    }
+
+    /**
+     * Set emailParent
+     *
+     * @param string $emailParent
+     * @return InscriptionSortie
+     */
+    public function setEmailParent($emailParent)
+    {
+        $this->emailParent = $emailParent;
+
+        return $this;
+    }
+
+    /**
+     * Get emailParent
+     *
+     * @return string 
+     */
+    public function getEmailParent()
+    {
+        return $this->emailParent;
+    }
 
     /**
      * Set nomEnfant
@@ -125,76 +193,5 @@ class InscriptionSortie
     public function getPrenomEnfant()
     {
         return $this->prenomEnfant;
-    }
-
-    /**
-     * Set sortie
-     *
-     * @param \SC\ActiviteBundle\Entity\Sortie $sortie
-     * @return InscriptionSortie
-     */
-    public function setSortie(\SC\ActiviteBundle\Entity\Sortie $sortie)
-    {
-        $this->sortie = $sortie;
-
-        return $this;
-    }
-
-    /**
-     * Get sortie
-     *
-     * @return \SC\ActiviteBundle\Entity\Sortie 
-     */
-    public function getSortie()
-    {
-        return $this->sortie;
-    }
-
-
-    /**
-     * Set emailParent
-     *
-     * @param \SC\UserBundle\Entity\Enfant $emailParent
-     * @return InscriptionSortie
-     */
-    public function setEmailParent(\SC\UserBundle\Entity\Enfant $emailParent)
-    {
-        $this->emailParent = $emailParent;
-
-        return $this;
-    }
-
-    /**
-     * Get emailParent
-     *
-     * @return \SC\UserBundle\Entity\Enfant 
-     */
-    public function getEmailParent()
-    {
-        return $this->emailParent;
-    }
-
-
-    /**
-     * Set idActivite
-     *
-     * @param \SC\ActiviteBundle\Entity\Activite $idActivite
-     * @return InscriptionSortie
-     */
-    public function setIdActivite(\SC\ActiviteBundle\Entity\Activite $idActivite)
-    {
-        $this->idActivite = $idActivite;
-
-        return $this;
-    }
-
-    /**
-     * Get idActivite
-     *
-     * @return \SC\ActiviteBundle\Entity\Activite 
-     */
-    public function getIdActivite()
-    {
-        return $this->idActivite;
     }
 }

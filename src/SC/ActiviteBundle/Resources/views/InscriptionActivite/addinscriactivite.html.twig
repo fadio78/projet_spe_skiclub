@@ -8,4 +8,20 @@
 {% block activité_body %}
   {{ include("SCActiviteBundle:InscriptionActivite:forminscriactivite.html.twig") }}
  
+
+
+
+  <p>
+    {# On affiche tous les messages flash dont le nom est « info » #}
+      {% for message in app.session.flashbag.get('info') %}
+        <FONT COLOR="red" > <p>{{ message }}</p> </FONT>
+      {% endfor %}
+  </p>
+  
+  <p>
+    <a href="{{ path('sc_activite_homepage') }}" class="btn btn-default">
+      <i class="glyphicon glyphicon-chevron-left"></i>
+      Retour à la liste
+    </a>
+  
 {% endblock %} 
