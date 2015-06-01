@@ -111,3 +111,8 @@ sc_admin_changePassword:
     requirements : 
          email : "[^/]+"
 
+sc_activite_getChoix:
+    path:      /getChoix/{id}
+    defaults:  { _controller: SCActiviteBundle:InscriptionSortie:getChoix }
+    requirements:
+        id: \d+     

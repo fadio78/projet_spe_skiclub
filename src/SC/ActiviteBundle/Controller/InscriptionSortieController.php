@@ -184,12 +184,22 @@ class InscriptionSortieController extends Controller
         if ($form->isValid()){
             $data = $form->getData();
             $activite = $data['activite'];
-            $mesSorties = $em->getRepository('SC\ActiviteBundle\Entity\InscriptionSortie')
-                                ->findBy(array('emailParent'=>$request->getSession()->get('email'),'idActivite' => $activite->getId()));
+            $id = $activite->getId();
+            $mesSorties = $em->getRepository('SC\ActiviteBundle\Entity\InscriptionSortie')->findBy(array('idActivite' => $id,'emailParent'=>$request->getSession()->get('email')));
             
-            return $this->render('SCUserBundle:Security:mesSorties.html.twig', array('mesSorties' => $mesSorties, 'activite'=> $activite));
+            return $this->render('SCUserBundle:Security:mesSorties.html.twig', array('activite'=> $activite, 'mesSorties' => $mesSorties));
         }
         
         return $this->render('SCUserBundle:Security:monCompte.html.twig', array('form' => $form->createView(),'voirActivite' => 1,'nom'=> $request->getSession()->get('email'), 'listEnfants'=>$listEnfants ));
+    }
+    
+    public function getChoixAction($id,Request $request) {
+        $em = $this->getDoctrine()->getManager();
+        $activite = $em->getRepository('SC\ActiviteBundle\Entity\Activite')->find($id);
+        if(is_null($activite)) {
+            return $this->pageErreur("cette activité n'existe pas");
+        }
+        $mesSorties = $em->getRepository('SC\ActiviteBundle\Entity\InscriptionSortie')->findBy(array('idActivite' => $id,'emailParent'=>$request->getSession()->get('email')));
+        return $this->render('SCUserBundle:Security:mesSorties.html.twig', array('activite'=> $activite, 'mesSorties' => $mesSorties,'choix'=>1));
     }
 }    
