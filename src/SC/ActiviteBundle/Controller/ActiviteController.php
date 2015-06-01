@@ -191,9 +191,9 @@ class ActiviteController extends Controller
             $listeInscritsActivites = $re ->findby(array('activite' => $activite));
             if (! is_null($listeInscritsActivites))
             { 
-                foreach ($inscription as $listeInscritsActivites)
+                foreach ($listeInscritsActivites as $inscription)
                 {
-                    $em -> remove($insciption);
+                    $em -> remove($inscription);
                 }
                 
             } 
