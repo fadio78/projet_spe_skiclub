@@ -8,18 +8,19 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use SC\ActiviteBundle\Entity\Activite;
 use SC\ActiviteBundle\Form\ActiviteType;
 use SC\ActiviteBundle\Form\LieuType;
-use SC\ActiviteBundle\Form\SortieType;
+use SC\ActiviteBundle\Form\StageType;
 use SC\ActiviteBundle\Form\ActiviteEditType;
 use SC\UserBundle\Entity\User;
+use SC\UserBundle\Entity\EnfantRepository;
 use SC\UserBundle\Entity\Licence;
-use SC\ActiviteBundle\Entity\Sortie;
+use SC\ActiviteBundle\Entity\Stage;
 use SC\ActiviteBundle\Entity\Lieu;
 use SC\ActiviteBundle\Entity\Saison;
-use SC\ActiviteBundle\Entity\InscriptionSortie;
-use SC\ActiviteBundle\Form\InscriptionSortieType;
+use SC\ActiviteBundle\Entity\InscriptionStage;
+use SC\ActiviteBundle\Form\InscriptionStageType;
 
 
-class InscriptionSortieController extends Controller 
+class InscriptionStageController extends Controller 
 {
     //genere une page d'erreur si besoin
     public function pageErreur($message) {
@@ -30,71 +31,68 @@ class InscriptionSortieController extends Controller
     }
     
     //liste les enfants d'un utilisateur
-    public function getEnfantAction($id,Request $request,$dateSortie,$lieu) {
-           
+    public function viewChildrenAction($id, $debutStage, $finStage, Request $request) {
+
         $em = $this->getDoctrine()->getManager();
-        $season = new Saison;
+        $repository = $this
+          ->getDoctrine()
+          ->getManager()
+          ->getRepository('SCActiviteBundle:Stage');
+        
+        $season = new Saison();
         $year = $season->connaitreSaison();
         $activite = $em->getRepository('SC\ActiviteBundle\Entity\Activite')->find($id);
         $saison = $em->getRepository('SC\ActiviteBundle\Entity\Saison')->findOneByAnnee($year);
-        $nomLieu = $em->getRepository('SC\ActiviteBundle\Entity\Lieu')->findOneByNomLieu($lieu);
-        $sortie = $em->getRepository('SC\ActiviteBundle\Entity\Sortie')
-                                                        ->findOneBy(array('dateSortie' => $dateSortie,'activite' =>  $activite, 
-                                                                                            'saison'=>$saison,'lieu'=>$nomLieu));
+        $stage = $em->getRepository('SC\ActiviteBundle\Entity\Stage')
+            ->findOneBy(array('debutStage' => $debutStage, 'finStage' => $finStage,'activite' =>  $activite));
         $parents = $em->getRepository('SC\UserBundle\Entity\User')->findOneByEmail($request->getSession()->get('email'));
+        $email = $parents->getEmail();
         
-        if(is_null($activite) OR is_null($sortie) OR is_null($nomLieu)) {
-            return $this->pageErreur("paramètres entrés invalides");
+        $inscriptionStage = new InscriptionStage();
+        $inscriptionStage -> setActivite($activite);
+        $inscriptionStage -> setEmail($email);
+        $inscriptionStage -> setDebutStage($debutStage);
+        $inscriptionStage -> setFinStage($finStage);
+        $inscriptionStage -> setPrixPayeStage(0);
+        
+        if(is_null($activite) OR is_null($stage) OR is_null($saison) OR is_null($parents)) {
+            $response = new Response;
+            $response->setContent("Error 404: not found");
+            $response->setStatusCode(Response::HTTP_NOT_FOUND);
+            return $response;
         }
-        $request->getSession()->set('sortie', $sortie);
-        $enfants = $em->getRepository('SC\UserBundle\Entity\Enfant')->findBy(array('userParent' => $parents));
         
-        return $this->render('SCActiviteBundle:Sortie:viewEnfant.html.twig', array('enfants'=> $enfants,'activite'=> $activite));        
+        $listeEnfants = $em->getRepository('SC\UserBundle\Entity\Enfant')->findBy(array('userParent' => $parents));
+        $defaultData = array('message' => 'Type your message here');
         
-      /*  if (is_null($activite)==true) {
-            return $this->pageErreur("l'activite demandée n'existe pas !");
-        }
-        
-        $inscription = new InscriptionSortie;
-        //on recupere le userParent
-        $email = $request->getSession()->get('email'); 
-        $parents = $this->getDoctrine()->getManager()->getRepository('SC\UserBundle\Entity\User')->findOneByEmail($email);
-        $form = $this->get('form.factory')->create(new InscriptionSortieType($parents,$activite), $inscription);
+        $form = $this->createFormBuilder($defaultData)
+           ->add('Enfant', 'entity', array('class'=> 'SC\UserBundle\Entity\Enfant'
+               ,'property' => 'prenomNom', 'multiple' => false,'expanded' => false,
+               'required' => true, 'query_builder' => function (EnfantRepository $repository) 
+               use ($email) { return $repository->getEnfant($email); }))
+          ->add('Enregistrer','submit')->getForm();
         $form->handleRequest($request);
-        
         if ($form->isValid()) {
-            //on teste si l'enfant est deja inscrit
-            $sortie = $inscription->getSortie();
-            $enfant = $inscription->getEmailParent();
-
-            //mise a jour des differents champs de l'instance d'InscriptionObjet
-            $inscription->setIdActivite($activite);
-            $inscription->setNomEnfant($enfant->getNomEnfant());
-            $inscription->setPrenomEnfant($enfant->getPrenomEnfant());
-            $inscription->setParticipation(0);
-
-            //requete sur inscriptionsorite impossible ??
-            //$listParticipant = $em->getRepository('SC\ActiviteBundle\Entity\InscriptionSortie')->findBy(array('sortie'=>$sortie,'emailParent'=>$enfant));
-            $listParticipant = $em->getRepository('SC\ActiviteBundle\Entity\InscriptionSortie')->findAll();
-            
-            $em->persist($inscription);
-            $em->flush();
-            
-            $request->getSession()->set('inscription', $inscription);
-            return $this->render('SCActiviteBundle::viewEnfant.html.twig', array('enfants'=> $enfant, 'sortie' => $sortie));
+        $data = $form->getData();
+        $enfant = $data ['Enfant'];
+        $inscriptionStage ->setNomEnfant($enfant -> getNomEnfant());
+        $inscriptionStage ->setPrenomEnfant($enfant -> getPrenomEnfant());
+        return $this->render('SCActiviteBundle:Stage:viewEnfant.html.twig', array('listeEnfants'=> $listeEnfants,'activite'=> $activite));
+        } else {
+            $response = new Response;
+            $response->setContent("Error 404: not found");
+            $response->setStatusCode(Response::HTTP_NOT_FOUND);
+            return $response;
         }
-        return $this->render('SCActiviteBundle::viewSortie.html.twig', array(
-            'form' => $form->createView(), 'inscription' => 1,
-            ));*/
     }
     
-    // met a jout les table  inscriptionSortie
-    public function inscrireEnfantAction($id,Request $request,$userParent,$nomEnfant,$prenomEnfant) {
+    // met a jout les tables  inscriptionStage
+    public function inscrireAction($id, $userParent, $nomEnfant, $prenomEnfant, Request $request) {
         $em = $this->getDoctrine()->getManager();
         //verifier qu'il a la licence
         $activite = $em->getRepository('SC\ActiviteBundle\Entity\Activite')->find($id);
-        $sortie = $request->getSession()->get('sortie');
-        if ($this->estInscrit($id,$sortie, $userParent, $nomEnfant, $prenomEnfant)==true) {
+        $stage = $request->getSession()->get('stage');
+        if ($this->estInscrit($id,$stage, $userParent, $nomEnfant, $prenomEnfant)==true) {
             return $this->pageErreur($nomEnfant.' '.'est déja inscrit à cette sortie');
         }
         
@@ -112,14 +110,14 @@ class InscriptionSortieController extends Controller
         return $this->render('SCActiviteBundle:Activite:view.html.twig', array('activite'=> $activite));
     }
     
-    //retourne true si l'enfant est deja inscrit a la sortie
+    //retourne true si l'enfant est deja inscrit au stage
     //false sinon
-    public function estInscrit($id,$sortie,$userParent,$nomEnfant,$prenomEnfant) {
+    public function estInscrit($id, $stage, $userParent, $nomEnfant, $prenomEnfant) {
         $em = $this->getDoctrine()->getManager();
-        $listeInscrit = $em->getRepository('SC\ActiviteBundle\Entity\InscriptionSortie')
-                                ->findOneBy(array('dateSortie'=>$sortie->getDateSortie(),'idActivite'=>$id, 
+        $enfantInscrit = $em->getRepository('SC\ActiviteBundle\Entity\InscriptionStage')
+                                ->findOneBy(array('debutStage'=>$stage->getDebutStage(),'finStage','idActivite'=>$id, 
                                         'emailParent'=>$userParent,'nomEnfant' => $nomEnfant, 'prenomEnfant'=> $prenomEnfant));
-        if($listeInscrit == null) {
+        if($enfantInscrit == null) {
             return false;
         }
         else {
