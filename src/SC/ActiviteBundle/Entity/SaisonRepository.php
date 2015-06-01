@@ -12,4 +12,17 @@ use Doctrine\ORM\EntityRepository;
  */
 class SaisonRepository extends EntityRepository
 {
+    
+    public function activitesSaison($year)
+    {
+        $qb = $this  ->createQueryBuilder('s')
+                     ->join('s.activites','a')
+                     ->where('s.annee = :annee')
+                     ->setParameter('annee', $year);
+     
+
+        return $qb
+               ->getQuery()
+               ->getResult();
+    } 
 }

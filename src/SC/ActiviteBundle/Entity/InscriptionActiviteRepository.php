@@ -20,7 +20,7 @@ class InscriptionActiviteRepository extends EntityRepository
          -> andWhere  ('i.nomEnfant = :nomEnfant')
          ->setParameter('nomEnfant', $inscriptionActivite -> getNomEnfant() )
          ->andwhere('i.saison = :annee')
-                  ->setParameter('nomEnfant', $inscriptionActivite -> getNomEnfant() )
+         ->setParameter('annee', $inscriptionActivite -> getSaison() -> getAnnee() )
          ->andwhere('i.email = :email')
          ->setParameter('email', $inscriptionActivite -> getEmail() )
          ->andwhere('i.activite = :id')
