@@ -48,12 +48,7 @@ class InscriptionStageController extends Controller
         $parents = $em->getRepository('SC\UserBundle\Entity\User')->findOneByEmail($request->getSession()->get('email'));
         $email = $parents->getEmail();
         
-        $inscriptionStage = new InscriptionStage();
-        $inscriptionStage -> setActivite($activite);
-        $inscriptionStage -> setEmail($email);
-        $inscriptionStage -> setDebutStage($debutStage);
-        $inscriptionStage -> setFinStage($finStage);
-        $inscriptionStage -> setPrixPayeStage(0);
+        
         
         if(is_null($activite) OR is_null($stage) OR is_null($saison) OR is_null($parents)) {
             $response = new Response;
@@ -62,7 +57,6 @@ class InscriptionStageController extends Controller
             return $response;
         }
         
-        $listeEnfants = $em->getRepository('SC\UserBundle\Entity\Enfant')->findBy(array('userParent' => $parents));
         $defaultData = array('message' => 'Type your message here');
         
         $form = $this->createFormBuilder($defaultData)
@@ -73,50 +67,43 @@ class InscriptionStageController extends Controller
           ->add('Enregistrer','submit')->getForm();
         $form->handleRequest($request);
         if ($form->isValid()) {
-        $data = $form->getData();
-        $enfant = $data ['Enfant'];
-        $inscriptionStage ->setNomEnfant($enfant -> getNomEnfant());
-        $inscriptionStage ->setPrenomEnfant($enfant -> getPrenomEnfant());
-        return $this->render('SCActiviteBundle:Stage:viewEnfant.html.twig', array('listeEnfants'=> $listeEnfants,'activite'=> $activite));
+            $data = $form->getData();
+            $enfant = $data ['Enfant'];
+            
+            $inscriptionStage = new InscriptionStage();
+            $inscriptionStage -> setActivite($activite);
+            $inscriptionStage -> setUser($parents);
+            $inscriptionStage -> setDebutStage($debutStage);
+            $inscriptionStage -> setFinStage($finStage);
+            $inscriptionStage -> setPrixPayeStage(0);
+            $inscriptionStage ->setNomEnfant($enfant -> getNomEnfant());
+            $inscriptionStage ->setPrenomEnfant($enfant -> getPrenomEnfant());
+            $er = $em ->getRepository('SC\ActiviteBundle\Entity\InscriptionStage');
+            if ($this->estInscrit($activite, $stage, $parents, $enfant->
+                    getNomEnfant(),$enfant->getPrenomEnfant()) === false)
+            {
+                $em->persist($inscriptionStage);
+                $em->flush();
+                $request->getSession()->getFlashBag()->add('info', 'Inscription bien enregistrée');
+                return $this->redirect($this->generateUrl('sc_activite_homepage'));
+            } else {
+                $request->getSession()->getFlashBag()->add('info', 'Enfant déjà inscrit');
+                return $this->render('SCActiviteBundle:Stage:viewEnfant.html.twig', array(
+            'form' => $form->createView()));
+            }
         } else {
-            $response = new Response;
-            $response->setContent("Error 404: not found");
-            $response->setStatusCode(Response::HTTP_NOT_FOUND);
-            return $response;
+            return $this->render('SCActiviteBundle:Stage:viewEnfant.html.twig',
+                    array('form' => $form->createView()));
         }
-    }
-    
-    // met a jout les tables  inscriptionStage
-    public function inscrireAction($id, $userParent, $nomEnfant, $prenomEnfant, Request $request) {
-        $em = $this->getDoctrine()->getManager();
-        //verifier qu'il a la licence
-        $activite = $em->getRepository('SC\ActiviteBundle\Entity\Activite')->find($id);
-        $stage = $request->getSession()->get('stage');
-        if ($this->estInscrit($id,$stage, $userParent, $nomEnfant, $prenomEnfant)==true) {
-            return $this->pageErreur($nomEnfant.' '.'est déja inscrit à cette sortie');
-        }
-        
-        $inscriptionSortie = new InscriptionSortie;
-        $inscriptionSortie->setDateSortie($sortie->getDateSortie());
-        $inscriptionSortie->setEmailParent($userParent);
-        $inscriptionSortie->setIdActivite($id);
-        $inscriptionSortie->setNomEnfant($nomEnfant);
-        $inscriptionSortie->setPreNomEnfant($prenomEnfant);
-        $inscriptionSortie->setParticipation(0);
-        
-        //on persist
-        $em->persist($inscriptionSortie);
-        $em->flush();
-        return $this->render('SCActiviteBundle:Activite:view.html.twig', array('activite'=> $activite));
     }
     
     //retourne true si l'enfant est deja inscrit au stage
     //false sinon
-    public function estInscrit($id, $stage, $userParent, $nomEnfant, $prenomEnfant) {
+    public function estInscrit($activite, $stage, $userParent, $nomEnfant, $prenomEnfant) {
         $em = $this->getDoctrine()->getManager();
         $enfantInscrit = $em->getRepository('SC\ActiviteBundle\Entity\InscriptionStage')
-                                ->findOneBy(array('debutStage'=>$stage->getDebutStage(),'finStage','idActivite'=>$id, 
-                                        'emailParent'=>$userParent,'nomEnfant' => $nomEnfant, 'prenomEnfant'=> $prenomEnfant));
+                                ->findOneBy(array('debutStage'=>$stage->getDebutStage(),'finStage'=>$stage->getFinStage(),'activite'=>$activite, 
+                                        'user'=>$userParent,'nomEnfant' => $nomEnfant, 'prenomEnfant'=> $prenomEnfant));
         if($enfantInscrit == null) {
             return false;
         }
@@ -124,4 +111,6 @@ class InscriptionStageController extends Controller
             return true;
         }
     }
-}    
+    
+    
+}

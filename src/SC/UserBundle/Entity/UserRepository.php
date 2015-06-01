@@ -127,6 +127,20 @@ class UserRepository extends EntityRepository implements UserProviderInterface
   
       
     }
+    //permet de changer le mot de passe 
+            public function changePassword($email, $newpassword ,$salt)
+    {
+
+
+                
+      $query = $this->_em->createQuery('UPDATE SCUserBundle:User a SET a.password = :newpassword , a.salt = :salt where a.email = :email ')
+                       ->setParameter('email', $email)
+                       ->setParameter('newpassword', $newpassword)
+                       ->setParameter('salt', $salt);
+       $query->execute();
+  
+      
+    }
   
   
 }

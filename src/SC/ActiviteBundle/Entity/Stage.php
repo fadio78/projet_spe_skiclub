@@ -292,7 +292,7 @@ class Stage
         return $this->activite;
     }
 
-        /**
+    /**
      * Set user
      *
      * @param \SC\UserBundle\Entity\User $user

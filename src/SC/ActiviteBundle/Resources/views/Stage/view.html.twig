@@ -9,28 +9,34 @@
     {% endfor %}
 
     {% for stage in listeStages %}
-       <b>{{ stage.nomStage }}</b>
-       <br><br/>
-       Type d'activité : {{ activite.nomActivite }}
-       <br/>
-       Saison : {{ stage.saison.annee }}
-       <br/>
-       Lieu : {{ stage.lieu.nomLieu }}
-       <br/>
-       Dates : du {{ stage.debutStage }} au {{ stage.finStage }}
-       <br/>
-       Prix : {{ stage.prixStage }}
-       <br/>
-       Charges : {{ stage.charges }}
-       <br><br/>
-       <a href="{{ path('sc_activite_editStage', {'id': activite.id, 'debutStage' : stage.debutStage, 'finStage' : stage.finStage}) }}" class="btn btn-default">
-       <i class="glyphicon glyphicon-edit"></i>
-            Modifier
-       </a>
-       <a href="{{ path('sc_activite_deleteStage', {'id': activite.id, 'debutStage' : stage.debutStage, 'finStage' : stage.finStage}) }}" class="btn btn-danger">
-            <i class="glyphicon glyphicon-trash"></i>
-            Supprimer
+        <b>{{ stage.nomStage }}</b>
+        <br/>
+        Type d'activité : {{ activite.nomActivite }}
+        <br/>
+        Saison : {{ stage.saison.annee }}
+        <br/>
+        Lieu : {{ stage.lieu.nomLieu }}
+        <br/>
+        Dates : du {{ stage.debutStage }} au {{ stage.finStage }}
+        <br/>
+        Prix : {{ stage.prixStage }}
+        <br/>
+        Charges : {{ stage.charges }}
+        <br><br/>
+        <a href="{{path('sc_activite_viewChildren', {'id': activite.id, 'debutStage' : stage.debutStage, 'finStage' : stage.finStage}) }}" class="btn btn-default">
+            <i class="glyphicon glyphicon-plus-sign"></i>
+            Inscription
         </a>
+        {% if is_granted('ROLE_ADMIN') %}
+            <a href="{{ path('sc_activite_editStage', {'id': activite.id, 'debutStage' : stage.debutStage, 'finStage' : stage.finStage}) }}" class="btn btn-default">
+            <i class="glyphicon glyphicon-edit"></i>
+                 Modifier
+            </a>
+            <a href="{{ path('sc_activite_deleteStage', {'id': activite.id, 'debutStage' : stage.debutStage, 'finStage' : stage.finStage}) }}" class="btn btn-danger">
+                 <i class="glyphicon glyphicon-trash"></i>
+                 Supprimer
+            </a>
+       {%endif%}
         <br><br/>
         <br><br/>        
     {% endfor %}    
