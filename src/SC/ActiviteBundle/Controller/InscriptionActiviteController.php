@@ -34,7 +34,6 @@ class InscriptionActiviteController extends Controller
         $s = new Saison ();
         $year = $s->connaitreSaison();  
         $saison = $em->getRepository('SC\ActiviteBundle\Entity\Saison')->find($year);
-        unset($season);
         $inscriptionActivite -> setSaison($saison);
         $defaultData = array('message' => 'Type your message here');
         $form = $this->createFormBuilder($defaultData)
