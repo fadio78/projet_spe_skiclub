@@ -114,4 +114,8 @@ sc_activite_viewChildren:
         id: \d+
         debutStage: "[0-9-]+"
         finStage: "[0-9-]+"
+        
+sc_activite_viewChildrenStages:
+    path:      /viewChildrenStages/
+    defaults:  {_controller:SCActiviteBundle:InscriptionStage:viewChildrenStages}
 

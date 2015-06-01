@@ -10,6 +10,7 @@ use SC\ActiviteBundle\Form\ActiviteType;
 use SC\ActiviteBundle\Form\LieuType;
 use SC\ActiviteBundle\Form\SortieType;
 use SC\ActiviteBundle\Form\ActiviteEditType;
+use SC\ActiviteBundle\Form\voirActiviteType;
 use SC\UserBundle\Entity\User;
 use SC\UserBundle\Entity\Licence;
 use SC\ActiviteBundle\Entity\Sortie;
@@ -166,5 +167,23 @@ class InscriptionSortieController extends Controller
         $request->getSession()->set('em',$em);*/
         return $this->render('SCActiviteBundle:Activite:tableauRecap.html.php', array('id'=> $id,'year'=>$year,'sorties'=>$sorties,'em'=> $em,'nomAct'=>$nomAct));
         
+    }
+    
+    public function voirActiviteAction(Request $request) {
+        $em = $this->getDoctrine()->getManager();
+        $defaultData = array('message' => 'Type your message here');
+        $form = $this->createFormBuilder($defaultData)
+           ->add('activite', 'entity', array('class'=> 'SC\ActiviteBundle\Entity\Activite','property' => 'nomActivite', 'multiple' => false,'expanded' => false,'required' => true 
+            ))
+            ->add('valider','submit')    
+            ->getForm();
+        $form->handleRequest($request);
+        if ($form->isValid()){
+            $data = $form->getData();
+            $activite = $data['activite'];
+            $enfants = $em->getRepository('SC\UserBundle\Entity\Enfant')->findBy(array());
+        }
+        
+        //return $this->render('SCUserBundle:Security:monCompte.html.twig', array('form' => $form->createView(),'voirActivite' => 1,'nom'=> $request->getSession()->get('email')));
     }
 }    

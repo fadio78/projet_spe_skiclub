@@ -9,19 +9,18 @@
         <h4> montant payé :{{adhesion.montantPaye}} <h4/>
           
          <h4> montant remise :{{adhesion.remise}} <h4/>   
+             
     <form action="{{ path('sc_admin_ajoutMontant',{'email': user.email}) }}" method="post">
     <label for="montant"> Valeur du paiement :</label>
     <input type="number" id="montant" name="_montant" value="" />        
      <input type="submit" value="ajouter" />
+ </form>
+     
+    
+  
+   
 
-     <br>
-     <br>
-     
-     
-    <a href="{{ path('sc_admin_activerAdmin', {'email': user.email}) }}" class="btn btn-default">
-
-     </form>
-     
+    
      
       <form action="{{ path('sc_admin_ajoutRemise',{'email': user.email}) }}" method="post">
     <label for="remise"> Valeur de la remise :</label>
@@ -33,6 +32,15 @@
     <label for="adhesion"> Adhesion :</label>
     <input type="checkbox"  name="_adhesion" value="1" />        
      <input type="submit" value="ajouter" />
+     </form>
+    
+    <form action="{{ path('sc_admin_changePassword',{'email': user.email}) }}" method="post">
+  <label for="password"> nouveau mot de passe :</label>
+    <input type="password" id="password" name="_password" value="" /> 
+    <br>
+    <label for="conf_password"> nouveau mot de passe :</label>
+    <input type="password" id="conf_password" name="_conf_password" value="" />  
+     <input type="submit" value="change" />
      </form>
      
      
@@ -48,7 +56,13 @@
       gestion Enfant(s)
     </a>   
         
-    
+        <h3><p>
+     {# On affiche tous les messages flash dont le nom est « info » #}
+      {% for message in app.session.flashbag.get('info') %}
+        <p>{{ message }}</p>
+      {% endfor %}
+       </p>
+      </h3>
 
     
 {% endblock %}

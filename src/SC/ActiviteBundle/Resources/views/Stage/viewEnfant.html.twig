@@ -3,17 +3,15 @@
 {% block title %}{{ parent() }} - Index{% endblock %}
 {% block activité_body %}
     <ul>
-        <h1> {{ app.session.get('sortie').dateSortie }} {{ app.session.get('sortie').lieu.nomLieu}} </h1>
-        
-        Cliquer sur un des enfants l'inscrira automatiquement à la sortie
-        <br/>
-            {% for enfant in enfants %}
-                <a href="{{path('sc_activite_inscrireEnfant', {'id': activite.id, 'userParent': enfant.userParent.email,
-                                 'nomEnfant': enfant.nomEnfant, 'prenomEnfant': enfant.prenomEnfant}) }}"                 
-                </a><br/>
-                {{ enfant.nomEnfant }} 
-            {%endfor%}    
-    </ul> 
+        {{ include("SCActiviteBundle:Stage:form.html.twig") }}
+        <h4>Choisissez quel enfant inscrire au stage</h4>
+    </ul>
+    <p>
+    {# On affiche tous les messages flash dont le nom est « info » #}
+      {% for message in app.session.flashbag.get('info') %}
+        <FONT COLOR="red" > <p>{{ message }}</p> </FONT>
+      {% endfor %}
+    </p>
     
     
-{% endblock %} 
+{% endblock %}
