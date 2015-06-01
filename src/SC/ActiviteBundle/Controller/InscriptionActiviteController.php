@@ -30,7 +30,6 @@ class InscriptionActiviteController extends Controller
         $inscriptionActivite = new InscriptionActivite();
         $activite = $em->getRepository('SC\ActiviteBundle\Entity\Activite')->find($id);
         $inscriptionActivite -> setActivite($activite);
-        $inscriptionActivite -> setPrixPayeActivite(0);
         $inscriptionActivite -> setEmail($email);
         $s = new Saison ();
         $year = $s->connaitreSaison();  
