@@ -198,7 +198,7 @@ class AdminController extends Controller
     }
     
         public function adhererAction(Request $request, $email)
-            {
+        {
 
                 $annee=2014; 
         $adhesion = $_POST['_adhesion'];
@@ -213,7 +213,41 @@ class AdminController extends Controller
          return  $this->gestionCompteAction( $request, $email);
         
         
-    }
+        }
 
-    
+        
+             public function changePasswordAction(Request $request, $email)
+            {
+                 $password = $_POST['_password'];
+                 $conf_password = $_POST['_conf_password'];
+                 
+                 if($password == $conf_password){
+                 
+                        $user = new User;
+                    $salt = substr(md5(time()),0,10);
+      
+                
+                    $factory = $this->get('security.encoder_factory');
+                    $encoder = $factory->getEncoder($user);
+                    $newpassword = $encoder->encodePassword($password, $salt);
+      
+
+ 
+        
+        $repository = $this
+          ->getDoctrine()
+          ->getManager()
+          ->getRepository('SCUserBundle:User');
+         
+           $adhesion = $repository->changePassword($email,$newpassword, $salt);
+            $request->getSession()->getFlashBag()->add('info', 'mot de passe modifié ');
+                 }else{
+                     $request->getSession()->getFlashBag()->add('info', 'Mot de passe de confirmation incorrecte ');
+                 } 
+            
+         return  $this->gestionCompteAction( $request, $email);
+        
+        
+    }
+         
 }
