@@ -123,5 +123,42 @@ class AdminController extends Controller
         
     }
     
+    public function gestionEnfantAction($email)
+    {
+        $valide = false;
+        $repository = $this
+          ->getDoctrine()
+          ->getManager()
+          ->getRepository('SCActiviteBundle:InscriptionActivite');
+
+        $listeEnfantsInscrits = $repository -> ListeEnfantsinscrits($email);   
+        return $this->render('SCUserBundle:Admin:gestionEnfant.html.twig',array('listeEnfantsInscrits' => $listeEnfantsInscrits, 'valide' => $valide));
+        
+    }
+    
+    
+    public function activierLicenceAction($email,$prenom,$nom,$id)
+    {
+        $em = $this ->getDoctrine() ->getManager();
+        $licenceEnfant = new LicenceEnfant();
+        $re = $em -> getRepository('SCActiviteBundle:Activite');
+        $activite = $re ->find($id);
+        $licence = $activite -> getLicence();
+        $licenceEnfant -> setLicence ($licence);
+        $licenceEnfant -> setEmail($email);
+        $licenceEnfant -> setPrenomEnfant($prenom);
+        $licenceEnfant -> setNomEnfant($nom);
+        $year = $s->connaitreSaison();  
+        $saison = $em->getRepository('SC\ActiviteBundle\Entity\Saison')->find($year);
+        $licenceEnfant -> setSaison($saison);
+        $em->persist($activite);
+        $em->flush();
+        $valide = true;
+        $repository = $em -> getRepository('SCActiviteBundle:InscriptionActivite') ;
+        $listeEnfantsInscrits = $repository -> ListeEnfantsinscrits($email);   
+        return $this->render('SCUserBundle:Admin:gestionEnfant.html.twig',array('listeEnfantsInscrits' => $listeEnfantsInscrits,'valide' => $valide));
+        
+    }
+    
     
 }
