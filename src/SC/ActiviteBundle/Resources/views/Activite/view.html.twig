@@ -64,6 +64,10 @@
       <i class="glyphicon glyphicon-edit"></i>
       Stages prévus
     </a>
+    <a href="{{ path('sc_activite_viewChildrenStages', {'id': activite.id}) }}" class="btn btn-default">
+      <i class="glyphicon glyphicon-edit"></i>
+      Voir les inscriptions aux stages
+    </a>
     {% if is_granted('ROLE_ADMIN') %}
     <a href="{{ path('sc_activite_addStage', {'id': activite.id}) }}" class="btn btn-default">
       <i class="glyphicon glyphicon-edit"></i>

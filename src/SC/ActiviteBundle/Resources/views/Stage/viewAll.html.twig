@@ -1,0 +1,16 @@
+{# src/SC/ActiviteBundle/Resources/views/Stage/viewAll.html.twig #}
+{% extends "SCActiviteBundle:Activite:layout.html.twig" %}
+{% block title %}{{ parent() }} - Index{% endblock %}
+{% block activité_body %}
+    <h3>Stages de {{activite.nomActivite}}</h3>
+<ul>
+    {% for stage in listeInscriptionStages %}
+        {{ stage.nomEnfant }} {{ stage.prenomEnfant }}
+        <br/>
+        Dates : du {{ stage.debutStage }} au {{ stage.finStage }}
+        <br/>
+        <br><br/>
+    {% endfor %}    
+</ul>
+ 
+{% endblock %}
