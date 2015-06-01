@@ -4,21 +4,22 @@
 
 {% block user_body %}
     <h1> email primaire :{{nom}}<h1/>
-    <h2><a href="{{ path('sc_enfant_ajouter') }}">Ajouter un Enfant</a><h2/>
-    <h2><a href="{{ path('sc_user_ajouter') }}">Ajouter utilisateur secondaire</a><h2/>
+    <h4><a href="{{ path('sc_enfant_ajouter') }}">Ajouter un Enfant</a><h4/>
+    <h4><a href="{{ path('sc_user_ajouter') }}">Ajouter utilisateur secondaire</a><h4/>
    
         {% if is_granted('ROLE_ADMIN') %}
-            <h2><a href="{{ path('sc_admin_homepage') }}">Gestion Activité/utilisateur</a><h2/> 
+            <h4><a href="{{ path('sc_admin_homepage') }}">Gestion Activité/utilisateur</a><h4/> 
         {%else%}
-            <h2><a href="{{ path('sc_activite_homepage') }}">Liste des activités proposées</a><h2/>
+            <h4><a href="{{ path('sc_activite_homepage') }}">Liste des activités proposées</a><h4/>
         {% endif %}
         
-    <h2> Enfant(s) inscrit(s) :
+    <h4> Enfant(s) inscrit(s) :
         <ul> <li>{% for enfant in listEnfants %}
                 {{ enfant.prenomEnfant }}<li/>
             {% endfor %}
         </ul>
-   <h2><a href="{{ path('sc_activite_listeEnfantsInscrits') }}">Liste de mes enfants inscrits aux activités</a><h2/>
+     <h4/>
+   <h4><a href="{{ path('sc_activite_listeEnfantsInscrits') }}">Liste de mes enfants inscrits aux activités</a><h4/>
    <h3><p>
     {# On affiche tous les messages flash dont le nom est « info » #}
       {% for message in app.session.flashbag.get('info') %}
