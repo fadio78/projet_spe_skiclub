@@ -101,7 +101,7 @@ class InscriptionSortieController extends Controller
         }
         
         $sortie = $request->getSession()->get('sortie');
-        if ($this->estInscrit($id,$sortie, $userParent, $nomEnfant, $prenomEnfant)==true) {
+        if ($this->estInscrit($id,$sortie, $userParent, $nomEnfant, $prenomEnfant,$year)==true) {
             return $this->pageErreur($nomEnfant.' '.'est déja inscrit à cette sortie');
         }
         
@@ -112,22 +112,23 @@ class InscriptionSortieController extends Controller
         $inscriptionSortie->setNomEnfant($nomEnfant);
         $inscriptionSortie->setPreNomEnfant($prenomEnfant);
         $inscriptionSortie->setParticipation(0);
+        $inscriptionSortie->setSaison($year);
         
         //on persist
         $em->persist($inscriptionSortie);
         $em->flush(); 
-        $mesInscriptions = $em->getRepository('SC\ActiviteBundle\Entity\InscriptionSortie')->findBy(array('emailParent'=>$userParent));
+        $mesInscriptions = $em->getRepository('SC\ActiviteBundle\Entity\InscriptionSortie')->findBy(array('emailParent'=>$userParent,'saison'=>$year));
         $request->getSession()->set('mesInscriptions', $mesInscriptions);
         return $this->render('SCActiviteBundle:Activite:view.html.twig', array('activite'=> $activite));
     }
     
     //retourne true si l'enfant est deja inscrit a la sortie
     //false sinon
-    public function estInscrit($id,$sortie,$userParent,$nomEnfant,$prenomEnfant) {
+    public function estInscrit($id,$sortie,$userParent,$nomEnfant,$prenomEnfant,$year) {
         $em = $this->getDoctrine()->getManager();
         $listeInscrit = $em->getRepository('SC\ActiviteBundle\Entity\InscriptionSortie')
                                 ->findOneBy(array('dateSortie'=>$sortie->getDateSortie(),'idActivite'=>$id, 
-                                        'emailParent'=>$userParent,'nomEnfant' => $nomEnfant, 'prenomEnfant'=> $prenomEnfant));
+                                        'emailParent'=>$userParent,'nomEnfant' => $nomEnfant, 'prenomEnfant'=> $prenomEnfant,'saison'=>$year));
         if($listeInscrit == null) {
             return false;
         }
@@ -148,5 +149,22 @@ class InscriptionSortieController extends Controller
         else {
             return true;
         }
+    }
+    //permet de lister les personnes inscrites aux sorties
+    public function inscritsAction($id,Request $request) {
+        $em = $this->getDoctrine()->getManager();
+        $season = new Saison;
+        $year = $season->connaitreSaison();
+        
+        $saison = $em->getRepository('SC\ActiviteBundle\Entity\Saison')->find($year);
+        $activite = $em->getRepository('SC\ActiviteBundle\Entity\Activite')->find($id);
+        $sorties = $em->getRepository('SC\ActiviteBundle\Entity\Sortie')
+                            ->findBy(array('activite'=>$activite,'saison'=>$saison));
+        $nomAct = $activite->getNomactivite();
+        /*$inscriptions = $em->getRepository('SC\ActiviteBundle\Entity\InscriptionSortie')
+                                ->findBy(array('dateSortie'=>$sorties->getDateSortie(),'idActivite'=>$id,'saison'=>$year));
+        $request->getSession()->set('em',$em);*/
+        return $this->render('SCActiviteBundle:Activite:tableauRecap.html.php', array('id'=> $id,'year'=>$year,'sorties'=>$sorties,'em'=> $em,'nomAct'=>$nomAct));
+        
     }
 }    
