@@ -109,7 +109,7 @@ class AdminController extends Controller
     {
 
         $annee=2014; 
-        $montant = (int)$this->$request->request->get('montant');
+        $montant = $_POST['_montant'];
         $repository = $this
           ->getDoctrine()
           ->getManager()
@@ -122,6 +122,40 @@ class AdminController extends Controller
         
         
     }
+              public function ajoutRemiseAction(Request $request, $email)
+            {
+
+                $annee=2014; 
+        $montant = $_POST['_remise'];
+        $repository = $this
+          ->getDoctrine()
+          ->getManager()
+          ->getRepository('SCUserBundle:Adhesion');
+         
+           $adhesion = $repository->ajoutRemise($email,$annee,$montant);
+              
+             
+         return  $this->gestionCompteAction( $request, $email);
+        
+        
+    }
     
+                  public function adhererAction(Request $request, $email)
+            {
+
+                $annee=2014; 
+        $adhesion = $_POST['_adhesion'];
+        $repository = $this
+          ->getDoctrine()
+          ->getManager()
+          ->getRepository('SCUserBundle:Adhesion');
+         if ($adhesion == 1){
+          $adhesion = $repository->adherer($email,$annee);
+         }     
+             
+         return  $this->gestionCompteAction( $request, $email);
+        
+        
+    }
     
 }

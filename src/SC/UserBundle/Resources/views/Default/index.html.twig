@@ -11,18 +11,19 @@
 
   <h2>Liste des annonces</h2>
   <ul>
-      
-   <li> <a href="{{ path('login') }}">Se connecter</a></li>
+     {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %} 
+   <li><a href="{{ path('logout') }}">Déconnexion</a></li>
+   {%else%}
+    <li> <a href="{{ path('login') }}">Se connecter</a></li>
     <li><a href="{{ path('sc_user_register') }}">S'enregistrer</a></li>
-    <li><a href="{{ path('logout') }}">Déconnexion</a></li>
-
+{% endif %}
     
 
         
       
     
 
-      <li>Pas (encore !) d'annonces</li>
+      
   </ul>
   
 <html>
