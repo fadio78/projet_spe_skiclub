@@ -44,6 +44,15 @@ class SecurityController extends Controller
     ));
     
   }
+    public function paramCompteAction(Request $request)
+  { 
+  
+    
+        return $this->render('SCUserBundle:Security:paramCompte.html.twig');
+        
+        
+    
+  }
   public function compteAction(Request $request)
   {
       
@@ -74,6 +83,25 @@ class SecurityController extends Controller
         $session->set('type',$type );
         $session->set('isPrimaire',$isPrimaire );
         
+
+        
+        return $this->render('SCUserBundle:Security:monCompte.html.twig',array(
+        'nom' => $email       
+        )
+        );
+        
+  }
+    public function compteEnfantAction(Request $request)
+  {
+      
+      
+        $session = $request->getSession();
+      
+        
+        
+        $email = $session->get('email');
+       
+        
         $repository = $this
             ->getDoctrine()
             ->getManager()
@@ -81,8 +109,7 @@ class SecurityController extends Controller
              ;
         $listEnfants = $repository->findby(['userParent' => $email]);
         
-        return $this->render('SCUserBundle:Security:monCompte.html.twig',array(
-        'nom' => $email , 
+        return $this->render('SCUserBundle:Security:monCompteEnfant.html.twig',array(
         'listEnfants'=> $listEnfants 
         )
         );

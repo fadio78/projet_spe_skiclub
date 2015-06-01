@@ -245,8 +245,19 @@ class AdminController extends Controller
           ->getManager()
           ->getRepository('SCUserBundle:User');
          
-           $adhesion = $repository->changePassword($email,$newpassword, $salt);
+          $repository->changePassword($email,$newpassword, $salt);
             $request->getSession()->getFlashBag()->add('info', 'mot de passe modifié ');
+                /*$message = \Swift_Message::newInstance()
+        
+                        
+                        modifier->setSubject('Hello Email')
+        ->setFrom('send@example.com')
+        ->setTo('recipient@example.com')
+        ->setBody('Yfucking ')
+    ;
+
+    $this->get('mailer')->send($message);*/
+            
                  }else{
                      $request->getSession()->getFlashBag()->add('info', 'Mot de passe de confirmation incorrecte ');
                  } 

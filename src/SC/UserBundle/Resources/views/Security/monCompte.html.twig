@@ -4,8 +4,8 @@
 
 {% block user_body %}
     <h1> email primaire :{{nom}}<h1/>
-    <h4><a href="{{ path('sc_enfant_ajouter') }}">Ajouter un Enfant</a><h4/>
-    <h4><a href="{{ path('sc_user_ajouter') }}">Ajouter utilisateur secondaire</a><h4/>
+    <h4><a href="{{ path('sc_user_compteEnfant') }}">Gestion Enfant(s)</a><h4/>
+    <h4><a href="{{ path('sc_user_paramCompte') }}">Paramètres du compte</a><h4/>
    
         {% if is_granted('ROLE_ADMIN') %}
             <h4><a href="{{ path('sc_admin_homepage') }}">Gestion Activité/utilisateur</a><h4/> 
@@ -14,12 +14,7 @@
         {% endif %}
         
 
-    <h4> Enfant(s) inscrit(s) :
-        <ul> {% for enfant in listEnfants %}
-                <li>{{ enfant.prenomEnfant }} </li>
-            {% endfor %}
-        </ul>
-     <h4/>
+
    <h4><a href="{{ path('sc_activite_listeEnfantsInscrits') }}">Liste de mes enfants inscrits aux activités</a><h4/>
    <h3><p>
     {# On affiche tous les messages flash dont le nom est « info » #}
