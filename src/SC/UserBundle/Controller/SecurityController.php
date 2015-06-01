@@ -97,12 +97,17 @@ class SecurityController extends Controller
        
       
       $user = new User;
-      $user->setSalt('' );
+      //création du salt aléatoire
+      $salt = substr(md5(time()),0,10);
+      $user->setSalt($salt );
       $user->setType('user');
       $user->setIsActive(false);
       $user->setIsPrimaire(true);
       $form = $this->get('form.factory')->create(new UserType(), $user);
+
       
+
+    
       
       // il faut aussi remplir la table adheion de l'annee actuel 
       
@@ -118,8 +123,14 @@ class SecurityController extends Controller
       $adhesion->setUser($user);
       
       // On fait le lien Requête <-> Formulaire
-        // À partir de maintenant, la variable $user contient les valeurs entrées dans le formulaire par le visiteur
-        $form->handleRequest($request);
+      // À partir de maintenant, la variable $user contient les valeurs entrées dans le formulaire par le visiteur
+      $form->handleRequest($request);
+      //encodage du mot de passe 
+      $factory = $this->get('security.encoder_factory');
+      $encoder = $factory->getEncoder($user);
+      $password = $encoder->encodePassword($user->getPassword(), $user->getSalt());
+      $user->setPassword($password);
+
         // On vérifie que les valeurs entrées sont correctes
         if ($form->isValid()) {
         // On l'enregistre notre objet $activite dans la base de données, par exemple
@@ -149,7 +160,9 @@ class SecurityController extends Controller
         }    
     }      
       $user = new User;
-      $user->setSalt('' );
+      //création du salt aléatoire
+      $salt = substr(md5(time()),0,10);
+      $user->setSalt($salt);
       $user->setType('user');
       $user->setIsActive(true);     
       $user->setIsPrimaire(false);
@@ -160,6 +173,14 @@ class SecurityController extends Controller
       // On fait le lien Requête <-> Formulaire
         // À partir de maintenant, la variable $user contient les valeurs entrées dans le formulaire par le visiteur
         $form->handleRequest($request);
+        
+        //encodage du mot de passe 
+      $factory = $this->get('security.encoder_factory');
+      $encoder = $factory->getEncoder($user);
+      $password = $encoder->encodePassword($user->getPassword(), $user->getSalt());
+      $user->setPassword($password);
+        
+        
         // On vérifie que les valeurs entrées sont correctes
         if ($form->isValid()) {
         // On l'enregistre notre objet $activite dans la base de données, par exemple

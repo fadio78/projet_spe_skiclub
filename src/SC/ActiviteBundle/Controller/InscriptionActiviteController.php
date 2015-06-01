@@ -29,6 +29,9 @@ class InscriptionActiviteController extends Controller
         $email = $session->get('email');
         $inscriptionActivite = new InscriptionActivite();
         $activite = $em->getRepository('SC\ActiviteBundle\Entity\Activite')->find($id);
+        if (null === $activite) {
+          throw new NotFoundHttpException("L'activité d'id ".$id." n'existe pas.");
+        }
         $inscriptionActivite -> setActivite($activite);
         $inscriptionActivite -> setEmail($email);
         $inscriptionActivite  -> setLicenceValide(0);
