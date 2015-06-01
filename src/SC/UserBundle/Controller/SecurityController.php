@@ -46,9 +46,12 @@ class SecurityController extends Controller
   }
     public function paramCompteAction(Request $request)
   { 
-  
+        $usr= $this->get('security.context')->getToken()->getUser();
     
-        return $this->render('SCUserBundle:Security:paramCompte.html.twig');
+        return $this->render('SCUserBundle:Security:paramCompte.html.twig',array(
+            'user' => $usr       
+            )
+        );
         
         
     
