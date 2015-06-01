@@ -92,6 +92,7 @@ class InscriptionSortieController extends Controller
     public function inscrireEnfantAction($id,Request $request,$userParent,$nomEnfant,$prenomEnfant) {
         $em = $this->getDoctrine()->getManager();
         //verifier qu'il a la licence
+        
         $activite = $em->getRepository('SC\ActiviteBundle\Entity\Activite')->find($id);
         $sortie = $request->getSession()->get('sortie');
         if ($this->estInscrit($id,$sortie, $userParent, $nomEnfant, $prenomEnfant)==true) {
@@ -109,7 +110,7 @@ class InscriptionSortieController extends Controller
         //on persist
         $em->persist($inscriptionSortie);
         $em->flush();
-        $mesInscriptions = $em->getRepository('SC\ActiviteBundle\Entity\InscriptionSortie')->findBy(array('idActivite'=>$id));
+        $mesInscriptions = $em->getRepository('SC\ActiviteBundle\Entity\InscriptionSortie')->findBy(array('emailParent'=>$userParent));
         $request->getSession()->set('mesInscriptions', $mesInscriptions);
         return $this->render('SCActiviteBundle:Activite:view.html.twig', array('activite'=> $activite));
     }
