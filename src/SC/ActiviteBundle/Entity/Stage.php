@@ -22,7 +22,7 @@ class Stage
     /**
      * @var string
      *
-     * @ORM\Column(name="debutStage", type="string", length=255)
+     * @ORM\Column(name="debutStage", type="string", length=20)
      * @ORM\Id
      */
     private $debutStage;
@@ -30,7 +30,7 @@ class Stage
     /**
      * @var string
      *
-     * @ORM\Column(name="finStage", type="string", length=255)
+     * @ORM\Column(name="finStage", type="string", length=20)
      * @ORM\Id
      */
     private $finStage;

@@ -17,14 +17,14 @@ class Adhesion
     /**
      * @ORM\ManyToOne(targetEntity="SC\UserBundle\Entity\User")
      * @ORM\Id
-     * @ORM\JoinColumn(nullable=false,name="email",referencedColumnName="email")
+     * @ORM\JoinColumn(nullable=false,name="email",referencedColumnName="email",onDelete="CASCADE")
      */
   private $user;
 
     /**
      * @ORM\ManyToOne(targetEntity="SC\ActiviteBundle\Entity\Saison")
      * @ORM\Id
-     * @ORM\JoinColumn(nullable=false,name="annee",referencedColumnName="annee")
+     * @ORM\JoinColumn(nullable=false,name="annee",referencedColumnName="annee",onDelete="CASCADE")
      */
   private $saison;
 

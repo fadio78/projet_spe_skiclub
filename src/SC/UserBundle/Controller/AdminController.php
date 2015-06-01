@@ -9,6 +9,11 @@ use Symfony\Component\Security\Core\SecurityContext;
 use SC\UserBundle\Entity\User;
 use SC\UserBundle\Form\UserType;
 use Doctrine\ORM\EntityRepository;
+use SC\ActiviteBundle\Entity\Activite;
+use SC\ActiviteBundle\Entity\InscriptionActivite;
+use SC\LicenceBundle\Entity\Licence;
+use SC\UserBundle\Entity\LicenceEnfant;
+use SC\ActiviteBundle\Entity\Saison;
 
 class AdminController extends Controller
 {
@@ -57,6 +62,19 @@ class AdminController extends Controller
            
            $repository->activerCompte($email);
         $request->getSession()->getFlashBag()->add('info', 'Compte bien activité ');
+        return $this->redirect($this->generateUrl('sc_admin_listUsersInactif'));
+        
+        
+    }
+            public function supprimerCompteAction(Request $request, $email)
+    {
+        $repository = $this
+          ->getDoctrine()
+          ->getManager()
+          ->getRepository('SCUserBundle:User');
+           
+           $repository->supprimerCompte($email);
+        $request->getSession()->getFlashBag()->add('info', 'Compte bien supprimé ');
         return $this->redirect($this->generateUrl('sc_admin_listUsersInactif'));
         
         
@@ -140,7 +158,46 @@ class AdminController extends Controller
         
     }
     
-                  public function adhererAction(Request $request, $email)
+
+    public function gestionEnfantAction($email)
+    {
+        $valide = false;
+        $repository = $this
+          ->getDoctrine()
+          ->getManager()
+          ->getRepository('SCActiviteBundle:InscriptionActivite');
+
+        $listeEnfantsInscrits = $repository -> ListeEnfantsinscrits($email);   
+        return $this->render('SCUserBundle:Admin:gestionEnfant.html.twig',array('listeEnfantsInscrits' => $listeEnfantsInscrits, 'valide' => $valide));
+        
+    }
+    
+    
+    public function activerLicenceAction($email,$prenom,$nom,$id, $annee)
+    {
+        $em = $this ->getDoctrine() ->getManager();
+        $licenceEnfant = new LicenceEnfant();
+        $re = $em -> getRepository('SCActiviteBundle:Activite');
+        $activite = $re ->find($id);
+        $licence = $activite -> getLicence();
+        $licenceEnfant -> setLicence ($licence);
+        $licenceEnfant -> setEmail($email);
+        $licenceEnfant -> setPrenomEnfant($prenom);
+        $licenceEnfant -> setNomEnfant($nom); 
+        $saison = $em->getRepository('SC\ActiviteBundle\Entity\Saison')->find($annee); 
+        $licenceEnfant -> setSaison($saison);
+        $em->persist($licenceEnfant);
+        $repository = $em -> getRepository('SCActiviteBundle:InscriptionActivite') ;
+        $inscriptionActivite = $repository ->findOneBy(array('activite' =>  $activite, 'saison'=> $saison,
+                                               'nomEnfant'=>$nom, 'prenomEnfant' =>$prenom, 'email'=>$email));
+        $inscriptionActivite -> setLicenceValide(1);
+        $em->flush();
+        $listeEnfantsInscrits = $repository -> ListeEnfantsinscrits($email);   
+        return $this->render('SCUserBundle:Admin:gestionEnfant.html.twig',array('listeEnfantsInscrits' => $listeEnfantsInscrits));
+        
+    }
+    
+        public function adhererAction(Request $request, $email)
             {
 
                 $annee=2014; 
@@ -157,5 +214,6 @@ class AdminController extends Controller
         
         
     }
+
     
 }

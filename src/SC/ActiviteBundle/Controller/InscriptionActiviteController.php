@@ -31,10 +31,10 @@ class InscriptionActiviteController extends Controller
         $activite = $em->getRepository('SC\ActiviteBundle\Entity\Activite')->find($id);
         $inscriptionActivite -> setActivite($activite);
         $inscriptionActivite -> setEmail($email);
-        $s = new Saison ();
-        $year = $s->connaitreSaison();  
+        $inscriptionActivite  -> setLicenceValide(0);
+        $saison = new Saison ();
+        $year = $saison->connaitreSaison();  
         $saison = $em->getRepository('SC\ActiviteBundle\Entity\Saison')->find($year);
-        unset($season);
         $inscriptionActivite -> setSaison($saison);
         $defaultData = array('message' => 'Type your message here');
         $form = $this->createFormBuilder($defaultData)

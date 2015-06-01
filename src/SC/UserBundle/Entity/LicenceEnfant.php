@@ -49,17 +49,7 @@ class LicenceEnfant
      */ 
     private $licence;
     
-    
-    
-    /**
-     * Get id
-     *
-     * @return integer 
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
+
 
     /**
      * Set email

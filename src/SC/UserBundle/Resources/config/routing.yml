@@ -32,7 +32,12 @@ sc_admin_activerCompte:
     defaults: { _controller: SCUserBundle:Admin:activerCompte }
     requirements : 
         email : "[^/]+"
-        
+
+sc_admin_supprimerCompte:
+    path:     /admin/suppressionCompte/{email}
+    defaults: { _controller: SCUserBundle:Admin:supprimerCompte }
+    requirements : 
+        email : "[^/]+"
         
 sc_admin_listNoAdmin:
     path:     /admin/listNoAdmin
@@ -58,6 +63,27 @@ sc_admin_ajoutMontant:
     requirements : 
          email : "[^/]+"  
          
+
+
+sc_admin_gestionEnfant:
+    path:     /admin/gestionCompte/gestionEnfant/{email}
+    defaults: { _controller: SCUserBundle:Admin:gestionEnfant }
+    requirements : 
+        email : "[^/]+" 
+        
+
+sc_admin_activerlicence:
+    path:     /admin/gestionCompte/gestionEnfant/{email}/{prenom}/{nom}/{annee}/{id}
+    defaults: { _controller: SCUserBundle:Admin:activerLicence }
+    requirements : 
+        email : "[^/]+" 
+        prenom : "[^/]+"
+        nom : "[^/]+"
+        annee : "[^/]+"
+        id : \d+
+    
+    
+
          
 sc_admin_ajoutRemise:
     path:     /admin/ajoutRemise/{email}
@@ -72,3 +98,4 @@ sc_admin_adherer:
     defaults: { _controller: SCUserBundle:Admin:adherer }
     requirements : 
          email : "[^/]+"  
+

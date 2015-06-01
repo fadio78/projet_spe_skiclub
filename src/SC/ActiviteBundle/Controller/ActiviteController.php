@@ -36,7 +36,6 @@ class ActiviteController extends Controller
         $season = new Saison;
         $year = $season->connaitreSaison();
         $request->getSession()->set('year', $year);
-        unset($season);
         $saison = $em -> getRepository('SCActiviteBundle:Saison') -> find($year);
         
         if (null === $saison) {
@@ -102,10 +101,7 @@ class ActiviteController extends Controller
 
         $season = new Saison;
         $year = $season->connaitreSaison();
-        unset($season);
-
-       
-            $user = $this->getDoctrine()->getManager()->getRepository('SC\UserBundle\Entity\User')->find($email);
+        $user = $this->getDoctrine()->getManager()->getRepository('SC\UserBundle\Entity\User')->find($email);
             // On crée un objet Activite
             $activite = new Activite();
             $activite->setUser($user);
@@ -172,7 +168,6 @@ class ActiviteController extends Controller
 
         $season = new Saison;
         $year = $season->connaitreSaison();
-        unset($season);
         $session = $request->getSession();
 
         $em = $this->getDoctrine()->getManager();
@@ -192,9 +187,19 @@ class ActiviteController extends Controller
             $saison -> removeActivite($activite);
             $this->suppSoritesEtInscrit($activite);
             $em->remove($activite);
+            $re = $em ->getRepository('SC\ActiviteBundle\Entity\InscriptionActivite');
+            $listeInscritsActivites = $re ->findby(array('activite' => $activite));
+            if (! is_null($listeInscritsActivites))
+            { 
+                foreach ($listeInscritsActivites as $inscription)
+                {
+                    $em -> remove($inscription);
+                }
+                
+            } 
             $em->flush();
             $listeActivites = $em->getRepository('SCActiviteBundle:Activite')->findAll();
-
+            
             return $this->render('SCActiviteBundle:Activite:index.html.twig', array('listeActivites' => $listeActivites));
 
         }    
