@@ -3,7 +3,7 @@
 {% extends "SCUserBundle::layout.html.twig" %}
 
 {% block user_body %}
-    <h1> email primaire :{{nom}}<h1/>
+    <p><b> Adresse e-mail</b> : {{nom}}</p>
     <h4><a href="{{ path('sc_enfant_ajouter') }}">Ajouter un Enfant</a><h4/>
     <h4><a href="{{ path('sc_user_ajouter') }}">Ajouter utilisateur secondaire</a><h4/>
    
@@ -22,7 +22,7 @@
      <h4/>
    {%if voirActivite is not defined %}    
    <h4><a href="{{ path('sc_activite_voirActivite') }}">Liste de mes inscriptions</a><h4/>
-   {%endif%}    
+   {%endif%}
    <h3><p>
     {# On affiche tous les messages flash dont le nom est « info » #}
       {% for message in app.session.flashbag.get('info') %}
@@ -34,7 +34,6 @@
           {{ form(form) }}
     {%endif%}    
   
-  </h3>  
+  </h3>
 
 {% endblock %}
-

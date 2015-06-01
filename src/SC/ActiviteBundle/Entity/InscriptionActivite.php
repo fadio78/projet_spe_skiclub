@@ -17,7 +17,7 @@ class InscriptionActivite
     /**
      * @ORM\ManyToOne(targetEntity="SC\ActiviteBundle\Entity\Activite")
      * @ORM\Id
-     * @ORM\JoinColumn(nullable=false,name="id", referencedColumnName="id")
+     * @ORM\JoinColumn(nullable=false,name="id", referencedColumnName="id",onDelete="CASCADE")
      */
     private $activite;
     

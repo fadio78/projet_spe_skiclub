@@ -53,7 +53,13 @@ class ActiviteController extends Controller
             throw new NotFoundHttpException('Page "'.$page.'" inexistante.');
         } */
       // Ici, on récupérera la liste des activités d'une saison donnée, puis on la passera au template
-        $listeActivites = $this -> activitesdelaSaison($year);
+         /*      
+        $repository = $em ->getRepository('SC\ActiviteBundle\Entity\Saison');
+        $listeSaison = $repository-> activitesSaison($year);
+        foreach ($listeSaison as $saison) 
+            $listeActivites = $saison -> getActivites(); */
+        $listeActivites = $em->getRepository('SCActiviteBundle:Activite')->findAll();
+        
         return $this->render('SCActiviteBundle:Activite:index.html.twig',array('listeActivites' => $listeActivites,'year' =>$year
         ));
     }
@@ -258,14 +264,4 @@ class ActiviteController extends Controller
     }
     
 
-    public function activitesdelaSaison($year)
-    {
-        $em = $this -> getDoctrine() -> getManager();
-        $repository = $em ->getRepository('SC\ActiviteBundle\Entity\Saison');
-        $listeSaison = $repository-> activitesSaison($year);
-        foreach ($listeSaison as $saison) {
-            $listeActivites = $saison -> getActivites();
-       }
-       return $listeActivites;
-    }
 }
