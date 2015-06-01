@@ -22,7 +22,7 @@
      <h4/>
    {%if voirActivite is not defined %}    
    <h4><a href="{{ path('sc_activite_voirActivite') }}">Liste de mes inscriptions</a><h4/>
-   {%endif%}    
+   {%endif%}
    <h3><p>
     {# On affiche tous les messages flash dont le nom est « info » #}
       {% for message in app.session.flashbag.get('info') %}
@@ -34,7 +34,6 @@
           {{ form(form) }}
     {%endif%}    
   
-  </h3>  
+  </h3>
 
 {% endblock %}
-
