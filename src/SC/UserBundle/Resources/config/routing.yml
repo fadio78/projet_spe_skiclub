@@ -99,3 +99,8 @@ sc_admin_adherer:
     requirements : 
          email : "[^/]+"  
 
+sc_admin_changePassword:
+    path:     /admin/changePassword/{email}
+    defaults: { _controller: SCUserBundle:Admin:changePassword }
+    requirements : 
+         email : "[^/]+"

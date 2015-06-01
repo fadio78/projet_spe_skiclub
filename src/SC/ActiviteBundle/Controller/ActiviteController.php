@@ -23,7 +23,7 @@ use SC\ActiviteBundle\Entity\InscriptionActivite;
 use SC\UserBundle\Entity\Enfant;
 use Doctrine\ORM\EntityRepository;
 use SC\UserBundle\Entity\EnfantRepository;
-
+use SC\ActiviteBundle\Entity\ActiviteRepository;
 
 
 
@@ -45,8 +45,6 @@ class ActiviteController extends Controller
             $em->flush();
         }
 
-     
-     
     // On ne sait pas combien de pages il y a
     // Mais on sait qu'une page doit être supérieure ou égale à 1
        /*if ($page < 1) {
@@ -54,10 +52,9 @@ class ActiviteController extends Controller
       // une page d'erreur 404 (qu'on pourra personnaliser plus tard d'ailleurs)
             throw new NotFoundHttpException('Page "'.$page.'" inexistante.');
         } */
-      // Ici, on récupérera la liste des activités, puis on la passera au template
-        $repository = $em ->getRepository('SCActiviteBundle:Activite');
-        $listeActivites = $repository->findAll();  
-           return $this->render('SCActiviteBundle:Activite:index.html.twig',array('listeActivites' => $listeActivites,'year' =>$year
+      // Ici, on récupérera la liste des activités d'une saison donnée, puis on la passera au template
+        $listeActivites = $this -> activitesdelaSaison($year);
+        return $this->render('SCActiviteBundle:Activite:index.html.twig',array('listeActivites' => $listeActivites,'year' =>$year
         ));
     }
     
@@ -261,4 +258,14 @@ class ActiviteController extends Controller
     }
     
 
+    public function activitesdelaSaison($year)
+    {
+        $em = $this -> getDoctrine() -> getManager();
+        $repository = $em ->getRepository('SC\ActiviteBundle\Entity\Saison');
+        $listeSaison = $repository-> activitesSaison($year);
+        foreach ($listeSaison as $saison) {
+            $listeActivites = $saison -> getActivites();
+       }
+       return $listeActivites;
+    }
 }
