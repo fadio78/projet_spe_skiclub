@@ -12,7 +12,7 @@ use SC\UserBundle\Entity\Enfant;
  */
 class InscriptionActiviteRepository extends EntityRepository
 {
-    public function Est_inscrit($inscriptionActivite) 
+    public function est_Inscrit($inscriptionActivite) 
     {
        $qb= $this->createQueryBuilder('i')
          ->where('i.prenomEnfant = :prenomEnfant')
