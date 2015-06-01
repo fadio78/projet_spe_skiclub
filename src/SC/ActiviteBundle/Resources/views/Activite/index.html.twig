@@ -3,8 +3,7 @@
 {% block title %}{{ parent() }} - Index{% endblock %}
 {% block activité_body %}
 <ul>
-    
-   
+
   <p>
     {# On affiche tous les messages flash dont le nom est « info » #}
       {% for message in app.session.flashbag.get('info') %}
@@ -17,6 +16,7 @@
     {% for activite in listeActivites %}
         <a href="{{ path('sc_activite_view', {'id': activite.id}) }}">
           {{ activite.nomActivite }}
+
         </a> 
         <br>
     {% endfor %}
