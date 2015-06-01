@@ -1,0 +1,19 @@
+{# src/SC/ActiviteBundle/Resources/views/index.html.twig #}
+{% extends "SCActiviteBundle:Activite:layout.html.twig" %}
+{% block title %}{{ parent() }} - Index{% endblock %}
+{% block activité_body %}
+    <ul>
+        <h1> {{ app.session.get('sortie').dateSortie }} {{ app.session.get('sortie').lieu.nomLieu}} </h1>
+        
+        Cliquer sur un des enfants l'inscrira automatiquement à la sortie
+        <br/>
+            {% for enfant in enfants %}
+                <a href="{{path('sc_activite_inscrireEnfant', {'id': activite.id, 'userParent': enfant.userParent.email,
+                                 'nomEnfant': enfant.nomEnfant, 'prenomEnfant': enfant.prenomEnfant}) }}"                 
+                </a><br/>
+                {{ enfant.nomEnfant }} 
+            {%endfor%}    
+    </ul> 
+    
+    
+{% endblock %} 

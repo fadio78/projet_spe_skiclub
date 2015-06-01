@@ -99,3 +99,11 @@ sc_activite_inscrireEnfant:
     defaults:  { _controller: SCActiviteBundle:InscriptionSortie:inscrireEnfant }
     requirements:
         id: \d+          
+
+sc_activite_viewChildren:
+    path:      /viewChildren/{id}/{debutStage}/{finStage}
+    defaults: {_controller:SCActiviteBundle:InscriptionStage:viewChildren }
+    requirements:
+        id: \d+
+        debutStage: "[0-9-]+"
+        finStage: "[0-9-]+"

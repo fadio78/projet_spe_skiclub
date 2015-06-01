@@ -6,7 +6,7 @@ namespace SC\ActiviteBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 
-class ActiviteEditType extends AbstractType
+class StageEditType extends AbstractType
 {
   public function buildForm(FormBuilderInterface $builder, array $options)
   {
@@ -14,11 +14,11 @@ class ActiviteEditType extends AbstractType
 
   public function getName()
   {
-    return 'sc_activitebundle_activite_edit';
+    return 'sc_activitebundle_stage_edit';
   }
 
   public function getParent()
   {
-    return new ActiviteType();
+    return new StageType();
   }
 }
