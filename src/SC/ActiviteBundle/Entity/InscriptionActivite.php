@@ -15,17 +15,6 @@ class InscriptionActivite
 
 
     /**
-     * @var integer
-     *
-     * @ORM\Column(name="prixPayeActivite", type="integer")
-     */
-    private $prixPayeActivite;
-    
-    
-
-
-    
-    /**
      * @ORM\ManyToOne(targetEntity="SC\ActiviteBundle\Entity\Activite")
      * @ORM\Id
      * @ORM\JoinColumn(nullable=false,name="id", referencedColumnName="id")
@@ -65,34 +54,7 @@ class InscriptionActivite
 
     
     private $prenomEnfant;
-    
-    
-    
-
-
-    /**
-     * Set prixPayeActivite
-     *
-     * @param integer $prixPayeActivite
-     * @return InscriptionActivite
-     */
-    public function setPrixPayeActivite($prixPayeActivite)
-    {
-        $this->prixPayeActivite = $prixPayeActivite;
-
-        return $this;
-    }
-
-    /**
-     * Get prixPayeActivite
-     *
-     * @return integer 
-     */
-    public function getPrixPayeActivite()
-    {
-        return $this->prixPayeActivite;
-    }
-
+      
 
     /**
      * Set activite

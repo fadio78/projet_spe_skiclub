@@ -63,6 +63,26 @@ sc_admin_ajoutMontant:
     requirements : 
          email : "[^/]+"  
          
+
+
+sc_admin_gestionEnfant:
+    path:     /admin/gestionCompte/gestionEnfant/{email}
+    defaults: { _controller: SCUserBundle:Admin:gestionEnfant }
+    requirements : 
+        email : "[^/]+" 
+        
+
+sc_admin_activerlicence:
+    path:     /admin/gestionCompte/gestionEnfant/{email}/{prenom}/{nom}/{id}/
+    defaults: { _controller: SCUserBundle:Admin:activerLicence }
+    requirements : 
+        email : "[^/]+" 
+        prenom : "[^/]+"
+        nom : "[^/]+"
+        id : \d+
+    
+    
+
          
 sc_admin_ajoutRemise:
     path:     /admin/ajoutRemise/{email}
@@ -77,3 +97,4 @@ sc_admin_adherer:
     defaults: { _controller: SCUserBundle:Admin:adherer }
     requirements : 
          email : "[^/]+"  
+

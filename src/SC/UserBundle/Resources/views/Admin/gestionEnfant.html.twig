@@ -1,0 +1,24 @@
+{% extends "SCUserBundle::layout.html.twig" %}
+
+
+{% block user_body %}
+
+    
+    {% for inscription in listeEnfantsInscrits %}
+        
+        <p>      {{ inscription.prenomEnfant }}  {{ inscription.nomEnfant }}  est inscrit à l'activité {{ inscription.activite.nomActivite }}  </p>
+        {% if inscription.activite.licence.typelicence !=null   %}
+            {% if valide == true %}
+                licence valide
+            {% else %}
+        <a href="{{ path('sc_admin_activerlicence', {'email': inscription.email}, {'prenom': inscription.prenomEnfant}, {'nom': inscription.nomEnfant}, {'id': inscription.activite.id}) }}" class="btn btn-default">
+          <i class="glyphicon glyphicon-plus"></i>
+        valider la  licence
+        </a> 
+            {% endif %}
+        {% endif %}
+        <br>
+    {% endfor %}   
+    
+    
+{% endblock %} 
