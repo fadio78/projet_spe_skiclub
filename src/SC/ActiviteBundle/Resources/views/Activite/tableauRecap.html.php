@@ -17,7 +17,7 @@
      <br/>
 <?php     
         $inscrits = $em->getRepository('SC\ActiviteBundle\Entity\InscriptionSortie')
-                        ->findBy(array('dateSortie'=>$sortie->getDateSortie(),'idActivite'=>$id,'saison'=>$year));
+                        ->findBy(array('dateSortie'=>$sortie->getDateSortie(),'idActivite'=>$id,'saison'=>$year,'lieu'=>$sortie->getLieu()->getNomLieu()));
 ?>   <?php      
         if(empty($inscrits)) { ?> 
        <ul> <li>  <?php  echo 'aucuns enfants inscrits'; ?></li> </ul>
