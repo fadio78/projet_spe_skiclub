@@ -49,4 +49,11 @@ sc_admin_gestionCompte:
     path:     /admin/gestionCompte/{email}
     defaults: { _controller: SCUserBundle:Admin:gestionCompte }
     requirements : 
-        email : "[^/]+"        
+        email : "[^/]+"      
+        
+        
+sc_admin_ajoutMontant:
+    path:     /admin/ajoutMontant/{email}
+    defaults: { _controller: SCUserBundle:Admin:ajoutMontant }
+    requirements : 
+         email : "[^/]+"  
