@@ -54,6 +54,16 @@ class InscriptionActivite
 
     
     private $prenomEnfant;
+    
+    
+    
+    /**
+     * @var integer
+     * 
+     * @ORM\Column(name="licenceValide", type="integer")
+     */
+    
+    private $licenceValide;
       
 
     /**
@@ -174,5 +184,28 @@ class InscriptionActivite
     public function getPrenomEnfant()
     {
         return $this->prenomEnfant;
+    }
+
+    /**
+     * Set licenceValide
+     *
+     * @param integer $licenceValide
+     * @return InscriptionActivite
+     */
+    public function setLicenceValide($licenceValide)
+    {
+        $this->licenceValide = $licenceValide;
+
+        return $this;
+    }
+
+    /**
+     * Get licenceValide
+     *
+     * @return integer 
+     */
+    public function getLicenceValide()
+    {
+        return $this->licenceValide;
     }
 }
