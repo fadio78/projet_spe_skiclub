@@ -94,6 +94,15 @@ class UserRepository extends EntityRepository implements UserProviderInterface
   
       
     }
+        //permet de supprimer un compte
+        public function supprimerCompte($email)
+    {
+      $query = $this->_em->createQuery('DELETE FROM SCUserBundle:User a where a.email = :email ')
+                       ->setParameter('email', $email);
+       $query->execute();
+  
+      
+    }
    // Permet de récuperer les adresse non active  
     public function noAdmin()
     {

@@ -13,6 +13,7 @@
         <td>  prenom </td>
         <td>  telephone </td>
         <td>  isActive </td>
+        <td> <td/>
         
         </tr>
     {% for user in listUsersInactif %}
@@ -25,8 +26,10 @@
         <td>  {{ user.isActive }}  </td>
         <td>   <a href="{{ path('sc_admin_activerCompte', {'email': user.email}) }}" class="btn btn-default">
       <i class="glyphicon glyphicon-edit"></i>
-      Activer le compte
-    </a> </td>
+      Activer le compte</a> </td>
+        <td>   <a href="{{ path('sc_admin_supprimerCompte', {'email': user.email}) }}" class="btn btn-default">
+      <i class="glyphicon glyphicon-trash"></i>
+      Supprimer le compte</a> </td>
         </tr>  
          
         
