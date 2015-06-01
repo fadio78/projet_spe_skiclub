@@ -25,6 +25,22 @@
         <p>{{ message }}</p>
       {% endfor %}
   </p>
-  </h3>
+  </h3>  
+      {%if app.session.get('mesInscriptions') is defined %}
+      Vos inscriptions:<br/>
+      {%for mesInscription in app.session.get('mesInscriptions') %}
+          
+          {{ mesInscription.nomEnfant }} - {{ mesInscription.dateSortie }} - {{ mesInscription.prenomEnfant }}
+           {%if mesInscription.participation == 0%}
+               non confirmée
+           {%else%}
+               confirmée
+           {%endif%}  
+           <br/>
+      {%endfor%}
+   
+   {%else%} 
+      <h2><a href="{{ path('sc_activite_homepage') }}">Mes Inscriptions</a><h2/> 
+   {%endif%}
 {% endblock %}
 
