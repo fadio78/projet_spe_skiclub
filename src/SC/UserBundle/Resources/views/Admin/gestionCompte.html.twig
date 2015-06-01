@@ -21,6 +21,12 @@
     <input type="number" id="remise" name="_remise" value="" />        
      <input type="submit" value="ajouter" />
      </form>
+    
+      <form action="{{ path('sc_admin_adherer',{'email': user.email}) }}" method="post">
+    <label for="adhesion"> Adhesion :</label>
+    <input type="checkbox"  name="_adhesion" value="1" />        
+     <input type="submit" value="ajouter" />
+     </form>
      
      
     <h4><a href="{{ path('sc_admin_activerAdmin', {'email': user.email}) }}" class="btn btn-default">

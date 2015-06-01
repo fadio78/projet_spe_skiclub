@@ -64,3 +64,11 @@ sc_admin_ajoutRemise:
     defaults: { _controller: SCUserBundle:Admin:ajoutRemise }
     requirements : 
          email : "[^/]+"  
+         
+         
+         
+sc_admin_adherer:
+    path:     /admin/adhesion/{email}
+    defaults: { _controller: SCUserBundle:Admin:adherer }
+    requirements : 
+         email : "[^/]+"  

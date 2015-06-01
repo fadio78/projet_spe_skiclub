@@ -140,4 +140,22 @@ class AdminController extends Controller
         
     }
     
+                  public function adhererAction(Request $request, $email)
+            {
+
+                $annee=2014; 
+        $adhesion = $_POST['_adhesion'];
+        $repository = $this
+          ->getDoctrine()
+          ->getManager()
+          ->getRepository('SCUserBundle:Adhesion');
+         if ($adhesion == 1){
+          $adhesion = $repository->adherer($email,$annee);
+         }     
+             
+         return  $this->gestionCompteAction( $request, $email);
+        
+        
+    }
+    
 }
