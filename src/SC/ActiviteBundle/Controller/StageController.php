@@ -7,6 +7,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use SC\ActiviteBundle\Entity\Stage;
 use SC\ActiviteBundle\Entity\Activite;
 use SC\ActiviteBundle\Form\StageType;
+use SC\ActiviteBundle\Form\StageEditType;
 use SC\UserBundle\Entity\User;
 
 /*
@@ -150,15 +151,16 @@ class StageController extends Controller {
     
     public function deleteAction($id, $debutStage, $finStage, Request $request) {
         
+        $activite = $em->getRepository('SC\ActiviteBundle\Entity\Activite')->find($id);
         // on verifie que les parametres sont bons
-        if (isset($id) == false || isset($debutStage) == false || isset($finStage) == false ) {
+        if (isset($activite) === false || isset($debutStage) === false || isset($finStage) === false ) {
            $response = new Response;
            $response->setContent("Error 404: not found");
            $response->setStatusCode(Response::HTTP_NOT_FOUND);
            return $response; 
         }
         $em = $this->getDoctrine()->getManager();
-        $activite = $em->getRepository('SC\ActiviteBundle\Entity\Activite')->find($id);
+        
         $stage = $em->getRepository('SC\ActiviteBundle\Entity\Stage')
                 ->findOneBy(array('activite' =>  $activite, 'debutStage'=> $debutStage,
                     'finStage'=>$finStage));
@@ -168,7 +170,8 @@ class StageController extends Controller {
             return $this->render('SCActiviteBundle:Stage:view.html.twig',array('listeStage' => $listeStages, 'activite' => $activite ));            
         }
         else {
-            $request->getSession()->getFlashBag()->add('info', 'Le stage a bien été supprimé, et un mail a été envoyé aux personnes inscrites');
+            $request->getSession()->getFlashBag()->add('info', 'Le stage a bien été supprimé, '
+                    . 'et un mail a été envoyé aux personnes inscrites');
             //envoyer les emails aux utilisateurs inscrits
             $em->remove($stage);
             $em->flush();
@@ -178,6 +181,35 @@ class StageController extends Controller {
             }
             return $this->render('SCActiviteBundle:Stage:view.html.twig',array('listeStages' => $listeStages, 'activite' => $activite ));
         }
+    }
+    
+    public function editAction($id, $debutStage, $finStage, Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $activite = $em->getRepository('SC\ActiviteBundle\Entity\Activite')->find($id);
+        // on verifie que les parametres sont bons
+        if (isset($activite) === false || isset($debutStage) === false || isset($finStage) === false ) {
+           $response = new Response;
+           $response->setContent("Error 404: not found");
+           $response->setStatusCode(Response::HTTP_NOT_FOUND);
+           return $response; 
+        }
+        
+        $stage = $em->getRepository('SC\ActiviteBundle\Entity\Stage')->findOneBy(
+                array('activite'=>$activite, 'debutStage'=>$debutStage, 'finStage', $finStage));
+        
+        $form = $this->createForm(new StageEditType(), $stage);
+
+        if ($form->handleRequest($request)->isValid()) {
+            // Inutile de persister ici, Doctrine connait déjà notre stage
+            $em->flush();
+            $request->getSession()->getFlashBag()->add('info', 'Stage bien modifiée.');
+            return $this->redirect($this->generateUrl('sc_activite_viewStage', 
+                        array('id' => $stage->getActivite()->getId(), 'listeStages' => $listeStages)));
+        }
+        return $this->render('SCActiviteBundle:Stage:edit.html.twig', array('form' 
+            => $form->createView(),'activite' => $activite, 'debutStage' => $debutStage,
+            'finStage' => $finStage));
     }
     
 }
