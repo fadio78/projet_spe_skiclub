@@ -179,12 +179,18 @@ class AdminController extends Controller
         $licenceEnfant = new LicenceEnfant();
         $re = $em -> getRepository('SCActiviteBundle:Activite');
         $activite = $re ->find($id);
+        if (null === $activite) {
+          throw new NotFoundHttpException("L'activité d'id ".$id." n'existe pas.");
+        }
         $licence = $activite -> getLicence();
         $licenceEnfant -> setLicence ($licence);
         $licenceEnfant -> setEmail($email);
         $licenceEnfant -> setPrenomEnfant($prenom);
         $licenceEnfant -> setNomEnfant($nom); 
-        $saison = $em->getRepository('SC\ActiviteBundle\Entity\Saison')->find($annee); 
+        $saison = $em->getRepository('SC\ActiviteBundle\Entity\Saison')->find($annee);
+        if (null === $saison) {
+          throw new NotFoundHttpException("La saison  d'année ".$annee." n'existe pas.");
+        }
         $licenceEnfant -> setSaison($saison);
         $em->persist($licenceEnfant);
         $repository = $em -> getRepository('SCActiviteBundle:InscriptionActivite') ;
