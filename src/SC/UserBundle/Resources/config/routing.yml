@@ -32,7 +32,12 @@ sc_admin_activerCompte:
     defaults: { _controller: SCUserBundle:Admin:activerCompte }
     requirements : 
         email : "[^/]+"
-        
+
+sc_admin_supprimerCompte:
+    path:     /admin/suppressionCompte/{email}
+    defaults: { _controller: SCUserBundle:Admin:supprimerCompte }
+    requirements : 
+        email : "[^/]+"
         
 sc_admin_listNoAdmin:
     path:     /admin/listNoAdmin

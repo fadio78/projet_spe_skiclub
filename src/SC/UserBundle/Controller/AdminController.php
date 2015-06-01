@@ -61,6 +61,19 @@ class AdminController extends Controller
         
         
     }
+            public function supprimerCompteAction(Request $request, $email)
+    {
+        $repository = $this
+          ->getDoctrine()
+          ->getManager()
+          ->getRepository('SCUserBundle:User');
+           
+           $repository->supprimerCompte($email);
+        $request->getSession()->getFlashBag()->add('info', 'Compte bien supprimé ');
+        return $this->redirect($this->generateUrl('sc_admin_listUsersInactif'));
+        
+        
+    }
 
            public function activerAdminAction(Request $request, $email)
     {
