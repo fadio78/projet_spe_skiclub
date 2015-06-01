@@ -9,6 +9,11 @@ use Symfony\Component\Security\Core\SecurityContext;
 use SC\UserBundle\Entity\User;
 use SC\UserBundle\Form\UserType;
 use Doctrine\ORM\EntityRepository;
+use SC\ActiviteBundle\Entity\Activite;
+use SC\ActiviteBundle\Entity\InscriptionActivite;
+use SC\LicenceBundle\Entity\Licence;
+use SC\UserBundle\Entity\LicenceEnfant;
+use SC\ActiviteBundle\Entity\Saison;
 
 class AdminController extends Controller
 {
@@ -168,7 +173,7 @@ class AdminController extends Controller
     }
     
     
-    public function activierLicenceAction($email,$prenom,$nom,$id)
+    public function activerLicenceAction($email,$prenom,$nom,$id, $annee)
     {
         $em = $this ->getDoctrine() ->getManager();
         $licenceEnfant = new LicenceEnfant();
@@ -178,16 +183,17 @@ class AdminController extends Controller
         $licenceEnfant -> setLicence ($licence);
         $licenceEnfant -> setEmail($email);
         $licenceEnfant -> setPrenomEnfant($prenom);
-        $licenceEnfant -> setNomEnfant($nom);
-        $year = $s->connaitreSaison();  
-        $saison = $em->getRepository('SC\ActiviteBundle\Entity\Saison')->find($year);
+        $licenceEnfant -> setNomEnfant($nom); 
+        $saison = $em->getRepository('SC\ActiviteBundle\Entity\Saison')->find($annee); 
         $licenceEnfant -> setSaison($saison);
-        $em->persist($activite);
-        $em->flush();
-        $valide = true;
+        $em->persist($licenceEnfant);
         $repository = $em -> getRepository('SCActiviteBundle:InscriptionActivite') ;
+        $inscriptionActivite = $repository ->findOneBy(array('activite' =>  $activite, 'saison'=> $saison,
+                                               'nomEnfant'=>$nom, 'prenomEnfant' =>$prenom, 'email'=>$email));
+        $inscriptionActivite -> setLicenceValide(1);
+        $em->flush();
         $listeEnfantsInscrits = $repository -> ListeEnfantsinscrits($email);   
-        return $this->render('SCUserBundle:Admin:gestionEnfant.html.twig',array('listeEnfantsInscrits' => $listeEnfantsInscrits,'valide' => $valide));
+        return $this->render('SCUserBundle:Admin:gestionEnfant.html.twig',array('listeEnfantsInscrits' => $listeEnfantsInscrits));
         
     }
     
