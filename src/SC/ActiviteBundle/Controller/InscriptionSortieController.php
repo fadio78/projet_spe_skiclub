@@ -91,9 +91,15 @@ class InscriptionSortieController extends Controller
     // met a jout les table  inscriptionSortie
     public function inscrireEnfantAction($id,Request $request,$userParent,$nomEnfant,$prenomEnfant) {
         $em = $this->getDoctrine()->getManager();
-        //verifier qu'il a la licence
-        
         $activite = $em->getRepository('SC\ActiviteBundle\Entity\Activite')->find($id);
+        $season = new Saison;
+        $year = $season->connaitreSaison();
+        $saison = $em->getRepository('SC\ActiviteBundle\Entity\Saison')->find($year);
+       
+        if ($this->inscritActivite($activite,$saison,$nomEnfant,$prenomEnfant,$userParent)==false) {
+            return $this->pageErreur($nomEnfant.' '.'non inscrit à cette activité');
+        }
+        
         $sortie = $request->getSession()->get('sortie');
         if ($this->estInscrit($id,$sortie, $userParent, $nomEnfant, $prenomEnfant)==true) {
             return $this->pageErreur($nomEnfant.' '.'est déja inscrit à cette sortie');
@@ -109,7 +115,7 @@ class InscriptionSortieController extends Controller
         
         //on persist
         $em->persist($inscriptionSortie);
-        $em->flush();
+        $em->flush(); 
         $mesInscriptions = $em->getRepository('SC\ActiviteBundle\Entity\InscriptionSortie')->findBy(array('emailParent'=>$userParent));
         $request->getSession()->set('mesInscriptions', $mesInscriptions);
         return $this->render('SCActiviteBundle:Activite:view.html.twig', array('activite'=> $activite));
@@ -123,6 +129,20 @@ class InscriptionSortieController extends Controller
                                 ->findOneBy(array('dateSortie'=>$sortie->getDateSortie(),'idActivite'=>$id, 
                                         'emailParent'=>$userParent,'nomEnfant' => $nomEnfant, 'prenomEnfant'=> $prenomEnfant));
         if($listeInscrit == null) {
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+    
+    //retourne true si l'enfant est inscrit a l'activite pour la saison courante
+    //false sinon
+    public function inscritActivite($activite,$saison,$nomEnfant,$prenomEnfant,$emailParent) {
+        $em = $this->getDoctrine()->getManager();
+        $enfant = $em->getRepository('SC\ActiviteBundle\Entity\InscriptionActivite')
+                        ->findOneBy(array('activite' => $activite, 'saison' => $saison, 'email' => $emailParent, 'nomEnfant'=>$nomEnfant,'prenomEnfant'=>$prenomEnfant));
+        if ($enfant == null) {
             return false;
         }
         else {
