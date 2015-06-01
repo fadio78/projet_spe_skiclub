@@ -99,3 +99,8 @@ sc_activite_inscrireEnfant:
     defaults:  { _controller: SCActiviteBundle:InscriptionSortie:inscrireEnfant }
     requirements:
         id: \d+          
+sc_activite_personnesInscrites:
+    path:      /personnesInscrites/{id}
+    defaults:  { _controller: SCActiviteBundle:InscriptionSortie:inscrits }
+    requirements:
+        id: \d+    

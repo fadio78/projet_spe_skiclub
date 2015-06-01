@@ -53,7 +53,13 @@ class InscriptionSortie
      * @ORM\Id
      */    
     private $prenomEnfant;     
- 
+    
+    /**
+     * @var integer
+     * @ORM\Column(name="saison", type="integer")
+     * @ORM\Id
+     */
+    private $saison; 
 
 
 
@@ -193,5 +199,28 @@ class InscriptionSortie
     public function getPrenomEnfant()
     {
         return $this->prenomEnfant;
+    }
+
+    /**
+     * Set saison
+     *
+     * @param integer $saison
+     * @return InscriptionSortie
+     */
+    public function setSaison($saison)
+    {
+        $this->saison = $saison;
+
+        return $this;
+    }
+
+    /**
+     * Get saison
+     *
+     * @return integer 
+     */
+    public function getSaison()
+    {
+        return $this->saison;
     }
 }
