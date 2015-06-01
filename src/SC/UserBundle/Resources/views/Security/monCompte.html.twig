@@ -20,29 +20,21 @@
             {% endfor %}
         </ul>
      <h4/>
-   <h4><a href="{{ path('sc_activite_listeEnfantsInscrits') }}">Liste de mes enfants inscrits aux activités</a><h4/>
+   {%if voirActivite is not defined %}    
+   <h4><a href="{{ path('sc_activite_voirActivite') }}">Liste de mes inscriptions</a><h4/>
+   {%endif%}    
    <h3><p>
     {# On affiche tous les messages flash dont le nom est « info » #}
       {% for message in app.session.flashbag.get('info') %}
         <p>{{ message }}</p>
       {% endfor %}
   </p>
+    
+    {%if voirActivite is defined and voirActivite == 1 %}
+          {{ form(form) }}
+    {%endif%}    
+  
   </h3>  
-      {%if app.session.get('mesInscriptions') is defined %}
-      Vos inscriptions:<br/>
-      {%for mesInscription in app.session.get('mesInscriptions') %}
-          
-          {{ mesInscription.nomEnfant }} - {{ mesInscription.dateSortie }} - {{ mesInscription.prenomEnfant }}
-           {%if mesInscription.participation == 0%}
-               non confirmée
-           {%else%}
-               confirmée
-           {%endif%}  
-           <br/>
-      {%endfor%}
-   
-   {%else%} 
-      <h2><a href="{{ path('sc_activite_homepage') }}">Mes Inscriptions</a><h2/> 
-   {%endif%}
+
 {% endblock %}
 
