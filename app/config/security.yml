@@ -3,8 +3,11 @@
 security:
     # http://symfony.com/doc/current/book/security.html#encoding-the-user-s-password
     encoders:
-        Symfony\Component\Security\Core\User\User: plaintext
-        SC\UserBundle\Entity\User: plaintext
+        Symfony\Component\Security\Core\User\User: sha512
+        SC\UserBundle\Entity\User: 
+           algorithm:  sha512
+           encode_as_base64: true
+           iterations:  1000
 
     # http://symfony.com/doc/current/book/security.html#hierarchical-roles
     role_hierarchy:
@@ -22,7 +25,7 @@ security:
             entity : { class: SC\UserBundle\Entity\User ,property: email}
             
         administrators:
-            entity: { class: SCUserBundle:User }    
+            entity: { class: SCUserBundle:User, property: email }    
 
     # the main part of the security, where you can set up firewalls
     # for specific sections of your app
@@ -45,9 +48,9 @@ security:
             logout:
                 path: logout
                 target: /
-       # admin_area:
-        #    pattern:    ^/admin
-         #   http_basic: ~
+        #admin_area:
+            #pattern:    ^/admin
+           # http_basic: ~
         
          # the login page has to be accessible for everybody
         demo_login:
@@ -77,7 +80,8 @@ security:
     # of your application based on roles, ip, host or methods
     # http://symfony.com/doc/current/cookbook/security/access_control.html
     access_control:
-       # - { path: ^/admin, ip: 127.0.0.1, requires_channel: https }
-        - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/admin, ip: 127.0.0.1, requires_channel: https }
+        - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        
         #- { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: https }

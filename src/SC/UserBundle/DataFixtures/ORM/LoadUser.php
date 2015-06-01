@@ -7,6 +7,7 @@ use Doctrine\Common\Persistence\ObjectManager;
 use SC\UserBundle\Entity\User;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
+use \SC\UserBundle\Controller\SecurityController ;
 
 class LoadUser extends AbstractFixture implements OrderedFixtureInterface
 {
@@ -26,7 +27,13 @@ class LoadUser extends AbstractFixture implements OrderedFixtureInterface
       $user->setAdresse('14 rue grenoble');
       $user->setCommune('grenoble');
       $user->setTelephone('06125566333');
-      $user->setPassword('azerty');
+      //création du salt aléatoire
+      
+      $user->setSalt('796ebe2464'); 
+      //correspond au mot de passe azerty
+      $user->setPassword('7LttXNaq28TF2GaUMTTx4Mr6i493LWbiWwNXxenBiKwyUuoVBzq0LsUhF6B4z7Ohl8oyc699+dZuCY6l+qMxlg==');
+     
+      
       if ($i==2) {
         $user->setType('admin');
       }
@@ -38,8 +45,8 @@ class LoadUser extends AbstractFixture implements OrderedFixtureInterface
       $user->setIsPrimaire(1);
       
      
-      // On ne se sert pas du sel pour l'instant
-      $user->setSalt(''); 
+      
+      
       // On définit uniquement le role ROLE_USER qui est le role de base
      // $user->setRoles(array('ROLE_USER'));
 
