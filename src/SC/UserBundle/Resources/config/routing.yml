@@ -57,3 +57,10 @@ sc_admin_ajoutMontant:
     defaults: { _controller: SCUserBundle:Admin:ajoutMontant }
     requirements : 
          email : "[^/]+"  
+         
+         
+sc_admin_ajoutRemise:
+    path:     /admin/ajoutRemise/{email}
+    defaults: { _controller: SCUserBundle:Admin:ajoutRemise }
+    requirements : 
+         email : "[^/]+"  

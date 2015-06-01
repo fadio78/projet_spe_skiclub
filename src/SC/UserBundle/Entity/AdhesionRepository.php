@@ -37,7 +37,7 @@ class AdhesionRepository extends EntityRepository
             //permet d'ajouter un nombre a la valeur de remise pour  une saison par l'utilisateur
         public function ajoutRemise($email, $annee, $montant)
     {
-      $query = $this->_em->createQuery('UPDATE SCUserBundle:Adhesion a SET a.remise += :montant where a.email = :email and a.annee= :annee')
+      $query = $this->_em->createQuery('UPDATE SCUserBundle:Adhesion a SET a.remise = a.remise + :montant where a.user = :email and a.saison= :annee')
                        ->setParameter('email', $email)
                        ->setParameter('annee', $annee)
                        ->setParameter('montant', $montant);
