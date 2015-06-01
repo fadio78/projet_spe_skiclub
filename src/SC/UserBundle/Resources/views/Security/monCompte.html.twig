@@ -3,9 +3,11 @@
 {% extends "SCUserBundle::layout.html.twig" %}
 
 {% block user_body %}
-    <h1> email primaire :{{nom}}<h1/>
+
+p><b> Adresse e-mail</b> : {{nom}}</p>
     <h4><a href="{{ path('sc_user_compteEnfant') }}">Gestion Enfant(s)</a><h4/>
     <h4><a href="{{ path('sc_user_paramCompte') }}">Paramètres du compte</a><h4/>
+
    
         {% if is_granted('ROLE_ADMIN') %}
             <h4><a href="{{ path('sc_admin_homepage') }}">Gestion Activité/utilisateur</a><h4/> 
@@ -15,29 +17,25 @@
         
 
 
+
    <h4><a href="{{ path('sc_activite_listeEnfantsInscrits') }}">Liste de mes enfants inscrits aux activités</a><h4/>
+
+    
+   {%if voirActivite is not defined %}    
+   <h4><a href="{{ path('sc_activite_voirActivite') }}">Liste de mes inscriptions</a><h4/>
+   {%endif%}
+
    <h3><p>
     {# On affiche tous les messages flash dont le nom est « info » #}
       {% for message in app.session.flashbag.get('info') %}
         <p>{{ message }}</p>
       {% endfor %}
   </p>
-  </h3>  
-      {%if app.session.get('mesInscriptions') is defined %}
-      Vos inscriptions:<br/>
-      {%for mesInscription in app.session.get('mesInscriptions') %}
-          
-          {{ mesInscription.nomEnfant }} - {{ mesInscription.dateSortie }} - {{ mesInscription.prenomEnfant }}
-           {%if mesInscription.participation == 0%}
-               non confirmée
-           {%else%}
-               confirmée
-           {%endif%}  
-           <br/>
-      {%endfor%}
-   
-   {%else%} 
-      <h2><a href="{{ path('sc_activite_homepage') }}">Mes Inscriptions</a><h2/> 
-   {%endif%}
-{% endblock %}
+    
+    {%if voirActivite is defined and voirActivite == 1 %}
+          {{ form(form) }}
+    {%endif%}    
+  
+  </h3>
 
+{% endblock %}

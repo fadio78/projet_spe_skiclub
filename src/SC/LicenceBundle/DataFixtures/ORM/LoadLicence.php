@@ -19,7 +19,7 @@ class LoadLicence extends AbstractFixture implements OrderedFixtureInterface
       // On crée la licence
       $licence = new Licence;
       $licence->setTypeLicence($name);
-      $licence->setPrixLicence(20);
+      $licence->setPrixLicence(40);
     
       
       // On le persiste
@@ -31,7 +31,7 @@ class LoadLicence extends AbstractFixture implements OrderedFixtureInterface
   }
   public function getOrder()
   {
-        return 1; // l'ordre dans lequel les fichiers sont chargés
+        return 3; // l'ordre dans lequel les fichiers sont chargés
   }  
 }
 

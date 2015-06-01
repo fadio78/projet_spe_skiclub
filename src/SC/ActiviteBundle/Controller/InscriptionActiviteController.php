@@ -53,7 +53,7 @@ class InscriptionActiviteController extends Controller
             $inscriptionActivite ->setPrenomEnfant($enfant -> getPrenomEnfant());
           
             $er = $em ->getRepository('SC\ActiviteBundle\Entity\InscriptionActivite');
-            $inscri = $er->Est_inscrit($inscriptionActivite);
+            $inscri = $er->est_Inscrit($inscriptionActivite);
             if ($inscri == null)
             {
               
@@ -84,7 +84,7 @@ class InscriptionActiviteController extends Controller
         $session = $request->getSession();
         $email = $session->get('email');
         $r = $em -> getRepository('SC\ActiviteBundle\Entity\InscriptionActivite') ;
-        $listeEnfantsInscrits = $r -> ListeEnfantsinscrits($email); 
+        $listeEnfantsInscrits = $r -> listeEnfantsinscrits($email); 
         return $this->render('SCActiviteBundle:InscriptionActivite:viewinscription.html.twig',array('listeEnfantsInscrits' => $listeEnfantsInscrits
         ));
         

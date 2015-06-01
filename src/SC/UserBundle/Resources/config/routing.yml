@@ -107,8 +107,15 @@ sc_admin_adherer:
     requirements : 
          email : "[^/]+"  
 
+
+sc_activite_voirActivite:
+    path:      /voirActivite
+    defaults: {_controller:SCActiviteBundle:InscriptionSortie:voirActivite }
+    requirements:
+
 sc_admin_changePassword:
     path:     /admin/changePassword/{email}
     defaults: { _controller: SCUserBundle:Admin:changePassword }
     requirements : 
          email : "[^/]+"
+

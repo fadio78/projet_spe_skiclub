@@ -10,6 +10,7 @@ use SC\ActiviteBundle\Form\ActiviteType;
 use SC\ActiviteBundle\Form\LieuType;
 use SC\ActiviteBundle\Form\SortieType;
 use SC\ActiviteBundle\Form\ActiviteEditType;
+use SC\ActiviteBundle\Form\voirActiviteType;
 use SC\UserBundle\Entity\User;
 use SC\UserBundle\Entity\Licence;
 use SC\ActiviteBundle\Entity\Sortie;
@@ -113,6 +114,7 @@ class InscriptionSortieController extends Controller
         $inscriptionSortie->setPreNomEnfant($prenomEnfant);
         $inscriptionSortie->setParticipation(0);
         $inscriptionSortie->setSaison($year);
+        $inscriptionSortie->setLieu($sortie->getLieu()->getNomLieu());
         
         //on persist
         $em->persist($inscriptionSortie);
@@ -128,7 +130,7 @@ class InscriptionSortieController extends Controller
         $em = $this->getDoctrine()->getManager();
         $listeInscrit = $em->getRepository('SC\ActiviteBundle\Entity\InscriptionSortie')
                                 ->findOneBy(array('dateSortie'=>$sortie->getDateSortie(),'idActivite'=>$id, 
-                                        'emailParent'=>$userParent,'nomEnfant' => $nomEnfant, 'prenomEnfant'=> $prenomEnfant,'saison'=>$year));
+                                        'emailParent'=>$userParent,'nomEnfant' => $nomEnfant, 'prenomEnfant'=> $prenomEnfant,'saison'=>$year,'lieu'=>$sortie->getLieu()->getNomLieu()));
         if($listeInscrit == null) {
             return false;
         }
@@ -166,5 +168,28 @@ class InscriptionSortieController extends Controller
         $request->getSession()->set('em',$em);*/
         return $this->render('SCActiviteBundle:Activite:tableauRecap.html.php', array('id'=> $id,'year'=>$year,'sorties'=>$sorties,'em'=> $em,'nomAct'=>$nomAct));
         
+    }
+    
+    public function voirActiviteAction(Request $request) {
+        $em = $this->getDoctrine()->getManager();
+        $defaultData = array('message' => 'Type your message here');
+        $parents = $em->getRepository('SC\UserBundle\Entity\User')->findOneByEmail($request->getSession()->get('email'));
+        $listEnfants = $em->getRepository('SC\UserBundle\Entity\Enfant')->findBy(array('userParent' => $parents));
+        $form = $this->createFormBuilder($defaultData)
+           ->add('activite', 'entity', array('class'=> 'SC\ActiviteBundle\Entity\Activite','property' => 'nomActivite', 'multiple' => false,'expanded' => false,'required' => true 
+            ))
+            ->add('valider','submit')    
+            ->getForm();
+        $form->handleRequest($request);
+        if ($form->isValid()){
+            $data = $form->getData();
+            $activite = $data['activite'];
+            $mesSorties = $em->getRepository('SC\ActiviteBundle\Entity\InscriptionSortie')
+                                ->findBy(array('emailParent'=>$request->getSession()->get('email'),'idActivite' => $activite->getId()));
+            
+            return $this->render('SCUserBundle:Security:mesSorties.html.twig', array('mesSorties' => $mesSorties, 'activite'=> $activite));
+        }
+        
+        return $this->render('SCUserBundle:Security:monCompte.html.twig', array('form' => $form->createView(),'voirActivite' => 1,'nom'=> $request->getSession()->get('email'), 'listEnfants'=>$listEnfants ));
     }
 }    
