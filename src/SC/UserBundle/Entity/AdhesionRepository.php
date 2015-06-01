@@ -12,4 +12,37 @@ use Doctrine\ORM\EntityRepository;
  */
 class AdhesionRepository extends EntityRepository
 {
+        //permet d'ajouter un nombre a la valeur du montant payé une saison par l'utilisateur
+        public function ajoutmontant($email, $annee, $montant)
+    {
+      $query = $this->_em->createQuery('UPDATE SCUserBundle:Adhesion a SET a.montantPaye = a.montantPaye + :montant where a.user = :email and a.saison= :annee')
+                       ->setParameter('email', $email)
+                       ->setParameter('annee', $annee)
+                       ->setParameter('montant', $montant);
+       $query->execute();
+  
+      
+    }
+           //permet de de mettre l'atribut adhesionAnnuel a 1 pour un utilisateur
+        public function Adherer($email, $annee)
+    {
+      $query = $this->_em->createQuery('UPDATE SCUserBundle:Adhesion a SET a.adhesionAnnuel = true where a.email = :email and a.annee= :annee')
+                       ->setParameter('email', $email)
+                       ->setParameter('annee', $annee);
+                       
+       $query->execute();
+  
+      
+    }
+            //permet d'ajouter un nombre a la valeur de remise pour  une saison par l'utilisateur
+        public function ajoutRemise($email, $annee, $montant)
+    {
+      $query = $this->_em->createQuery('UPDATE SCUserBundle:Adhesion a SET a.remise += :montant where a.email = :email and a.annee= :annee')
+                       ->setParameter('email', $email)
+                       ->setParameter('annee', $annee)
+                       ->setParameter('montant', $montant);
+       $query->execute();
+  
+      
+    }
 }

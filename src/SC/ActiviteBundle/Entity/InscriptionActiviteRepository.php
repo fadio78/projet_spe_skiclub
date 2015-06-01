@@ -26,5 +26,16 @@ class InscriptionActiviteRepository extends EntityRepository
         return $qb->getQuery()->getResult();
 
     }
+    public function ListeEnfantsinscrits($email)
+    {
+        $qb= $this->createQueryBuilder('i')
+         ->where('i.email = :email')
+         ->setParameter('email', $email);
+        
+        return $qb->getQuery()->getResult();
+        
+    }
 
+    
+    
 }

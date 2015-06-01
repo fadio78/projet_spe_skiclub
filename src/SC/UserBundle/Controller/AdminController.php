@@ -104,6 +104,24 @@ class AdminController extends Controller
         
         
     }
+
+               public function ajoutMontantAction(Request $request, $email)
+    {
+
+        $annee=2014; 
+        $montant = (int)$this->$request->request->get('montant');
+        $repository = $this
+          ->getDoctrine()
+          ->getManager()
+          ->getRepository('SCUserBundle:Adhesion');
+         
+           $adhesion = $repository->ajoutMontant($email,$annee,$montant);
+              
+             
+         return  $this->gestionCompteAction( $request, $email);
+        
+        
+    }
     
     
 }

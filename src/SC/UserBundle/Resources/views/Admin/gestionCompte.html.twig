@@ -8,9 +8,15 @@
        {# <h4> Adhésion 2014 payer:{{adhesion.adhesionAnnuel}} <h4/>#}
         <h4> montant payer :{{adhesion.montantPaye}} <h4/>
             
-            
-        <h4><a href="{{ path('sc_admin_activerAdmin', {'email': user.email}) }}" class="btn btn-default">
-      <i class="glyphicon glyphicon-edit"></i>
+    <form action="{{ path('sc_admin_ajoutMontant',{'email': user.email}) }}" method="post">
+    <label for="montant"> Valeur du paiement :</label>
+    <input type="number" id="montant" name="_montant" value="" />        
+     <input type="submit" value="ajouter" />
+     
+     
+     
+    <h4><a href="{{ path('sc_admin_activerAdmin', {'email': user.email}) }}" class="btn btn-default">
+      <i class="glyphicon glyphicon-plus"></i>
       rendre Admin
     </a> <h4/>
          

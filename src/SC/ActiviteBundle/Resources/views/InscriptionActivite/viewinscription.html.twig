@@ -1,0 +1,21 @@
+{# src/SC/ActiviteBundle/Resources/views/InscriptionActivite/viewinscription.html.twig #}
+{% extends "SCActiviteBundle:Activite:layout.html.twig" %}
+{% block title %}{{ parent() }} - Index{% endblock %}
+{% block activité_body %}
+
+    
+    {% for inscription in listeEnfantsInscrits %}
+        
+        <p>      {{ inscription.prenomEnfant }}  {{ inscription.nomEnfant }}  est inscrit à l'activité {{ inscription.activite.nomActivite }}  </p>
+       
+        <br>
+    {% endfor %}   
+    
+    
+    
+    
+    
+    
+    
+    
+{% endblock %} 
