@@ -38,7 +38,23 @@ class LoadSortie extends AbstractFixture implements OrderedFixtureInterface
             $manager->flush();                        
         }
     }
-    
+   $i = 0;
+   $saison =  $manager->getRepository('SCActiviteBundle:Saison')->findOneByAnnee(2015); 
+     
+    foreach ($activites as $activite) {
+        foreach ($lieux as $lieu) {
+            $i =$i+1;
+            $sortie = new Sortie();
+            $sortie->setDateSortie($i.' '.$i.' '.$i);
+            $sortie->setLieu($lieu);
+            $sortie->setActivite($activite);
+            $sortie->setUser($user);
+            $sortie->setSaison($saison);
+            
+            $manager->persist($sortie);
+            $manager->flush();                        
+        }
+    }   
   }
 
   public function getOrder()
