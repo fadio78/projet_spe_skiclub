@@ -47,9 +47,25 @@ class SecurityController extends Controller
     public function paramCompteAction(Request $request)
   { 
         $usr= $this->get('security.context')->getToken()->getUser();
-    
+        $email = $usr->getUsername();
+       
+        $saison = new Saison;
+        $annee = $saison->connaitreSaison();
+        
+        $repository = $this
+          ->getDoctrine()
+          ->getManager()
+          ->getRepository('SCUserBundle:Adhesion');
+        
+        $adhesion = $repository->findOneby(
+                   array('user' => $email,
+                         'saison'=> $annee
+                   ));
+              
         return $this->render('SCUserBundle:Security:paramCompte.html.twig',array(
-            'user' => $usr       
+            'user' => $usr ,
+            'adhesion'=>$adhesion
+                
             )
         );
         
@@ -128,21 +144,14 @@ class SecurityController extends Controller
             $em->flush();
         }
            
-        $repository = $this
-          ->getDoctrine()
-          ->getManager()
-          ->getRepository('SCUserBundle:Adhesion');
+        
            
-           $adhesion = $repository->findOneby(
-                   array('user' => $email,
-                         'saison'=> $annee
-                   ));
-              
+           
            
         
         return $this->render('SCUserBundle:Security:monCompte.html.twig',array(
-        'nom' => $email,
-        'adhesion'=>$adhesion    
+        'nom' => $email
+          
                 
         )
         );
