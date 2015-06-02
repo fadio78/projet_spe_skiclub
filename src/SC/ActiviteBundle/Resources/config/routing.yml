@@ -121,3 +121,8 @@ sc_activite_viewChildrenStages:
     requirements:
         id: \d+
 
+sc_activite_viewAllStagesUser:
+    path:      /viewAllStagesUser/
+    defaults:   {_controller:SCUserBundle:Admin:viewAllStagesUser}
+    requirements:
+        email : "[^/]+"

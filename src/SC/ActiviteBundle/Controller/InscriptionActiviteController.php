@@ -42,6 +42,9 @@ class InscriptionActiviteController extends Controller
         $saison = new Saison ();
         $year = $saison->connaitreSaison();  
         $saison = $em->getRepository('SC\ActiviteBundle\Entity\Saison')->find($year);
+        if (null === $saison) {
+          throw new NotFoundHttpException("La saison  d'année ".$annee." n'existe pas.");
+        }
         $inscriptionActivite -> setSaison($saison);
         $defaultData = array('message' => 'Type your message here');
         $form = $this->createFormBuilder($defaultData)
@@ -88,8 +91,9 @@ class InscriptionActiviteController extends Controller
         $session = $request->getSession();
         $email = $session->get('email');
         $r = $em -> getRepository('SC\ActiviteBundle\Entity\InscriptionActivite') ;
-        $listeEnfantsInscrits = $r -> listeEnfantsinscrits($email); 
-        return $this->render('SCActiviteBundle:InscriptionActivite:viewinscription.html.twig',array('listeEnfantsInscrits' => $listeEnfantsInscrits
+        $listeDeMesInscriptions = $r -> listeDeMesInscriptions($email); 
+        $prix = $r -> getSommeApayer($email);
+        return $this->render('SCActiviteBundle:InscriptionActivite:viewinscription.html.twig',array('listeDeMesInscriptions' => $listeDeMesInscriptions,'prix' => $prix
         ));
         
     }
