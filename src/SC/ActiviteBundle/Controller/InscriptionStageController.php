@@ -112,5 +112,25 @@ class InscriptionStageController extends Controller
         }
     }
     
+    public function viewChildrenStagesaction($id, Request $request) {
+        $em = $this->getDoctrine()->getManager();
+        $season = new Saison;
+        $year = $season->connaitreSaison();
+        $saison = $em->getRepository('SC\ActiviteBundle\Entity\Saison')->find($year);
+        $activite = new Activite();
+        $activite = $em->getRepository('SC\ActiviteBundle\Entity\Activite')->find($id);
+        
+        
+        $listeInscriptionStages = $em->getRepository('SC\ActiviteBundle\Entity\InscriptionStage')->findBy(array('activite'=>$activite));
+        if (is_null($activite)) {
+            $response = new Response;
+            $response->setContent("Error 404: not found");
+            $response->setStatusCode(Response::HTTP_NOT_FOUND);
+            return $response;
+        } else {
+            return $this->render('SCActiviteBundle:Stage:viewAll.html.twig',
+                    array('listeInscriptionStages' => $listeInscriptionStages, 'activite' => $activite));
+        }
+    }
     
 }

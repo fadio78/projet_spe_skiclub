@@ -1,0 +1,17 @@
+{% extends "SCUserBundle::layout.html.twig" %}
+
+
+
+{% block user_body %}
+    
+    <h4> Enfant(s) inscrit(s) :
+        <ul> {% for enfant in listEnfants %}
+                <li>{{ enfant.prenomEnfant }} </li>
+            {% endfor %}
+        </ul>
+     <h4/>
+    
+    <h4><a href="{{ path('sc_enfant_ajouter') }}">Ajouter un Enfant</a><h4/>
+    
+    
+{% endblock %}
