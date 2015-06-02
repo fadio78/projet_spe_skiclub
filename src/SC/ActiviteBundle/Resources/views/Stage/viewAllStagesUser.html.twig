@@ -3,7 +3,13 @@
 {% block title %}{{ parent() }} - Index{% endblock %}
 {% block activité_body %}
     <h3>Stages pour les enfants pour la saison en cours</h3>
-
+    <br/>
+    <p>En vert les inscriptions payées, en rouge les inscriptions pas encore payées.
+    <br>Cliquez sur "Confirmer" pour accuser la réception du paiement, que le client pourra voir également sur son compte.
+    <br>Vous pouvez également supprimer les inscriptions aux stages. Attention, la suppression est définitive.</p>
+    
+    <br/>
+    
 <table border="1" cellpadding="10" cellspacing="1" width="100%">
    <tr>
 
@@ -14,6 +20,8 @@
        <th><center>Stages</center></th>
        
        <th><center>Paiement</center></th>
+
+       <th><center>Action</center></th>
 
    </tr>
 
@@ -30,13 +38,24 @@
        {% else %}
        <td  bgcolor="#01DF01"><center></center></td>
        {% endif %}
+       {% if  stage.prixPayeStage == 0 %}
        <td><center><a href="{{path('sc_activite_confirmPayment', {
             'id': stage.activite.id, 
             'email': stage.user.email,
             'nomEnfant': stage.nomEnfant,
             'prenomEnfant': stage.prenomEnfant,
             'debutStage': stage.debutStage,
-            'finStage': stage.finStage})}}">Confirmation du paiement</a></center></td>
+            'finStage': stage.finStage})}}">Confirmer le paiement</a></center></td>
+       {% else %}
+       <td><center>Paiement confirmé</center></td>
+       {% endif %}
+       <td><center><a href="{{path('sc_activite_deleteInscriptionStage', {
+            'id': stage.activite.id, 
+            'email': stage.user.email,
+            'nomEnfant': stage.nomEnfant,
+            'prenomEnfant': stage.prenomEnfant,
+            'debutStage': stage.debutStage,
+            'finStage': stage.finStage})}}">Supprimer</a></center></td>
 
    </tr>
    {% endfor %}

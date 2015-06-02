@@ -160,4 +160,33 @@ class InscriptionStageController extends Controller
         $request->getSession()->getFlashBag()->add('info', 'Confirmation de paiement pris en compte');
         return $this->render('SCActiviteBundle:Stage:viewAllStagesUser.html.twig', array('listeInscriptionStages'=>$listeInscriptionStages));
     }
+    
+    public function deleteInscriptionStageAction($id, $email, $nomEnfant, $prenomEnfant, $debutStage, $finStage, Request $request) {
+        $em = $this->getDoctrine()->getManager();
+        
+        $season = new Saison;
+        $year = $season->connaitreSaison();
+        $saison = $em->getRepository('SC\ActiviteBundle\Entity\Saison')->find($year);
+        
+        $user = new User();
+        $user = $em->getRepository('SC\UserBundle\Entity\User')->find($email);
+        
+        $activite = new Activite();
+        $activite = $em->getRepository('SC\ActiviteBundle\Entity\Activite')->find($id);
+        
+        $inscriptionStage = $em->getRepository('SC\ActiviteBundle\Entity\InscriptionStage')->findOneBy(
+                array('activite'=>$activite, 'user'=>$user, 'nomEnfant'=>$nomEnfant,'prenomEnfant'=>$prenomEnfant,'debutStage'=>$debutStage,
+                    'finStage'=>$finStage));
+        
+        $em->remove($inscriptionStage);
+        $em->flush();
+        
+        $listeInscriptionStages = $em->getRepository('SC\ActiviteBundle\Entity\InscriptionStage')
+                ->findBy(array('saison'=>$saison, 'user'=>$user));
+        
+        $request->getSession()->getFlashBag()->add('info', 'Confirmation de paiement pris en compte');
+        return $this->render('SCActiviteBundle:Stage:viewAllStagesUser.html.twig', array('listeInscriptionStages'=>$listeInscriptionStages));
+        
+        
+    }
 }

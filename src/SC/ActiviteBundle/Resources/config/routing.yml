@@ -137,3 +137,14 @@ sc_activite_confirmPayment:
         prenomEnfant: "[^/]+"
         debutStage: "[0-9-]+"
         finStage: "[0-9-]+"
+
+sc_activite_deleteInscriptionStage:
+    path:       /deleteInscriptionStage/{id}/{email}/{nomEnfant}/{prenomEnfant}/{debutStage}/{finStage}
+    defaults:   {_controller:SCActiviteBundle:InscriptionStage:deleteInscriptionStage}
+    requirements:
+        id: \d+
+        email: "[^/]+"
+        nomEnfant: "[^/]+"
+        prenomEnfant: "[^/]+"
+        debutStage: "[0-9-]+"
+        finStage: "[0-9-]+"
