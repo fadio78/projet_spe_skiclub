@@ -76,20 +76,74 @@ class SecurityController extends Controller
              ;
             
             
-        $user = $repository->find($email);
+        $user = $repository->findOneby(['email' => $email]);
+        
         $email = $user->getEmailPrimaire();
         $session->set('emailSecondaire',$emailSecondaire );
+        
+        
+        }else{
+            
+            $repository = $this
+            ->getDoctrine()
+            ->getManager()
+            ->getRepository('SCUserBundle:User')
+             ;
+            
+            
+        $user = $repository->findOneby(['email' => $email]);
         }
         
         
         $session->set('email',$email );
-        $session->set('type',$type );
         $session->set('isPrimaire',$isPrimaire );
         
-
+        $saison = new Saison;
+        $annee = $saison->connaitreSaison();
+        
+           
+        $em = $this->getDoctrine()->getManager();
+     
+        
+        //on le rentre dans la table adhesion si il est pas encore inscrit 
+        
+        
+        $adhesion = $em->getRepository('SCUserBundle:Adhesion')->findOneby(
+                   array('user' => $email,
+                         'saison'=> $annee
+                   ));
+        
+        
+        if ($adhesion == null){
+            
+            $saison_actuel = $em->getRepository('SC\ActiviteBundle\Entity\Saison')->find($annee);
+            $adhesion = new Adhesion;
+            $adhesion->setAdhesionAnnuel(false);
+            $adhesion->setModalite(0);
+            $adhesion->setMontantPaye(0);
+            $adhesion->setRemise(0);
+            $adhesion->setSaison($saison_actuel);
+            $adhesion->setUser($user);
+            $em->persist($adhesion);
+            $em->flush();
+        }
+           
+        $repository = $this
+          ->getDoctrine()
+          ->getManager()
+          ->getRepository('SCUserBundle:Adhesion');
+           
+           $adhesion = $repository->findOneby(
+                   array('user' => $email,
+                         'saison'=> $annee
+                   ));
+              
+           
         
         return $this->render('SCUserBundle:Security:monCompte.html.twig',array(
-        'nom' => $email       
+        'nom' => $email,
+        'adhesion'=>$adhesion    
+                
         )
         );
         
