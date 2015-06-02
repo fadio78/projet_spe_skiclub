@@ -38,7 +38,6 @@
      <input type="submit" value="Modifier" /> {# change -> Modifier #}
      </form>
      
-     <h4><a href="{{ path('sc_activite_viewAllStagesUser', {'email': inscription.email})}}" Gestion des paiements des stages</h4>
      
     <h4><a href="{{ path('sc_admin_activerAdmin', {'email': user.email}) }}" class="btn btn-default">
 
@@ -51,7 +50,13 @@
       <i class="glyphicon glyphicon-folder-open"></i>
       Gestion des enfants
     </a>   
-        
+  
+    <a href="{{ path('sc_activite_viewAllStagesUser', {'email': user.email}) }}" class="btn btn-default">
+      <i class="glyphicon glyphicon-folder-open"></i>
+      Gestion des inscriptions des stages
+    </a>          
+           
+           
         <h3><p>
      {# On affiche tous les messages flash dont le nom est « info » #}
       {% for message in app.session.flashbag.get('info') %}
