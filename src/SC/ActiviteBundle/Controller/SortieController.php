@@ -103,6 +103,16 @@ class SortieController extends Controller
     
     //permet d'afficher toutes les sorties pour l'activite id sur la saison en cours
     public function voirSortieAction($id) {
+        
+        $to      = 'nathan.claudot@phelma.grenoble-inp.fr';
+        $subject = 'le sujet';
+        $message = 'Bonjour !';
+        $headers = 'From: fadio.doumbia@phelma.grenoble-inp.fr' . "\r\n" .
+        'Reply-To: fadio.doumbia@phelma.grenoble-inp.fr' . "\r\n" .
+        'X-Mailer: PHP/' . phpversion();
+        mail($to, $subject, $message, $headers);
+        
+        
         $saison = new Saison;
         $year = $saison->connaitreSaison();
         $saison = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Saison')->findOneByAnnee($year);     
@@ -143,7 +153,7 @@ class SortieController extends Controller
         }
         else {
             
-            $this->estInscrit($sortie->getDateSortie(),$id);
+            $this->estInscrit($sortie->getDateSortie(),$id,$lieu);
             $em->remove($sortie);
             $em->flush();
             $request->getSession()->getFlashBag()->add('info', 'La sortie a bien été supprimée, et un mail a été envoyé aux personnes inscrites');
@@ -151,7 +161,8 @@ class SortieController extends Controller
             return $this->render('SCActiviteBundle:Sortie:viewSortie.html.twig',array('listSortie' => $listSortie, 'activite' => $activite ));
         }
     }
-    
+    // propose des choix a l'utilisateur
+    // essentiellement pour la vue
     public function actionSortieAction($id, Request $request, $dateSortie, $lieu) {
         $em = $this->getDoctrine()->getManager();
         $saison = new Saison;
@@ -168,7 +179,7 @@ class SortieController extends Controller
     }
     
     
-    
+    // permet de retourner une page d'erreur
     public function pageErreur($message) {
         $response = new Response;
         $response->setContent($message);
@@ -176,7 +187,9 @@ class SortieController extends Controller
         return $response;
     }
     
-    public function estInscrit($dateSortie,$id) {
+    //supprime les enfants inscrit a une sortie donnee pour une saison donnee
+    //envoie un mail pour prevenir que la sortie a ete annulee
+    public function estInscrit($dateSortie,$id,$lieu) {
         $em = $this->getDoctrine()->getManager();
         $saison = new Saison;
         $year = $saison->connaitreSaison();
@@ -189,5 +202,18 @@ class SortieController extends Controller
         }
         $em->flush();
     }
+  
+    //envoie un mail a l'adresse 'email' pour prevenir les personnes inscrites 
+    public function envoieMail($email,$dateSortie,$lieu) {
+            
+        $to      = 'nathan.claudot@phelma.grenoble-inp.fr';
+        $subject = 'le sujet';
+        $message = 'Bonjour !';
+        $headers = 'From: webmaster@example.com' . "\r\n" .
+        'Reply-To: webmaster@example.com' . "\r\n" .
+        'X-Mailer: PHP/' . phpversion();
+        mail($to, $subject, $message, $headers);
+        
+        
+    }
 }
-
