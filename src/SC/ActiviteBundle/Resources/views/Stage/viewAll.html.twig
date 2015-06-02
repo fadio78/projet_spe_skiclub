@@ -3,14 +3,37 @@
 {% block title %}{{ parent() }} - Index{% endblock %}
 {% block activité_body %}
     <h3>Stages de {{activite.nomActivite}}</h3>
-<ul>
-    {% for stage in listeInscriptionStages %}
-        {{ stage.nomEnfant }} {{ stage.prenomEnfant }}
-        <br/>
-        Dates : du {{ stage.debutStage }} au {{ stage.finStage }}
-        <br/>
-        <br><br/>
-    {% endfor %}    
-</ul>
+
+<table border="1" cellpadding="10" cellspacing="1" width="100%">
+   <tr>
+
+       <th><center>Nom</center></th>
+
+<th><center>Prénom</center></th>
+
+       <th><center>Stages</center></th>
+       
+       <th><center>Paiement</center></th>
+
+   </tr>
+
+   {% for stage in listeInscriptionStages %}
+   <tr>
+
+       <td><center>{{ stage.nomEnfant }}</center></td>
+
+       <td><center>{{ stage.prenomEnfant}}</center></td>
+
+       <td><center>{{ stage.debutStage }} au {{ stage.finStage }}</center></td>
+       {% if  stage.prixPayeStage == 0 %}
+       <td  bgcolor="#DF0101"><center></center></td>
+       {% else %}
+       <td  bgcolor="#01DF01"><center></center></td>
+       {% endif %}
+
+   </tr>
+   {% endfor %}
+   
+</table>
  
 {% endblock %}
