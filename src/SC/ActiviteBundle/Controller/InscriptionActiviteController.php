@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use SC\ActiviteBundle\Entity\Activite;
 use SC\UserBundle\Entity\User;
+use SC\UserBundle\Entity\Adhesion;
 use SC\UserBundle\Entity\Licence;
 use SC\ActiviteBundle\Entity\Saison;
 use SC\ActiviteBundle\Entity\SaisonRepository;
@@ -23,10 +24,13 @@ class InscriptionActiviteController extends Controller
 
     
     public function inscriptionActiviteAction($id,Request $request) 
-    {
+    {   
         $em = $this->getDoctrine()->getManager();
         $session = $request->getSession();
-        $email = $session->get('email');
+        $email = $session->get('email');   
+        
+        
+                
         $inscriptionActivite = new InscriptionActivite();
         $activite = $em->getRepository('SC\ActiviteBundle\Entity\Activite')->find($id);
         if (null === $activite) {

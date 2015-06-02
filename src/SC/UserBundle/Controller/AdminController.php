@@ -7,6 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\SecurityContext;
 use SC\UserBundle\Entity\User;
+use SC\UserBundle\Entity\Adhesion;
 use SC\UserBundle\Form\UserType;
 use Doctrine\ORM\EntityRepository;
 use SC\ActiviteBundle\Entity\Activite;
@@ -95,6 +96,8 @@ class AdminController extends Controller
     } 
                public function gestionCompteAction(Request $request, $email)
     {
+                   
+                   
         $saison = new Saison;
         $annee = $saison->connaitreSaison();
         $repository = $this
@@ -103,6 +106,33 @@ class AdminController extends Controller
           ->getRepository('SCUserBundle:User');
            
            $user= $repository->findOneby(['email' => $email]);
+           
+           
+        $em = $this->getDoctrine()->getManager();
+     
+        
+        //on le rentre dans la table adhesion si il est pas encore inscrit 
+        
+        
+        $adhesion = $em->getRepository('SCUserBundle:Adhesion')->findOneby(
+                   array('user' => $email,
+                         'saison'=> $annee
+                   ));
+        
+        
+        if ($adhesion == null){
+            
+            $saison_actuel = $em->getRepository('SC\ActiviteBundle\Entity\Saison')->find($annee);
+            $adhesion = new Adhesion;
+            $adhesion->setAdhesionAnnuel(false);
+            $adhesion->setModalite(0);
+            $adhesion->setMontantPaye(0);
+            $adhesion->setRemise(0);
+            $adhesion->setSaison($saison_actuel);
+            $adhesion->setUser($user);
+            $em->persist($adhesion);
+            $em->flush();
+        }
            
         $repository = $this
           ->getDoctrine()

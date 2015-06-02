@@ -48,7 +48,7 @@ class SortieController extends Controller
                 $string = $date->format('Y').'-'.$date->format('m').'-'.$date->format('d').' '.$date->format('H').':'.$date->format('i').':'.$date->format('s');
                 
                 // si il ya deja une meme date -> erreur                
-                if ($this->dateExiste($string) == true) {
+                if ($this->dateExiste($string,$activite) == true) {
                     return $this->pageErreur("Une date identique a déjà été validée : deux sorties ne peuvent avoir même date");
                 }
                 
@@ -86,11 +86,11 @@ class SortieController extends Controller
     
     // teste si la date existe deja dans la BD
     // return true si la date est dans la BD, false sinon
-    public function dateExiste($date) {
+    public function dateExiste($date,$activite) {
         
         if($this->getDoctrine()->getManager()
                                     ->getRepository('SC\ActiviteBundle\Entity\Sortie')
-                                            ->findOneByDateSortie($date) === null) {
+                                            ->findOneBy(array('dateSortie'=>$date,'activite'=> $activite)) === null) {
             
             return false;
             

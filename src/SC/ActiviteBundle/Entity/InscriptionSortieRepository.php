@@ -12,15 +12,17 @@ use Doctrine\ORM\EntityRepository;
  */
 class InscriptionSortieRepository extends EntityRepository
 {
-    public function estInscrit(/*$sortie,$enfant*/) {
-      $queryBuilder = $this->createQueryBuilder('a')
-      ->where(/*a.emailParent = :parents and 'a.nomEnfant = :name' and */'a.prenomEnfant = :surname' /*and a.idActivite = :id and 'a.sortie = :sor'*/)
-      //->setParameter('parents', $enfant)
-      //->setParameter('name', $enfant->getNomEnfant());
-      ->setParameter('surname', 'monPrenom');
-      //->setParameter('id', $sortie->getActivite()->getId())
-      //->setParameter('sor', $sortie);
-      
-      return $queryBuilder->getQuery()->getResult();
+    public function confirmationParticipation($id,$dateSortie,$lieu,$nomEnfant,$prenomEnfant,$year,$email) {
+      $query = $this->_em->createQuery('UPDATE SCActiviteBundle:InscriptionSortie a SET a.participation = :takePart where a.idActivite = :id AND a.saison = :year AND a.dateSortie = :date AND a.lieu = :lieu and a.nomEnfant = :nom AND a.prenomEnfant = :prenom AND a.emailParent = :email')
+                       ->setParameter('takePart', 1)
+                       ->setParameter('id', $id)
+                       ->setParameter('year', $year)
+                       ->setParameter('date', $dateSortie)
+                       ->setParameter('lieu', $lieu)
+                       ->setParameter('nom', $nomEnfant)
+                       ->setParameter('prenom', $prenomEnfant)
+                       ->setParameter('email', $email);
+
+       $query->execute();
     }
 }

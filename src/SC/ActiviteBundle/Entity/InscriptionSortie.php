@@ -20,7 +20,7 @@ class InscriptionSortie
     
     /**
      * @var string
-     * @ORM\Column(name="dateSortie", type="string",length=20)
+     * @ORM\Column(name="dateSortie", type="string",length=30)
      * @ORM\Id
      */   
     private $dateSortie;
@@ -34,28 +34,28 @@ class InscriptionSortie
     
     /**
      * @var string
-     * @ORM\Column(name="lieu", type="string",length=15)
+     * @ORM\Column(name="lieu", type="string",length=30)
      * @ORM\Id
      */    
     private $lieu;     
     
     /**
      * @var string
-     * @ORM\Column(name="email", type="string",length=15)
+     * @ORM\Column(name="email", type="string",length=30)
      * @ORM\Id
      */    
     private $emailParent;
     
     /**
      * @var string
-     * @ORM\Column(name="nomEnfant", type="string",length=15)
+     * @ORM\Column(name="nomEnfant", type="string",length=30)
      * @ORM\Id
      */    
     private $nomEnfant;     
 
     /**
      * @var string
-     * @ORM\Column(name="prenomEnfant", type="string",length=15)
+     * @ORM\Column(name="prenomEnfant", type="string",length=30)
      * @ORM\Id
      */    
     private $prenomEnfant;     
@@ -251,5 +251,9 @@ class InscriptionSortie
     public function getLieu()
     {
         return $this->lieu;
+    }
+    
+    public function __toString() {
+        return $this->nomEnfant.' '.$this->dateSortie.' '.$this->lieu;
     }
 }
