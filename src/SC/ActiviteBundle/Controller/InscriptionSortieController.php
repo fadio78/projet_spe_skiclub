@@ -89,18 +89,23 @@ class InscriptionSortieController extends Controller
             ));*/
     }
     
-    // met a jout les table  inscriptionSortie
+    // met a jout la table  inscriptionSortie
     public function inscrireEnfantAction($id,Request $request,$userParent,$nomEnfant,$prenomEnfant) {
         $em = $this->getDoctrine()->getManager();
         $activite = $em->getRepository('SC\ActiviteBundle\Entity\Activite')->find($id);
         $season = new Saison;
         $year = $season->connaitreSaison();
         $saison = $em->getRepository('SC\ActiviteBundle\Entity\Saison')->find($year);
-       
+        
+        //on verifie que les parametres sont bons
+        if (is_null($saison) OR is_null($activite)) {
+            return $this->pageErreur('paramètres entrés invalides');
+        }
+        //on verifie que l'enfant est inscrit a l'activite
         if ($this->inscritActivite($activite,$saison,$nomEnfant,$prenomEnfant,$userParent)==false) {
             return $this->pageErreur($nomEnfant.' '.'non inscrit à cette activité');
         }
-        
+        //on verifie que l'enfant n'est pas deja inscrit a cette sortie
         $sortie = $request->getSession()->get('sortie');
         if ($this->estInscrit($id,$sortie, $userParent, $nomEnfant, $prenomEnfant,$year)==true) {
             return $this->pageErreur($nomEnfant.' '.'est déja inscrit à cette sortie');
@@ -143,6 +148,7 @@ class InscriptionSortieController extends Controller
     //false sinon
     public function inscritActivite($activite,$saison,$nomEnfant,$prenomEnfant,$emailParent) {
         $em = $this->getDoctrine()->getManager();
+        //on regarde si l'enfant est inscrit a l'activite pour la saison donnee
         $enfant = $em->getRepository('SC\ActiviteBundle\Entity\InscriptionActivite')
                         ->findOneBy(array('activite' => $activite, 'saison' => $saison, 'email' => $emailParent, 'nomEnfant'=>$nomEnfant,'prenomEnfant'=>$prenomEnfant));
         if ($enfant == null) {
@@ -156,10 +162,14 @@ class InscriptionSortieController extends Controller
     public function inscritsAction($id,Request $request) {
         $em = $this->getDoctrine()->getManager();
         $season = new Saison;
-        $year = $season->connaitreSaison();
-        
+        $year = $season->connaitreSaison();        
         $saison = $em->getRepository('SC\ActiviteBundle\Entity\Saison')->find($year);
         $activite = $em->getRepository('SC\ActiviteBundle\Entity\Activite')->find($id);
+        
+        if (is_null($activite)) {
+            return $this->pageErreur('paramètres entrés invalides');
+        }
+        
         $sorties = $em->getRepository('SC\ActiviteBundle\Entity\Sortie')
                             ->findBy(array('activite'=>$activite,'saison'=>$saison));
         $nomAct = $activite->getNomactivite();
@@ -195,12 +205,14 @@ class InscriptionSortieController extends Controller
         return $this->render('SCUserBundle:Security:monCompte.html.twig', array('form' => $form->createView(),'voirActivite' => 1,'nom'=> $request->getSession()->get('email'), 'listEnfants'=>$listEnfants));
     }
     
+    // permet de proposer deux choix a l'utilisateur lorsqu'il clique sur un lien
+    // annuler sortie ou confirmer participation
     public function getChoixAction($id,Request $request,$dateSortie,$lieu,$nomEnfant,$prenomEnfant) {
         $em = $this->getDoctrine()->getManager();
         $saison = new Saison;
         $year = $saison->connaitreSaison();
         $activite = $em->getRepository('SC\ActiviteBundle\Entity\Activite')->find($id);
-        //on verifie que les parametre sont valides
+        //on verifie que les parametres sont valides
         if($this->parametreValide($id, $dateSortie, $lieu) == false) {
             return $this->pageErreur("informations fournies non correctes");
         }
@@ -233,7 +245,7 @@ class InscriptionSortieController extends Controller
          
         return $this->render('SCUserBundle:Security:monCompte.html.twig',array('listEnfants'=>$listEnfants));
     }
-    
+    // supprime de la table inscription sortie l'enfant pour la sortie consideree sur l'annee et l'activite
     public function annulationAction($id,Request $request,$dateSortie,$lieu,$nomEnfant,$prenomEnfant) {
         
         //on verifie que les infos sont correctes
