@@ -27,21 +27,12 @@
     <ul> Le type de la licence est: {{activite.licence.typeLicence}} et son prix est: {{activite.licence.prixLicence}} €  </ul>
     {% endif %}
   <p>
-    <a href="{{ path('sc_activite_homepage') }}" class="btn btn-default">
-      <i class="glyphicon glyphicon-chevron-left"></i>
-      Retour à la liste
-    </a>
+    
      
     <a href="{{ path('sc_activite_inscriptionActivite' , {'id': activite.id})}}" class="btn btn-default">
       <i class="glyphicon glyphicon-edit"></i>
-      Inscrire un enfant à l'activité
-    
+      Inscription à l'activité
     </a>
-        <a href="{{ path('sc_activite_voirSortie', {'id': activite.id}) }}" class="btn btn-default">
-      <i class="glyphicon glyphicon-edit"></i>
-      Sortie prévues
-    </a> 
-      
     {% if is_granted('ROLE_ADMIN') %}
     <a href="{{ path('sc_activite_edit', {'id': activite.id}) }}" class="btn btn-default">
       <i class="glyphicon glyphicon-edit"></i>
@@ -51,26 +42,45 @@
       <i class="glyphicon glyphicon-trash"></i>
       Supprimer l'activité
     </a>
-      <br><br/>
-    <a href="{{ path('sc_activite_ajoutSortie', {'id': activite.id}) }}" class="btn btn-default">
+    {% endif %}
+    </a>
+    <br><br/>
+    <a href="{{ path('sc_activite_voirSortie', {'id': activite.id}) }}" class="btn btn-default">
       <i class="glyphicon glyphicon-edit"></i>
-      Ajouter une sortie
-    </a>      
-      <br><br/>
-    <a href="{{ path('sc_activite_viewStage', {'id': activite.id}) }}" class="btn btn-default">
-      <i class="glyphicon glyphicon-edit"></i>
-      Stages prévus
-    </a> 
-    <a href="{{ path('sc_activite_addStage', {'id': activite.id}) }}" class="btn btn-default">
-      <i class="glyphicon glyphicon-edit"></i>
-      Ajouter un stage
+      Sortie prévues
     </a>
     <a href="{{ path('sc_activite_personnesInscrites', {'id': activite.id}) }}" class="btn btn-default">
       <i class="glyphicon glyphicon-edit"></i>
       Voir les inscriptions aux sorties
     </a>
-      
+    {% if is_granted('ROLE_ADMIN') %}
+    <a href="{{ path('sc_activite_ajoutSortie', {'id': activite.id}) }}" class="btn btn-default">
+      <i class="glyphicon glyphicon-edit"></i>
+      Ajouter une sortie
+    </a>
     {% endif %}
+      <br><br/>
+    <a href="{{ path('sc_activite_viewStage', {'id': activite.id}) }}" class="btn btn-default">
+      <i class="glyphicon glyphicon-edit"></i>
+      Stages prévus
+    </a>
+    <a href="{{ path('sc_activite_viewChildrenStages', {'id': activite.id}) }}" class="btn btn-default">
+      <i class="glyphicon glyphicon-edit"></i>
+      Voir les inscriptions aux stages
+    </a>
+    {% if is_granted('ROLE_ADMIN') %}
+    <a href="{{ path('sc_activite_addStage', {'id': activite.id}) }}" class="btn btn-default">
+      <i class="glyphicon glyphicon-edit"></i>
+      Ajouter un stage
+    </a>
+    {% endif %}
+    <br><br/>
+    <br><br/>
+    <a href="{{ path('sc_activite_homepage') }}" class="btn btn-default">
+      <i class="glyphicon glyphicon-chevron-left"></i>
+      Retour à la liste
+    </a>
+    
     
   </p>
 {% endblock %} 

@@ -95,6 +95,8 @@ class AdminController extends Controller
     } 
                public function gestionCompteAction(Request $request, $email)
     {
+        $saison = new Saison;
+        $annee = $saison->connaitreSaison();
         $repository = $this
           ->getDoctrine()
           ->getManager()
@@ -109,7 +111,7 @@ class AdminController extends Controller
            
            $adhesion = $repository->findOneby(
                    array('user' => $email,
-                         'saison'=> 2014
+                         'saison'=> $annee
                    ));
               
            
@@ -126,7 +128,8 @@ class AdminController extends Controller
                public function ajoutMontantAction(Request $request, $email)
     {
 
-        $annee=2014; 
+        $saison = new Saison;
+        $annee = $saison->connaitreSaison();
         $montant = $_POST['_montant'];
         $repository = $this
           ->getDoctrine()
@@ -143,7 +146,8 @@ class AdminController extends Controller
               public function ajoutRemiseAction(Request $request, $email)
             {
 
-                $annee=2014; 
+        $saison = new Saison;
+        $annee = $saison->connaitreSaison();
         $montant = $_POST['_remise'];
         $repository = $this
           ->getDoctrine()
@@ -206,7 +210,8 @@ class AdminController extends Controller
         public function adhererAction(Request $request, $email)
         {
 
-                $annee=2014; 
+        $saison = new Saison;
+        $annee = $saison->connaitreSaison();
         $adhesion = $_POST['_adhesion'];
         $repository = $this
           ->getDoctrine()
@@ -245,8 +250,19 @@ class AdminController extends Controller
           ->getManager()
           ->getRepository('SCUserBundle:User');
          
-           $adhesion = $repository->changePassword($email,$newpassword, $salt);
+          $repository->changePassword($email,$newpassword, $salt);
             $request->getSession()->getFlashBag()->add('info', 'mot de passe modifié ');
+                /*$message = \Swift_Message::newInstance()
+        
+                        
+                        modifier->setSubject('Hello Email')
+        ->setFrom('send@example.com')
+        ->setTo('recipient@example.com')
+        ->setBody('Yfucking ')
+    ;
+
+    $this->get('mailer')->send($message);*/
+            
                  }else{
                      $request->getSession()->getFlashBag()->add('info', 'Mot de passe de confirmation incorrecte ');
                  } 

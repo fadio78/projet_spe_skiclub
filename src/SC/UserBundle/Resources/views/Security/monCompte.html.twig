@@ -3,9 +3,11 @@
 {% extends "SCUserBundle::layout.html.twig" %}
 
 {% block user_body %}
-    <p><b> Adresse e-mail</b> : {{app.session.get('email')}}</p>
-    <h4><a href="{{ path('sc_enfant_ajouter') }}">Ajouter un Enfant</a><h4/>
-    <h4><a href="{{ path('sc_user_ajouter') }}">Ajouter utilisateur secondaire</a><h4/>
+
+<p><b> Adresse e-mail</b> : {{app.session.get('email')}}</p>
+    <h4><a href="{{ path('sc_user_compteEnfant') }}">Gestion Enfant(s)</a><h4/>
+    <h4><a href="{{ path('sc_user_paramCompte') }}">Paramètres du compte</a><h4/>
+
    
         {% if is_granted('ROLE_ADMIN') %}
             <h4><a href="{{ path('sc_admin_homepage') }}">Gestion Activité/utilisateur</a><h4/> 
@@ -14,15 +16,15 @@
         {% endif %}
         
 
-    <h4> Enfant(s) inscrit(s) :
-        <ul> {% for enfant in listEnfants %}
-                <li>{{ enfant.prenomEnfant }} </li>
-            {% endfor %}
-        </ul>
-     <h4/>
+
+
+   <h4><a href="{{ path('sc_activite_listeEnfantsInscrits') }}">Liste de mes enfants inscrits aux activités</a><h4/>
+
+    
    {%if voirActivite is not defined %}    
    <h4><a href="{{ path('sc_activite_voirActivite') }}">Liste de mes inscriptions</a><h4/>
    {%endif%}
+
    <h3><p>
     {# On affiche tous les messages flash dont le nom est « info » #}
       {% for message in app.session.flashbag.get('info') %}

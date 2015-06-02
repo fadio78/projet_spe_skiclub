@@ -5,6 +5,14 @@ sc_user_homepage:
 sc_user_compte:
     path:     /monCompte
     defaults: { _controller: SCUserBundle:Security:compte }
+    
+sc_user_compteEnfant:
+    path:     /monCompteEnfant
+    defaults: { _controller: SCUserBundle:Security:compteEnfant }
+    
+sc_user_paramCompte:
+    path:     /parametreCompte
+    defaults: { _controller: SCUserBundle:Security:paramCompte }
 
 
 sc_user_register:
