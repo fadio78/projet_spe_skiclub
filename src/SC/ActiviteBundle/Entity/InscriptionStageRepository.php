@@ -12,4 +12,19 @@ use Doctrine\ORM\EntityRepository;
  */
 class InscriptionStageRepository extends EntityRepository
 {
+    public function validationPayment($prixTotal, $activite, $user, $nomEnfant, $prenomEnfant, $debutStage, $finStage) {
+      $query = $this->_em->createQuery('UPDATE SCActiviteBundle:InscriptionStage i'
+              . ' SET i.prixPayeStage = :prixTotal where i.activite = :activite'
+              . ' AND i.user = :user AND i.debutStage = :debutStage AND i.finStage = :finStage'
+              . ' and i.nomEnfant = :nom AND i.prenomEnfant = :prenom')
+                       ->setParameter('prixTotal', $prixTotal)
+                       ->setParameter('activite', $activite)
+                       ->setParameter('nom', $nomEnfant)
+                       ->setParameter('prenom', $prenomEnfant)
+                       ->setParameter('user', $user)
+                       ->setParameter('debutStage', $debutStage)
+                       ->setParameter('finStage', $finStage);
+
+       $query->execute();
+    }
 }

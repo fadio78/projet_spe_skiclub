@@ -1,0 +1,46 @@
+{# src/SC/ActiviteBundle/Resources/views/Stage/viewAll.html.twig #}
+{% extends "SCActiviteBundle:Activite:layout.html.twig" %}
+{% block title %}{{ parent() }} - Index{% endblock %}
+{% block activité_body %}
+    <h3>Stages pour les enfants pour la saison en cours</h3>
+
+<table border="1" cellpadding="10" cellspacing="1" width="100%">
+   <tr>
+
+       <th><center>Nom</center></th>
+
+       <th><center>Prénom</center></th>
+
+       <th><center>Stages</center></th>
+       
+       <th><center>Paiement</center></th>
+
+   </tr>
+
+   {% for stage in listeInscriptionStages %}
+   <tr>
+
+       <td><center>{{ stage.nomEnfant }}</center></td>
+
+       <td><center>{{ stage.prenomEnfant}}</center></td>
+
+       <td><center>{{ stage.debutStage }} au {{ stage.finStage }}</center></td>
+       {% if  stage.prixPayeStage == 0 %}
+       <td  bgcolor="#DF0101"><center></center></td>
+       {% else %}
+       <td  bgcolor="#01DF01"><center></center></td>
+       {% endif %}
+       <td><center><a href="{{path('sc_activite_confirmPayment', {
+            'id': stage.activite.id, 
+            'email': stage.user.email,
+            'nomEnfant': stage.nomEnfant,
+            'prenomEnfant': stage.prenomEnfant,
+            'debutStage': stage.debutStage,
+            'finStage': stage.finStage})}}">Confirmation du paiement</a></center></td>
+
+   </tr>
+   {% endfor %}
+   
+</table>
+ 
+{% endblock %}
