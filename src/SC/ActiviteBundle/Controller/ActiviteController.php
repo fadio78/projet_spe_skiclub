@@ -219,8 +219,7 @@ class ActiviteController extends Controller
                 $em ->remove($inscription);
             }
             }
-            
-            $this->suppSoritesEtInscrit($activite);
+        
             $this->suppSoritesEtInscrit($activite,$saison);
             $this->deleteStagesInscriptionStages($activite,$saison);
             
