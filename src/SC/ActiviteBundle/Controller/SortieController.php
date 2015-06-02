@@ -189,7 +189,7 @@ class SortieController extends Controller
     
     //supprime les enfants inscrit a une sortie donnee pour une saison donnee
     //envoie un mail pour prevenir que la sortie a ete annulee
-    public function estInscrit($dateSortie,$id,$lieu) {
+    public function estInscrit($dateSortie,$id,$lieu,Request $request) {
         $em = $this->getDoctrine()->getManager();
         $saison = new Saison;
         $year = $saison->connaitreSaison();
@@ -197,22 +197,22 @@ class SortieController extends Controller
                             ->findBy(array('dateSortie'=>$dateSortie,'idActivite'=>$id,'saison'=> $year));
         
         foreach ($inscrits as $enfant) {
-            //envoie du mail
+            $this->envoieMail($enfant->getEmailParent(), $dateSortie, $lieu, $request);
             $em->remove($enfant);
         }
         $em->flush();
     }
   
     //envoie un mail a l'adresse 'email' pour prevenir les personnes inscrites 
-    public function envoieMail($email,$dateSortie,$lieu) {
+    public function envoieMail($email,$dateSortie,$lieu,Request $request) {
             
-        $to      = 'nathan.claudot@phelma.grenoble-inp.fr';
-        $subject = 'le sujet';
-        $message = 'Bonjour !';
-        $headers = 'From: webmaster@example.com' . "\r\n" .
-        'Reply-To: webmaster@example.com' . "\r\n" .
-        'X-Mailer: PHP/' . phpversion();
-        mail($to, $subject, $message, $headers);
+        $message = \Swift_Message::newInstance()                     
+                            ->setSubject('SKICLUB: Sortie annulee')
+                            ->setFrom($request->getSession()->get('email'))
+                            ->setTo($email)
+                            ->setBody('Bonjour, Nous avons le regret de vous annoncer que la sortie prévue le '.$dateSortie.' a : '.$lieu.' est annulee. Pardon pour la gene occasionnee. Le SKICLUB');
+                    
+        $this->get('mailer')->send($message);
         
         
     }
