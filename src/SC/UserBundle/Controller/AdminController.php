@@ -1,4 +1,3 @@
-
 <?php
 // src/SC/UserBundle/Controller/AdminController.php;
 
@@ -203,8 +202,8 @@ class AdminController extends Controller
                                                'nomEnfant'=>$nom, 'prenomEnfant' =>$prenom, 'email'=>$email));
         $inscriptionActivite -> setLicenceValide(1);
         $em->flush();
-        $listeEnfantsInscrits = $repository -> listeEnfantsinscrits($email);   
-        return $this->render('SCUserBundle:Admin:gestionEnfant.html.twig',array('listeEnfantsInscrits' => $listeEnfantsInscrits));
+        $listeEnfantsInscrits = $repository -> listeDeMesInscriptions($email);   
+        return $this->render('SCUserBundle:Admin:gestionEnfant.html.twig',array('listeDeMesInscriptions' => $listeDeMesInscriptions));
         
     }
     

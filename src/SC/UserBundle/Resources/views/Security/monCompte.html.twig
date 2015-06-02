@@ -16,12 +16,7 @@
         {% endif %}
         
 
-    <h4> Enfant(s) inscrit(s) :
-        <ul> {% for enfant in listEnfants %}
-                <li>{{ enfant.prenomEnfant }} </li>
-            {% endfor %}
-        </ul>
-     <h4/>
+
      <h4><a href="{{ path('sc_activite_listeEnfantsInscrits') }}">Liste de mes enfants inscrits aux activités</a><h4/>
 
    {%if voirActivite is not defined %}    

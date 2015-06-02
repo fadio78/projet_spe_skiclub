@@ -190,16 +190,7 @@ class ActiviteController extends Controller
             $saison -> removeActivite($activite);
             $this->suppSoritesEtInscrit($activite);
             $em->remove($activite);
-            $re = $em ->getRepository('SC\ActiviteBundle\Entity\InscriptionActivite');
-            $listeInscritsActivites = $re ->findby(array('activite' => $activite));
-            if (! is_null($listeInscritsActivites))
-            { 
-                foreach ($listeInscritsActivites as $inscription)
-                {
-                    $em -> remove($inscription);
-                }
-                
-            } 
+            $re = $em ->getRepository('SC\ActiviteBundle\Entity\InscriptionActivite');           
             $em->flush();
             $listeActivites = $em->getRepository('SCActiviteBundle:Activite')->findAll();
             

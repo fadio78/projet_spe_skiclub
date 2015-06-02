@@ -4,12 +4,13 @@
 {% block activité_body %}
 
     
-    {% for inscription in listeEnfantsInscrits %}
+    {% for inscription in listeDeMesInscriptions %}
         
         <p>      {{ inscription.prenomEnfant }}  {{ inscription.nomEnfant }}  est inscrit à l'activité {{ inscription.activite.nomActivite }}  </p>
+        
         <br>
     {% endfor %}  
     
-    
+    <p> le prix des total à payer est {{prix}} </p>
     
 {% endblock %} 
