@@ -90,7 +90,7 @@ sc_activite_actionSortie:
         id: \d+    
         
 sc_activite_listeEnfantsInscrits:
-    path:      /monCompte/viewInscription
+    path:      /mesinscriptions
     defaults:  { _controller: SCActiviteBundle:InscriptionActivite:viewInscriActivite }
 
         

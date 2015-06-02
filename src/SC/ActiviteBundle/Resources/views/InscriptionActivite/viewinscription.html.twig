@@ -10,7 +10,7 @@
         
         <br>
     {% endfor %}  
-    
-    <p> le prix des total à payer est {{prix}} </p>
-    
+    {% if prix != 0 %}
+    <p> le prix total à payer:(prix activités + licences) est: {{prix}} </p>
+    {%endif%}
 {% endblock %} 
