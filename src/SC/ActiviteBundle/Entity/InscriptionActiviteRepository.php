@@ -4,6 +4,7 @@ namespace SC\ActiviteBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
 use SC\UserBundle\Entity\Enfant;
+use SC\ActiviteBundle\Entity\Saison;
 /**
  * InscriptionActiviteRepository
  *
@@ -28,16 +29,105 @@ class InscriptionActiviteRepository extends EntityRepository
         return $qb->getQuery()->getResult();
 
     }
-    public function ListeEnfantsinscrits($email)
+    
+    /*retourne la liste des inscriptions aux activités à partir d'un email donné */
+    public function listeDeMesInscriptions($email)
     {
+      
         $qb= $this->createQueryBuilder('i')
-         ->where('i.email = :email')
-         ->setParameter('email', $email);
+                  ->where('i.email = :email')
+                  ->setParameter('email', $email);
         
         return $qb->getQuery()->getResult();
         
     }
+    
+    
+    public function getSommeActivitesApayerParEnfant($email,$prenom,$nom)
+    {
+        $somme = 0;
+        $saison = new Saison ();
+        $year = $saison->connaitreSaison();          
+        $qb = $this ->createQueryBuilder('i')
+                    ->leftJoin('i.activite', 'a')
+                    ->addSelect('a')
+                    ->where('i.saison = :annee')
+                    ->setParameter('annee', $year)
+                    ->andwhere('i.email = :email')
+                    -> setParameter('email',$email)
+                    ->andwhere('i.prenom = :prenom')
+                    ->setParameter('prenom', $prenom)
+                    ->andwhere('i.nom = :nom')
+                    ->setParameter('nom', $nom);
+        $liste = $qb  ->getQuery() ->getResult();
+        foreach( $liste as $inscri)
+        {
+            $somme = $somme + ($inscri ->getActivite() -> getPrixActivite());
+        }
+        return $somme;
+    }
+    
+    public function getSommeActivitesApayer($email)
+    {
+        $somme = 0;
+        $saison = new Saison ();
+        $year = $saison->connaitreSaison();          
+        $qb = $this ->createQueryBuilder('i')
+                    ->leftJoin('i.activite', 'a')
+                    ->addSelect('a')
+                    ->where('i.saison = :annee')
+                    ->setParameter('annee', $year)
+                    ->andwhere('i.email = :email')
+                    ->setParameter('email', $email);
+        $liste = $qb  ->getQuery() ->getResult();
+        foreach( $liste as $inscri)
+        {
+            $somme = $somme + ($inscri ->getActivite() -> getPrixActivite())    ;
+        }
+        return $somme;
+    } 
+    
 
     
     
+    public function getSommeLicencesApayer($email,$prenom,$nom)
+    {
+        $somme = 0;
+        $saison = new Saison ();
+        $year = $saison->connaitreSaison(); 
+        $qb = $this->_em->createQuery('SELECT  distinct c.typeLicence , c.prixLicence from SCActiviteBundle:InscriptionActivite a Left JOIN  SCActiviteBundle:Activite b WITH (a.activite =b.id ) Left join SCLicenceBundle:Licence c WITH (b.licence= c.typeLicence) WHERE a.email =:email and a.prenomEnfant =:prenom and a.nomEnfant =:nom ')
+                        ->setParameter('email', $email)
+                        ->setParameter('prenom', $prenom)
+                        ->setParameter('nom', $nom);
+
+        $liste =$qb ->getResult();
+        $longueur = count($liste);
+        foreach( $liste as $l)
+        {
+          $somme = $somme + $l['prixLicence'] ;
+        }
+        return $somme;
+    
+    } 
+    
+    
+  
+    
+    public function getSommeApayer($email)
+    {
+        $somme = 0;
+        $r = $this -> _em-> getRepository('SCUserBundle:Enfant');
+             
+   
+        $liste = $r->findBy(['userParent' => $email]);
+       foreach ($liste as $inscri)
+        {
+            $s = $this -> getSommeLicencesApayer($email,$inscri -> getPrenomEnfant(),$inscri -> getNomEnfant());
+            $somme = $somme + $s;
+            
+        }
+        $a = $this -> getSommeActivitesApayer($email);
+        $somme = $somme + $a ;
+        return $somme;
+    }
 }
