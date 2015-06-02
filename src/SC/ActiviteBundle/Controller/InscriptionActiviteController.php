@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use SC\ActiviteBundle\Entity\Activite;
 use SC\UserBundle\Entity\User;
+use SC\UserBundle\Entity\Adhesion;
 use SC\UserBundle\Entity\Licence;
 use SC\ActiviteBundle\Entity\Saison;
 use SC\ActiviteBundle\Entity\SaisonRepository;
@@ -23,10 +24,41 @@ class InscriptionActiviteController extends Controller
 
     
     public function inscriptionActiviteAction($id,Request $request) 
-    {
+    {   
         $em = $this->getDoctrine()->getManager();
         $session = $request->getSession();
         $email = $session->get('email');
+        
+        //on le rentre dans la table adhesion si il est pas encore inscrit 
+        
+        $saison_actuel = new Saison();
+        $annee = $saison_actuel->connaitreSaison();
+        $adhesion = $em->getRepository('SCUserBundle:Adhesion')->findOneby(
+                   array('user' => $email,
+                         'saison'=> $annee
+                   ));
+        
+        
+        if ($adhesion == null){
+            $user = $em->getRepository('SCUserBundle:User')->findOneby(['email' => $email]);
+            $saison_actuel = $em->getRepository('SC\ActiviteBundle\Entity\Saison')->find($annee);
+            $adhesion = new Adhesion;
+            $adhesion->setAdhesionAnnuel(false);
+            $adhesion->setModalite(0);
+            $adhesion->setMontantPaye(0);
+            $adhesion->setRemise(0);
+            $adhesion->setSaison($saison_actuel);
+            $adhesion->setUser($user);
+            $em->persist($adhesion);
+            $em->flush();
+        }
+        
+        
+        
+        
+        
+        
+        
         $inscriptionActivite = new InscriptionActivite();
         $activite = $em->getRepository('SC\ActiviteBundle\Entity\Activite')->find($id);
         if (null === $activite) {

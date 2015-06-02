@@ -37,6 +37,6 @@ class LoadActivite extends AbstractFixture implements OrderedFixtureInterface
   }
   public function getOrder()
   {
-        return 4; // l'ordre dans lequel les fichiers sont chargés
+        return 7; // l'ordre dans lequel les fichiers sont chargés
   }  
 }
