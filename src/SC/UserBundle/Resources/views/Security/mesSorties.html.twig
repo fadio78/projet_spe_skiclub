@@ -1,0 +1,44 @@
+{% extends "SCUserBundle::layout.html.twig" %}
+{% block user_body %}
+
+    <h4>Activite : {{ activite.getNomactivite }}  <div align="right"> Saison : {{ saison }}</div></h4><br/> 
+  
+    {% for sortie in mesSorties %}
+        
+        {{ sortie.dateSortie }} à {{ sortie.lieu }} :
+        <a href="{{path('sc_inscription_getChoix', {'id': activite.id,'dateSortie' : sortie.dateSortie  , 'lieu': sortie.lieu,'nomEnfant': sortie.nomEnfant,'prenomEnfant': sortie.prenomEnfant }) }}"> 
+        {{ sortie.nomEnfant }} </a> {{sortie.participation}} <br/>
+        
+        
+        
+    {%endfor%}    
+    
+    {%if mesSorties == null %}
+        aucune inscription
+    {%endif%}  
+    <br/>
+    <br/>
+    {%if choix is defined and choix == 1 %}
+        Vous pouvez confirmer ou annuler la participation de {{ prenomEnfant }} à la sortie : {{ dateSortie }} à {{ lieu }} <br/>
+        Pour rappel voici les inscrits (il est normal que le nom de votre enfant n'apparaisse pas): <br/> <br/>
+        {%for inscrit in inscrits %} 
+            {%if (inscrit.emailParent != app.session.get('email')) or (inscrit.emailParent == app.session.get('email') and inscrit.nomEnfant != nomEnfant and inscrit.prenomEnfant != prenomEnfant) %}
+                {{ inscrit.nomEnfant }} {{ inscrit.prenomEnfant }} 
+                    {%if inscrit.participation == 1 %} 
+                        a confirmé
+                    {%else%}
+                        n'a pas confirmé
+                    {%endif%}
+            {%endif%}
+        {%endfor%}     
+    
+    <a href="{{path('sc_inscription_validation', { 'id': activite.id,'dateSortie' : dateSortie  , 'lieu': lieu,'nomEnfant': nomEnfant,'prenomEnfant': prenomEnfant }) }}" class="btn btn-default">
+        <i class="glyphicon glyphicon-edit"></i>
+            Je valide cette sortie  
+    </a> 
+    <a href="{{path('sc_inscription_annulation', { 'id': activite.id,'dateSortie' : dateSortie  , 'lieu': lieu,'nomEnfant': nomEnfant,'prenomEnfant': prenomEnfant }) }}" class="btn btn-default">
+        <i class="glyphicon glyphicon-edit"></i>
+            J'annule ma participation  
+    </a>
+    {%endif%}     
+{% endblock %}    

@@ -16,14 +16,15 @@ class LoadEnfant extends AbstractFixture implements OrderedFixtureInterface
   {
     //on recupere tous les user de la BD  
     $advertRepository = $manager->getRepository('SC\UserBundle\Entity\User')->findAll();
-    
+    $i = 0;
     //on va creer un nouvel enfant
     foreach ($advertRepository as $client) {
+        $i = $i+1;
         $enfant = new Enfant;
         $enfant->setDateNaissance(new \DateTime("2012-07-08")); 
         $enfant->setNiveauSki('bon'); 
-        $enfant->setNomEnfant('monNom'); 
-        $enfant->setPrenomEnfant('monPrenom');
+        $enfant->setNomEnfant($i.' '.'monNom'); 
+        $enfant->setPrenomEnfant($i.' '.'monPrenom');
         $enfant->setUserParent($client);
         
         //ajout dans la base
