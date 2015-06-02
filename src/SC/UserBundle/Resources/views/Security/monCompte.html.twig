@@ -4,7 +4,7 @@
 
 {% block user_body %}
 
-<p><b> Adresse e-mail</b> : {{nom}}</p>
+<p><b> Adresse e-mail</b> : {{app.session.get('email')}}</p>
     <h4><a href="{{ path('sc_user_compteEnfant') }}">Gestion Enfant(s)</a><h4/>
     <h4><a href="{{ path('sc_user_paramCompte') }}">Paramètres du compte</a><h4/>
 
