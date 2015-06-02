@@ -6,55 +6,50 @@
     
     <h2> Gestion du compte de {{user.prenom}} {{user.nom}} pour la saison  {{adhesion.saison.annee}}<h2/>
        {# <h4> Adhésion 2014 payer:{{adhesion.adhesionAnnuel}} <h4/>#}
-        <h4> montant payé :{{adhesion.montantPaye}} <h4/>
+        <h4>Montant payé : {{adhesion.montantPaye}} €<h4/>
           
-         <h4> montant remise :{{adhesion.remise}} <h4/>   
+         <h4>Montant remise : {{adhesion.remise}} €<h4/>   
              
     <form action="{{ path('sc_admin_ajoutMontant',{'email': user.email}) }}" method="post">
-    <label for="montant"> Valeur du paiement :</label>
+    <label for="montant">Valeur du paiement : </label>
     <input type="number" id="montant" name="_montant" value="" />        
      <input type="submit" value="ajouter" />
  </form>
-     
-    
-  
-   
-
-    
-     
+         
       <form action="{{ path('sc_admin_ajoutRemise',{'email': user.email}) }}" method="post">
-    <label for="remise"> Valeur de la remise :</label>
+    <label for="remise">Valeur de la remise : </label>
     <input type="number" id="remise" name="_remise" value="" />        
      <input type="submit" value="ajouter" />
      </form>
     
       <form action="{{ path('sc_admin_adherer',{'email': user.email}) }}" method="post">
-    <label for="adhesion"> Adhesion :</label>
+    <label for="adhesion">Adhésion : </label>
     <input type="checkbox"  name="_adhesion" value="1" />        
      <input type="submit" value="ajouter" />
      </form>
     
     <form action="{{ path('sc_admin_changePassword',{'email': user.email}) }}" method="post">
-  <label for="password"> nouveau mot de passe :</label>
+  <label for="password">Nouveau mot de passe : </label>
     <input type="password" id="password" name="_password" value="" /> 
     <br>
-    <label for="conf_password"> Comfirmation mot de passe :</label>
+    <label for="conf_password">Confirmation mot de passe : </label>
     <input type="password" id="conf_password" name="_conf_password" value="" />
     <br>
-     <input type="submit" value="change" />
+     <input type="submit" value="Modifier" /> {# change -> Modifier #}
      </form>
      
+     <h4><a href="{{ path('sc_activite_viewAllStagesUser', {'email': inscription.email})}}" Gestion des paiements des stages</h4>
      
     <h4><a href="{{ path('sc_admin_activerAdmin', {'email': user.email}) }}" class="btn btn-default">
 
       <i class="glyphicon glyphicon-plus"></i>
-      rendre Admin
+      Donner les droits d'administrateurs
     </a> 
     
     
     <a href="{{ path('sc_admin_gestionEnfant', {'email': user.email}) }}" class="btn btn-default">
       <i class="glyphicon glyphicon-folder-open"></i>
-      gestion Enfant(s)
+      Gestion des enfants
     </a>   
         
         <h3><p>
