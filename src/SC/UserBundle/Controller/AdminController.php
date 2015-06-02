@@ -316,5 +316,27 @@ $message = \Swift_Message::newInstance()
         
         
     }
-         
+ 
+    public function viewAllStagesUserAction($email, Request $request) {
+        $em = $this->getDoctrine()->getManager();
+        $season = new Saison;
+        $year = $season->connaitreSaison();
+        $saison = $em->getRepository('SC\ActiviteBundle\Entity\Saison')->find($year);
+        
+        if (is_null($email)) {
+            $response = new Response;
+            $response->setContent("Error 404: not found");
+            $response->setStatusCode(Response::HTTP_NOT_FOUND);
+            return $response;
+        } else {
+            $user = new User();
+            $user = $em->getRepository('SC\UserBundle\Entity\User')->findOneByEmail($email);
+        
+            $listeInscriptionStages = $em->getRepository('SC\ActiviteBundle\Entity\InscriptionStage')
+                ->findBy(array('saison'=>$saison, 'user'=>$user));
+            return $this->render('SCActiviteBundle:Stage:viewAllStagesUser.html.twig',
+                    array('listeInscriptionStages' => $listeInscriptionStages));
+        }
+    }
+    
 }
