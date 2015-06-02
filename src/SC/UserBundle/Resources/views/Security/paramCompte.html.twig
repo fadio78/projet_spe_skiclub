@@ -3,7 +3,7 @@
 {% block user_body %}
    <h4><a href="{{ path('sc_user_ajouter') }}">Ajouter utilisateur secondaire</a><h4/>
        <h4> Pour la saison {{adhesion.saison.annee }} : <h4/>
-        <h4>Montant payé : {{adhesion.montantPaye}}<h4/> 
+        <h4>Montant payé : {{adhesion.montantPaye}} €<h4/> 
   <form action="{{ path('sc_admin_changePassword',{'email': user.email}) }}" method="post">
   <label for="password"> nouveau mot de passe :</label>
   <input type="password" id="password" name="_password" value="" /> 
