@@ -111,8 +111,18 @@ sc_admin_changePassword:
     requirements : 
          email : "[^/]+"
 
-sc_activite_getChoix:
-    path:      /getChoix/{id}
+sc_inscription_getChoix:
+    path:      /getChoix/{id}/{dateSortie}/{lieu}/{nomEnfant}/{prenomEnfant}
     defaults:  { _controller: SCActiviteBundle:InscriptionSortie:getChoix }
     requirements:
-        id: \d+     
+        id: \d+
+sc_inscription_validation:
+    path:      /validation/{id}/{dateSortie}/{lieu}/{nomEnfant}/{prenomEnfant}
+    defaults:  { _controller: SCActiviteBundle:InscriptionSortie:validation }
+    requirements:
+        id: \d+
+sc_inscription_annulation:
+    path:      /annulation/{id}/{dateSortie}/{lieu}/{nomEnfant}/{prenomEnfant}
+    defaults:  { _controller: SCActiviteBundle:InscriptionSortie:annulation }
+    requirements:
+        id: \d+        

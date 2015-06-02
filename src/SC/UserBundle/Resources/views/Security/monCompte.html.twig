@@ -3,7 +3,7 @@
 {% extends "SCUserBundle::layout.html.twig" %}
 
 {% block user_body %}
-    <p><b> Adresse e-mail</b> : {{nom}}</p>
+    <p><b> Adresse e-mail</b> : {{app.session.get('email')}}</p>
     <h4><a href="{{ path('sc_enfant_ajouter') }}">Ajouter un Enfant</a><h4/>
     <h4><a href="{{ path('sc_user_ajouter') }}">Ajouter utilisateur secondaire</a><h4/>
    

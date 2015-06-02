@@ -252,4 +252,8 @@ class InscriptionSortie
     {
         return $this->lieu;
     }
+    
+    public function __toString() {
+        return $this->nomEnfant.' '.$this->dateSortie.' '.$this->lieu;
+    }
 }
