@@ -6,6 +6,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use SC\ActiviteBundle\Entity\Stage;
 use SC\ActiviteBundle\Entity\Activite;
+use SC\ActiviteBundle\Entity\Saison;
 use SC\ActiviteBundle\Form\StageType;
 use SC\ActiviteBundle\Form\StageEditType;
 use SC\UserBundle\Entity\User;
@@ -40,11 +41,13 @@ class StageController extends Controller {
     
         public function viewAction($id) {
             
+            $season = new Saison();
+            $year = $season->connaitreSaison();
             $activite = $this->GetDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Activite')->find($id);
-	
+            $saison = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Saison')->findOneByAnnee($year);
             if(is_null($activite) == false) {
                 // on recupere tous les stages
-                $listeStages = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Stage')->findAll();
+                $listeStages = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Stage')->findBySaison($saison);
                 return $this->render('SCActiviteBundle:Stage:view.html.twig', array('listeStages' => $listeStages, 'activite' => $activite));
             } else {
                 $response = new Response;
@@ -151,6 +154,7 @@ class StageController extends Controller {
     
     public function deleteAction($id, $debutStage, $finStage, Request $request) {
         
+        $em = $this->getDoctrine()->getManager();
         $activite = $em->getRepository('SC\ActiviteBundle\Entity\Activite')->find($id);
         // on verifie que les parametres sont bons
         if (isset($activite) === false || isset($debutStage) === false || isset($finStage) === false ) {
@@ -159,8 +163,7 @@ class StageController extends Controller {
            $response->setStatusCode(Response::HTTP_NOT_FOUND);
            return $response; 
         }
-        $em = $this->getDoctrine()->getManager();
-        
+             
         $stage = $em->getRepository('SC\ActiviteBundle\Entity\Stage')
                 ->findOneBy(array('activite' =>  $activite, 'debutStage'=> $debutStage,
                     'finStage'=>$finStage));
