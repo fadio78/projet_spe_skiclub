@@ -282,16 +282,16 @@ class AdminController extends Controller
          
           $repository->changePassword($email,$newpassword, $salt);
             $request->getSession()->getFlashBag()->add('info', 'mot de passe modifié ');
-                /*$message = \Swift_Message::newInstance()
+                $message = \Swift_Message::newInstance()
         
                         
-                        modifier->setSubject('Hello Email')
+        ->setSubject('Hello Email')
         ->setFrom('send@example.com')
-        ->setTo('recipient@example.com')
-        ->setBody('Yfucking ')
+        ->setTo('recipient@example.')
+        ->setBody('fatigué')
     ;
 
-    $this->get('mailer')->send($message);*/
+    $this->get('mailer')->send($message);
             
                  }else{
                      $request->getSession()->getFlashBag()->add('info', 'Mot de passe de confirmation incorrecte ');
