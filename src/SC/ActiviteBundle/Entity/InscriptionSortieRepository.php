@@ -12,15 +12,16 @@ use Doctrine\ORM\EntityRepository;
  */
 class InscriptionSortieRepository extends EntityRepository
 {
-    public function confirmationParticipation($id,$dateSortie,$lieu,$nomEnfant,$prenomEnfant,$year) {
-      $query = $this->_em->createQuery('UPDATE SCActiviteBundle:InscriptionSortie a SET a.participation = :takePart where a.idActivite = :id AND a.saison = :year AND a.dateSortie = :date AND a.lieu = :lieu and a.nomEnfant = :nom AND a.prenomEnfant = :prenom')
+    public function confirmationParticipation($id,$dateSortie,$lieu,$nomEnfant,$prenomEnfant,$year,$email) {
+      $query = $this->_em->createQuery('UPDATE SCActiviteBundle:InscriptionSortie a SET a.participation = :takePart where a.idActivite = :id AND a.saison = :year AND a.dateSortie = :date AND a.lieu = :lieu and a.nomEnfant = :nom AND a.prenomEnfant = :prenom AND a.emailParent = :email')
                        ->setParameter('takePart', 1)
                        ->setParameter('id', $id)
                        ->setParameter('year', $year)
                        ->setParameter('date', $dateSortie)
                        ->setParameter('lieu', $lieu)
                        ->setParameter('nom', $nomEnfant)
-                       ->setParameter('prenom', $prenomEnfant);
+                       ->setParameter('prenom', $prenomEnfant)
+                       ->setParameter('email', $email);
 
        $query->execute();
     }

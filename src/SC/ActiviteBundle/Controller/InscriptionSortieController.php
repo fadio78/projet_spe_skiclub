@@ -228,7 +228,7 @@ class InscriptionSortieController extends Controller
         $year = $saison->connaitreSaison(); 
         //on met a jour l'entite
         $em->getRepository('SC\ActiviteBundle\Entity\InscriptionSortie')
-                                ->confirmationParticipation($id,$dateSortie,$lieu,$nomEnfant,$prenomEnfant,$year);
+                                ->confirmationParticipation($id,$dateSortie,$lieu,$nomEnfant,$prenomEnfant,$year,$request->getSession()->get('email'));
         $request->getSession()->getFlashBag()->add('info', 'la confirmation de votre participation a bien ete prise en compte');
          
         return $this->render('SCUserBundle:Security:monCompte.html.twig',array('listEnfants'=>$listEnfants));
@@ -249,7 +249,7 @@ class InscriptionSortieController extends Controller
         $year = $saison->connaitreSaison(); 
         //on supprime de la table
         $inscription = $em->getRepository('SC\ActiviteBundle\Entity\InscriptionSortie')
-                                ->findOneBy(array('idActivite' =>$id,'dateSortie'=>$dateSortie,'lieu' => $lieu, 'nomEnfant' => $nomEnfant, 'prenomEnfant' => $prenomEnfant, 'saison' => $year));
+                                ->findOneBy(array('idActivite' =>$id,'dateSortie'=>$dateSortie,'lieu' => $lieu,'emailParent'=> $request->getSession()->get('email'),'nomEnfant' => $nomEnfant, 'prenomEnfant' => $prenomEnfant, 'saison' => $year));
         if(is_null($inscription)) {
             return $this->pageErreur("vous n'etes pas inscrit à cette sortie");
         }
