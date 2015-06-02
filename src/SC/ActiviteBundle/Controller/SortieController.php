@@ -48,7 +48,7 @@ class SortieController extends Controller
                 $string = $date->format('Y').'-'.$date->format('m').'-'.$date->format('d').' '.$date->format('H').':'.$date->format('i').':'.$date->format('s');
                 
                 // si il ya deja une meme date -> erreur                
-                if ($this->dateExiste($string,$activite) == true) {
+                if ($this->dateExiste($string,$activite,$saison) == true) {
                     return $this->pageErreur("Une date identique a déjà été validée : deux sorties ne peuvent avoir même date");
                 }
                 
@@ -86,11 +86,11 @@ class SortieController extends Controller
     
     // teste si la date existe deja dans la BD
     // return true si la date est dans la BD, false sinon
-    public function dateExiste($date,$activite) {
+    public function dateExiste($date,$activite,$saison) {
         
         if($this->getDoctrine()->getManager()
                                     ->getRepository('SC\ActiviteBundle\Entity\Sortie')
-                                            ->findOneBy(array('dateSortie'=>$date,'activite'=> $activite)) === null) {
+                                            ->findOneBy(array('dateSortie'=>$date,'activite'=> $activite,'saison' => $saison)) === null) {
             
             return false;
             
@@ -101,15 +101,17 @@ class SortieController extends Controller
         
     }
     
-    //permet d'afficher toutes les sorties pour l'activite id
+    //permet d'afficher toutes les sorties pour l'activite id sur la saison en cours
     public function voirSortieAction($id) {
-     
+        $saison = new Saison;
+        $year = $saison->connaitreSaison();
+        $saison = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Saison')->findOneByAnnee($year);     
         $activite = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Activite')->find($id);   
         
         if (is_null($activite)==false) {
             
-            //on recupere toutes les sorties
-            $listSortie = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Sortie')->findByActivite($activite);
+            //on recupere toutes les sorties pour la saison en cours et l'activite donnee
+            $listSortie = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Sortie')->findBy(array('activite'=>$activite,'saison'=>$saison));
             return $this->render('SCActiviteBundle:Sortie:viewSortie.html.twig',array('listSortie' => $listSortie, 'activite' => $activite ));
         
         }
@@ -123,16 +125,20 @@ class SortieController extends Controller
     public function deleteSortieAction($id, Request $request, $dateSortie, $lieu) {
         
         $em = $this->getDoctrine()->getManager();
+        $saison = new Saison;
+        $year = $saison->connaitreSaison();
+        $saison = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Saison')->findOneByAnnee($year);
         $nomLieu = $em->getRepository('SC\ActiviteBundle\Entity\Lieu')->findOneByNomLieu($lieu);
         $activite = $em->getRepository('SC\ActiviteBundle\Entity\Activite')->find($id);
         $sortie = $em->getRepository('SC\ActiviteBundle\Entity\Sortie')
-                                                        ->findOneBy(array('dateSortie' => $dateSortie,'activite' =>  $activite, 'dateSortie'=>$dateSortie,'lieu'=>$nomLieu));
+                                                        ->findOneBy(array('dateSortie' => $dateSortie,'activite' =>  $activite, 'dateSortie'=>$dateSortie,'lieu'=>$nomLieu,'saison'=>$saison));
         //au cas ou les paramètres seraient modifiés à la main par quelqu'un
-        if (is_null($activite)==true) {
-            return $this->pageErreur("l'activité demandée n'existe pas");
+        
+        if (is_null($activite)==true OR is_null($lieu)) {
+            return $this->pageErreur("l'activité demandée n'existe pas ou le lieu n'est pas reference");
         }
         if (isset($sortie)==FALSE) {
-            $listSortie = $em->getRepository('SC\ActiviteBundle\Entity\Sortie')->findAll();
+            $listSortie = $em->getRepository('SC\ActiviteBundle\Entity\Sortie')->findBy(array('activite'=>$activite,'saison'=>$saison));
             return $this->render('SCActiviteBundle:Sortie:viewSortie.html.twig',array('listSortie' => $listSortie, 'activite' => $activite ));            
         }
         else {
@@ -141,20 +147,23 @@ class SortieController extends Controller
             $em->remove($sortie);
             $em->flush();
             $request->getSession()->getFlashBag()->add('info', 'La sortie a bien été supprimée, et un mail a été envoyé aux personnes inscrites');
-            $listSortie = $em->getRepository('SC\ActiviteBundle\Entity\Sortie')->findAll();
+            $listSortie = $em->getRepository('SC\ActiviteBundle\Entity\Sortie')->findBy(array('activite'=>$activite,'saison'=>$saison));
             return $this->render('SCActiviteBundle:Sortie:viewSortie.html.twig',array('listSortie' => $listSortie, 'activite' => $activite ));
         }
     }
     
     public function actionSortieAction($id, Request $request, $dateSortie, $lieu) {
         $em = $this->getDoctrine()->getManager();
+        $saison = new Saison;
+        $year = $saison->connaitreSaison();
+        $saison = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Saison')->findOneByAnnee($year);
         $activite = $em->getRepository('SC\ActiviteBundle\Entity\Activite')->find($id);
         
             if (is_null($activite)==true) {
                 return $this->pageErreur("l'activité demandée n'existe pas");
             }
 
-        $listSortie = $em->getRepository('SC\ActiviteBundle\Entity\Sortie')->findBy(array('activite'=>$activite));
+        $listSortie = $em->getRepository('SC\ActiviteBundle\Entity\Sortie')->findBy(array('activite'=>$activite,'saison'=>$saison));
         return $this->render('SCActiviteBundle:Sortie:viewSortie.html.twig',array('listSortie' => $listSortie, 'activite' => $activite, 'dateSortie'=>$dateSortie,'lieu'=>$lieu ));
     }
     
@@ -169,8 +178,10 @@ class SortieController extends Controller
     
     public function estInscrit($dateSortie,$id) {
         $em = $this->getDoctrine()->getManager();
+        $saison = new Saison;
+        $year = $saison->connaitreSaison();
         $inscrits = $em->getRepository('SC\ActiviteBundle\Entity\InscriptionSortie')
-                            ->findBy(array('dateSortie'=>$dateSortie,'idActivite'=>$id));
+                            ->findBy(array('dateSortie'=>$dateSortie,'idActivite'=>$id,'saison'=> $year));
         
         foreach ($inscrits as $enfant) {
             //envoie du mail
