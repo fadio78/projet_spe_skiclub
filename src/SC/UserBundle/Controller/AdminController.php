@@ -63,6 +63,20 @@ class AdminController extends Controller
            
            $repository->activerCompte($email);
         $request->getSession()->getFlashBag()->add('info', 'Compte bien activité ');
+        
+        $message = \Swift_Message::newInstance()
+        
+                        
+        ->setSubject('Compte activé')
+        ->setFrom($request->getSession()->get('email'))
+        ->setTo($email)
+        ->setBody('Votre Compte a été activité, vous pouvez vous connecter sur skiclub la petite roche')
+                        
+    ;
+
+    $this->get('mailer')->send($message);
+        
+        
         return $this->redirect($this->generateUrl('sc_admin_listUsersInactif'));
         
         
@@ -282,16 +296,17 @@ class AdminController extends Controller
          
           $repository->changePassword($email,$newpassword, $salt);
             $request->getSession()->getFlashBag()->add('info', 'mot de passe modifié ');
-                /*$message = \Swift_Message::newInstance()
+$message = \Swift_Message::newInstance()
         
                         
-                        modifier->setSubject('Hello Email')
-        ->setFrom('send@example.com')
-        ->setTo('recipient@example.com')
-        ->setBody('Yfucking ')
+        ->setSubject('Changement de mot de passe ')
+        ->setFrom($request->getSession()->get('email'))
+        ->setTo($email)
+        ->setBody('Votre mot de passe a changé voici le nouveau que vous devez aller modifier :'.$password)
+                        
     ;
 
-    $this->get('mailer')->send($message);*/
+    $this->get('mailer')->send($message);
             
                  }else{
                      $request->getSession()->getFlashBag()->add('info', 'Mot de passe de confirmation incorrecte ');
@@ -301,5 +316,27 @@ class AdminController extends Controller
         
         
     }
-         
+ 
+    public function viewAllStagesUserAction($email, Request $request) {
+        $em = $this->getDoctrine()->getManager();
+        $season = new Saison;
+        $year = $season->connaitreSaison();
+        $saison = $em->getRepository('SC\ActiviteBundle\Entity\Saison')->find($year);
+        
+        if (is_null($email)) {
+            $response = new Response;
+            $response->setContent("Error 404: not found");
+            $response->setStatusCode(Response::HTTP_NOT_FOUND);
+            return $response;
+        } else {
+            $user = new User();
+            $user = $em->getRepository('SC\UserBundle\Entity\User')->findOneByEmail($email);
+        
+            $listeInscriptionStages = $em->getRepository('SC\ActiviteBundle\Entity\InscriptionStage')
+                ->findBy(array('saison'=>$saison, 'user'=>$user));
+            return $this->render('SCActiviteBundle:Stage:viewAllStagesUser.html.twig',
+                    array('listeInscriptionStages' => $listeInscriptionStages));
+        }
+    }
+    
 }

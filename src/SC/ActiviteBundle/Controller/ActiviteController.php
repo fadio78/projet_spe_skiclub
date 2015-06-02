@@ -186,6 +186,7 @@ class ActiviteController extends Controller
             // liste des inscrits à l'activité des saisons précédentes
             $inscriptionsSaisons = $repository -> inscriptionsSaisons($id);
             $saison -> removeActivite($activite);
+
             $saisonactuelle  = null;
             $saisonsprecedentes = null;
             
@@ -220,6 +221,11 @@ class ActiviteController extends Controller
             }
             
             $this->suppSoritesEtInscrit($activite);
+            $this->suppSoritesEtInscrit($activite,$saison);
+            $this->deleteStagesInscriptionStages($activite,$saison);
+            
+            $re = $em ->getRepository('SC\ActiviteBundle\Entity\InscriptionActivite');           
+
             $em->flush();
             $listeActivites =$saison -> getActivites();
             return $this->render('SCActiviteBundle:Activite:index.html.twig', array('listeActivites' => $listeActivites));
@@ -227,18 +233,32 @@ class ActiviteController extends Controller
         }    
     }
     
-    public function suppSoritesEtInscrit($activite) {
+    public function suppSoritesEtInscrit($activite,$saison) {
         $em = $this->getDoctrine()->getManager();
-        $sorties = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Sortie')->findBy(array('activite'=> $activite));
+        $sorties = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Sortie')->findBy(array('activite'=> $activite,'saison'=>$saison));
             foreach ($sorties as $sortie) {
                 $em->remove($sortie);
             }
-        $inscrits = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\InscriptionSortie')->findBy(array('idActivite'=> $activite));    
+        $inscrits = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\InscriptionSortie')->findBy(array('idActivite'=> $activite,'saison'=>$saison->getAnnee()));    
             foreach ($inscrits as $enfant) {
                 $em->remove($enfant);
             }        
         $em->flush();
     }
+    
+    public function deleteStagesInscriptionStages($activite,$saison) {
+        $em = $this->getDoctrine()->getManager();
+        $stages = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Stage')->findBy(array('activite'=> $activite,'saison'=>$saison));
+            foreach ($stages as $stage) {
+                $em->remove($stage);
+            }
+        $inscriptionStages = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\InscriptionStage')->findBy(array('activite'=> $activite,'saison'=>$saison));    
+            foreach ($inscrits as $enfant) {
+                $em->remove($enfant);
+            }        
+        $em->flush();
+    }
+    
 
     public function ajoutSortieAction($id,Request $request) {
         
@@ -281,6 +301,7 @@ class ActiviteController extends Controller
             return $annee-1;
         }
     }
+    
     
 
 }

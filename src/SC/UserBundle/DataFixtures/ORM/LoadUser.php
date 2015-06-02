@@ -22,8 +22,8 @@ class LoadUser extends AbstractFixture implements OrderedFixtureInterface
 
       // Le nom d'utilisateur et le mot de passe sont identiques
       $user->setEmail($name);
-      $user->setNom('monNom');
-      $user->setPrenom('monPrenom');
+      $user->setNom($i.' '.'monNom');
+      $user->setPrenom($i.' '.'monPrenom');
       $user->setAdresse('14 rue grenoble');
       $user->setCommune('grenoble');
       $user->setTelephone('06125566333');

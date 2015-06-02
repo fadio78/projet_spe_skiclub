@@ -1,17 +1,23 @@
 {% extends "SCUserBundle::layout.html.twig" %}
 
 {% block user_body %}
-   <h4><a href="{{ path('sc_user_ajouter') }}">Ajouter utilisateur secondaire</a><h4/>
-       <h4> Pour la saison {{adhesion.saison.annee }} : <h4/>
-        <h4>Montant payé : {{adhesion.montantPaye}}<h4/> 
+  <h4>Informations concernant le compte</h4>
+  <br/>
+  <p><u>Montant payé pour la saison <b>{{adhesion.saison.annee }}</b></u> : {{adhesion.montantPaye}} €<p/>
+  <br/>
+  <p>Vous pouvez ajouter un utilisateur secondaire. Un utilisateur secondaire peut inscrire vos enfants avec son propre compte et son propre mot de passe.</p>
+  <p><a href="{{ path('sc_user_ajouter') }}">Ajouter</a><p/>
+  
+  </br>
+  <p><u>Changer de mot de passe</u></p>
   <form action="{{ path('sc_admin_changePassword',{'email': user.email}) }}" method="post">
-  <label for="password"> nouveau mot de passe :</label>
+  <label for="password">Nouveau mot de passe : </label>
   <input type="password" id="password" name="_password" value="" /> 
   <br>
-  <label for="conf_password"> confirmation mot de passe :</label>
+  <label for="conf_password">Confirmation mot de passe : </label>
   <input type="password" id="conf_password" name="_conf_password" value="" />  
   <br>
-  <input type="submit" value="change" />
+  <input type="submit" value="Modifier" />
   </form>
     
 {% endblock %}

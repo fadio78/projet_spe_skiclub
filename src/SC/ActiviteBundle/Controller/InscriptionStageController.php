@@ -30,7 +30,7 @@ class InscriptionStageController extends Controller
         return $response;
     }
     
-    //liste les enfants d'un utilisateur
+    //permet de voir la liste des enfants, de choisir l'enfant à inscrire et de l'inscrire
     public function viewChildrenAction($id, $debutStage, $finStage, Request $request) {
 
         $em = $this->getDoctrine()->getManager();
@@ -56,7 +56,7 @@ class InscriptionStageController extends Controller
             $response->setStatusCode(Response::HTTP_NOT_FOUND);
             return $response;
         }
-        
+        // On crée le formulaire pour faire la liste déroulante des enfants de l'utilisateur
         $defaultData = array('message' => 'Type your message here');
         
         $form = $this->createFormBuilder($defaultData)
@@ -75,9 +75,10 @@ class InscriptionStageController extends Controller
             $inscriptionStage -> setUser($parents);
             $inscriptionStage -> setDebutStage($debutStage);
             $inscriptionStage -> setFinStage($finStage);
+            $inscriptionStage -> setSaison($saison);
             $inscriptionStage -> setPrixPayeStage(0);
-            $inscriptionStage ->setNomEnfant($enfant -> getNomEnfant());
-            $inscriptionStage ->setPrenomEnfant($enfant -> getPrenomEnfant());
+            $inscriptionStage -> setNomEnfant($enfant -> getNomEnfant());
+            $inscriptionStage -> setPrenomEnfant($enfant -> getPrenomEnfant());
             $er = $em ->getRepository('SC\ActiviteBundle\Entity\InscriptionStage');
             if ($this->estInscrit($activite, $stage, $parents, $enfant->
                     getNomEnfant(),$enfant->getPrenomEnfant()) === false)
@@ -112,7 +113,8 @@ class InscriptionStageController extends Controller
         }
     }
     
-    public function viewChildrenStagesaction($id, Request $request) {
+    // Voir la liste des inscriptions aux stages de tous les enfants pour une saison
+    public function viewChildrenStagesAction($id, Request $request) {
         $em = $this->getDoctrine()->getManager();
         $season = new Saison;
         $year = $season->connaitreSaison();
@@ -120,8 +122,7 @@ class InscriptionStageController extends Controller
         $activite = new Activite();
         $activite = $em->getRepository('SC\ActiviteBundle\Entity\Activite')->find($id);
         
-        
-        $listeInscriptionStages = $em->getRepository('SC\ActiviteBundle\Entity\InscriptionStage')->findBy(array('activite'=>$activite));
+        $listeInscriptionStages = $em->getRepository('SC\ActiviteBundle\Entity\InscriptionStage')->findBy(array('activite'=>$activite, 'saison'=>$saison));
         if (is_null($activite)) {
             $response = new Response;
             $response->setContent("Error 404: not found");
@@ -132,5 +133,60 @@ class InscriptionStageController extends Controller
                     array('listeInscriptionStages' => $listeInscriptionStages, 'activite' => $activite));
         }
     }
+
+    public function confirmPaymentAction($id, $email, $nomEnfant, $prenomEnfant, $debutStage, $finStage, Request $request) {
+        $em = $this->getDoctrine()->getManager();
+        
+        $season = new Saison;
+        $year = $season->connaitreSaison();
+        $saison = $em->getRepository('SC\ActiviteBundle\Entity\Saison')->find($year);
+        
+        $user = new User();
+        $user = $em->getRepository('SC\UserBundle\Entity\User')->find($email);
+        
+        $activite = new Activite();
+        $activite = $em->getRepository('SC\ActiviteBundle\Entity\Activite')->find($id);
+        
+        $stage = $em->getRepository('SC\ActiviteBundle\Entity\Stage')->findOneBy(
+                array('activite'=>$activite,'debutStage'=>$debutStage,
+                    'finStage'=>$finStage));
+        $prixTotal = $stage->getPrixStage() + $stage->getCharges();
+        $em->getRepository('SC\ActiviteBundle\Entity\InscriptionStage')
+                                ->validationPayment($prixTotal, $activite, $user, $nomEnfant, $prenomEnfant, $debutStage, $finStage);
+        
+        $listeInscriptionStages = $em->getRepository('SC\ActiviteBundle\Entity\InscriptionStage')
+                ->findBy(array('saison'=>$saison, 'user'=>$user));
+        
+        $request->getSession()->getFlashBag()->add('info', 'Confirmation de paiement pris en compte');
+        return $this->render('SCActiviteBundle:Stage:viewAllStagesUser.html.twig', array('listeInscriptionStages'=>$listeInscriptionStages));
+    }
     
+    public function deleteInscriptionStageAction($id, $email, $nomEnfant, $prenomEnfant, $debutStage, $finStage, Request $request) {
+        $em = $this->getDoctrine()->getManager();
+        
+        $season = new Saison;
+        $year = $season->connaitreSaison();
+        $saison = $em->getRepository('SC\ActiviteBundle\Entity\Saison')->find($year);
+        
+        $user = new User();
+        $user = $em->getRepository('SC\UserBundle\Entity\User')->find($email);
+        
+        $activite = new Activite();
+        $activite = $em->getRepository('SC\ActiviteBundle\Entity\Activite')->find($id);
+        
+        $inscriptionStage = $em->getRepository('SC\ActiviteBundle\Entity\InscriptionStage')->findOneBy(
+                array('activite'=>$activite, 'user'=>$user, 'nomEnfant'=>$nomEnfant,'prenomEnfant'=>$prenomEnfant,'debutStage'=>$debutStage,
+                    'finStage'=>$finStage));
+        
+        $em->remove($inscriptionStage);
+        $em->flush();
+        
+        $listeInscriptionStages = $em->getRepository('SC\ActiviteBundle\Entity\InscriptionStage')
+                ->findBy(array('saison'=>$saison, 'user'=>$user));
+        
+        $request->getSession()->getFlashBag()->add('info', 'Confirmation de paiement pris en compte');
+        return $this->render('SCActiviteBundle:Stage:viewAllStagesUser.html.twig', array('listeInscriptionStages'=>$listeInscriptionStages));
+        
+        
+    }
 }
