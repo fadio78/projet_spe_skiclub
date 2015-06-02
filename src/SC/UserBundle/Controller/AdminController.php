@@ -1,3 +1,4 @@
+
 <?php
 // src/SC/UserBundle/Controller/AdminController.php;
 
