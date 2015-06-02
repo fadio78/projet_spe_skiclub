@@ -63,6 +63,20 @@ class AdminController extends Controller
            
            $repository->activerCompte($email);
         $request->getSession()->getFlashBag()->add('info', 'Compte bien activité ');
+        
+        $message = \Swift_Message::newInstance()
+        
+                        
+        ->setSubject('Compte activé')
+        ->setFrom($request->getSession()->get('email'))
+        ->setTo($email)
+        ->setBody('Votre Compte a été activité, vous pouvez vous connecter sur skiclub la petite roche')
+                        
+    ;
+
+    $this->get('mailer')->send($message);
+        
+        
         return $this->redirect($this->generateUrl('sc_admin_listUsersInactif'));
         
         
@@ -282,13 +296,14 @@ class AdminController extends Controller
          
           $repository->changePassword($email,$newpassword, $salt);
             $request->getSession()->getFlashBag()->add('info', 'mot de passe modifié ');
-                $message = \Swift_Message::newInstance()
+$message = \Swift_Message::newInstance()
         
                         
-        ->setSubject('Hello Email')
-        ->setFrom('send@example.com')
-        ->setTo('recipient@example.')
-        ->setBody('fatigué')
+        ->setSubject('Changement de mot de passe ')
+        ->setFrom($request->getSession()->get('email'))
+        ->setTo($email)
+        ->setBody('Votre mot de passe a changé voici le nouveau que vous devez aller modifier :'.$password)
+                        
     ;
 
     $this->get('mailer')->send($message);
