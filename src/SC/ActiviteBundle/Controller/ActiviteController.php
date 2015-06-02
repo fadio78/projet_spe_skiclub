@@ -188,18 +188,9 @@ class ActiviteController extends Controller
         else {
             $saison = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Saison')->find($year);
             $saison -> removeActivite($activite);
-            $this->suppSoritesEtInscrit($activite);
+            $this->suppSoritesEtInscrit($activite,$saison);
             $em->remove($activite);
-            $re = $em ->getRepository('SC\ActiviteBundle\Entity\InscriptionActivite');
-            $listeInscritsActivites = $re ->findby(array('activite' => $activite));
-            if (! is_null($listeInscritsActivites))
-            { 
-                foreach ($listeInscritsActivites as $inscription)
-                {
-                    $em -> remove($inscription);
-                }
-                
-            } 
+            $re = $em ->getRepository('SC\ActiviteBundle\Entity\InscriptionActivite');           
             $em->flush();
             $listeActivites = $em->getRepository('SCActiviteBundle:Activite')->findAll();
             
@@ -208,13 +199,13 @@ class ActiviteController extends Controller
         }    
     }
     
-    public function suppSoritesEtInscrit($activite) {
+    public function suppSoritesEtInscrit($activite,$saison) {
         $em = $this->getDoctrine()->getManager();
-        $sorties = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Sortie')->findBy(array('activite'=> $activite));
+        $sorties = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Sortie')->findBy(array('activite'=> $activite,'saison'=>$saison));
             foreach ($sorties as $sortie) {
                 $em->remove($sortie);
             }
-        $inscrits = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\InscriptionSortie')->findBy(array('idActivite'=> $activite));    
+        $inscrits = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\InscriptionSortie')->findBy(array('idActivite'=> $activite,'saison'=>$saison->getAnnee()));    
             foreach ($inscrits as $enfant) {
                 $em->remove($enfant);
             }        
@@ -262,6 +253,7 @@ class ActiviteController extends Controller
             return $annee-1;
         }
     }
+    
     
 
 }

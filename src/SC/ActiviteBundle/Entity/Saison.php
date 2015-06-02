@@ -104,7 +104,7 @@ class Saison
         $date = new \DateTime();
         $annee = $date->format('Y');
         $mois = $date->format('m');
-        
+       
         if ($mois > 8) {
             return $annee;
         }
