@@ -3,13 +3,12 @@
 {% block title %}{{ parent() }} - Index{% endblock %}
 {% block activité_body %}
     <ul>
-        
         <p>Choisissez quel enfant inscrire au stage.
         <br>
         Si l'enfant ne possède pas la licence pour l'activité en question, une 
         licence pour cette activité sera automatiquement prise lors de l'inscription.
         <br>
-        En cliquant sur le bouton d'inscription, la licence sera ajoutée automatiquement à vos frais.
+        En cliquant sur le bouton enregistrer, la licence sera ajoutée automatiquement à vos frais.
         </p>
         {{ include("SCActiviteBundle:Stage:form.html.twig") }}
     </ul>
