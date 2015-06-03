@@ -183,10 +183,13 @@ class ActiviteController extends Controller
             $repository = $em -> getRepository('SC\ActiviteBundle\Entity\InscriptionActivite');
             // liste des inscrits à l'activité cette saison
             $inscriptions = $repository-> inscriptions($id);
+        //    $inscriptions = $repository ->findBy(array('activite' => $activite,'saison' => $saison));
             // liste des inscrits à l'activité des saisons précédentes
             $inscriptionsSaisons = $repository -> inscriptionsSaisons($id);
             $saison -> removeActivite($activite);
-
+         /*   if (is_null($inscriptions) == true) {
+                $em->remove($activite);
+            }*/
             $saisonactuelle  = null;
             $saisonsprecedentes = null;
             
@@ -201,12 +204,18 @@ class ActiviteController extends Controller
             //je supprime l'activité s'il n'y a pas d'inscription
             if (is_null($saisonactuelle) AND is_null($saisonsprecedentes) )
             {
+                
                 $em->remove($activite);
             }
             //je supprime l'activité s'il y a des inscriptions que cette saison
             if (is_null($saisonsprecedentes)  AND   isset($saisonactuelle))
             {
                 //envoi mail
+                //je supprime les inscriptions de cette saison
+                foreach ($inscriptions as $inscription)
+                {
+                $em ->remove($inscription);
+                }
                 $em->remove($activite);
             }
             // je ne supprime que les inscriptions de cette saison 
@@ -219,7 +228,7 @@ class ActiviteController extends Controller
                 $em ->remove($inscription);
             }
             }
-        
+       
             $this->suppSoritesEtInscrit($activite,$saison);
             $this->deleteStagesInscriptionStages($activite,$saison);
             
