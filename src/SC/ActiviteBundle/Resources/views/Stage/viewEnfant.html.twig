@@ -3,6 +3,9 @@
 {% block title %}{{ parent() }} - Index{% endblock %}
 {% block activité_body %}
     <ul>
+        {% if (activite.typeLicence == null) %}
+        <p>Il n'y pas besoin de licence pour ce stage. </p>
+        {% else %}
         <p>Choisissez quel enfant inscrire au stage.
         <br>
         Si l'enfant ne possède pas la licence pour l'activité en question, une 
@@ -10,6 +13,7 @@
         <br>
         En cliquant sur le bouton enregistrer, la licence sera ajoutée automatiquement à vos frais.
         </p>
+        {% endif %}
         {{ include("SCActiviteBundle:Stage:form.html.twig") }}
     </ul>
     <p>
