@@ -276,7 +276,7 @@ class ActiviteController extends Controller
                 $em->remove($stage);
             }
         $inscriptionStages = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\InscriptionStage')->findBy(array('activite'=> $activite,'saison'=>$saison));    
-            foreach ($inscrits as $enfant) {
+            foreach ($inscriptionStages as $enfant) {
                 $em->remove($enfant);
             }        
         $em->flush();
