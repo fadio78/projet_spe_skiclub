@@ -47,7 +47,7 @@ class StageController extends Controller {
             $saison = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Saison')->findOneByAnnee($year);
             if(is_null($activite) == false) {
                 // on recupere tous les stages
-                $listeStages = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Stage')->findBySaison($saison);
+                $listeStages = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Stage')->findBy(array('activite'=>$activite,'saison'  => $saison));
                 return $this->render('SCActiviteBundle:Stage:view.html.twig', array('listeStages' => $listeStages, 'activite' => $activite));
             } else {
                 $response = new Response;
@@ -183,24 +183,20 @@ class StageController extends Controller {
             $em = $this->getDoctrine()->getManager();
             $saison = new Saison();
             $year = $saison->connaitreSaison();
+            $saison = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Saison')->findOneByAnnee($year);
             
             // On supprime ici l'inscription de chaque enfant du stage qui va être supprimé
             $inscrits = $em->getRepository('SC\ActiviteBundle\Entity\InscriptionStage')
-                            ->findBy(array('debutStage'=>$debutStage,'finStage'=>$finStage,'id'=>$id,'saison'=> $year));
+                            ->findBy(array('debutStage'=>$debutStage,'finStage'=>$finStage,'activite'=>$activite,'saison'=> $saison));
             foreach ($inscrits as $enfant) {
-            $this->mailStageCancelled($enfant->getEmailParent(), $debutStage, $finStage, $lieu);
+            $this->mailStageCancelled($enfant->getUser()->getEmail(), $debutStage, $finStage, $lieu);
             $em->remove($enfant);
             }
             // On supprime le stage
             $em->remove($stage);
             $em->flush();
-            $saison = new Saison();
-            $year = $saison->connaitreSaison();
-            $saison = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Saison')->findOneByAnnee($year);
-            $listeStages = $em->getRepository('SC\ActiviteBundle\Entity\Stage')->findBy(array('saison'=>$saison));
-            if ($listeStages == null) {
-                $request->getSession()->getFlashBag()->add('info', 'Il n\'y a pas de stage pour cette activité');
-            }
+
+            $listeStages = $em->getRepository('SC\ActiviteBundle\Entity\Stage')->findBy(array('activite' =>$activite, 'saison'=>$saison));
             return $this->render('SCActiviteBundle:Stage:view.html.twig',array('listeStages' => $listeStages, 'activite' => $activite ));
         }
     }
@@ -218,7 +214,7 @@ class StageController extends Controller {
         }
         
         $stage = $em->getRepository('SC\ActiviteBundle\Entity\Stage')->findOneBy(
-                array('activite'=>$activite, 'debutStage'=>$debutStage, 'finStage', $finStage));
+                array('activite'=>$activite, 'debutStage'=>$debutStage, 'finStage'=> $finStage));
         
         $form = $this->createForm(new StageEditType(), $stage);
 
@@ -230,9 +226,11 @@ class StageController extends Controller {
             return $this->redirect($this->generateUrl('sc_activite_viewStage', 
                         array('id' => $stage->getActivite()->getId(), 'listeStages' => $listeStages)));
         }
+        $debut = strtotime($debutStage);
+        $fin = strtotime($finStage);
         return $this->render('SCActiviteBundle:Stage:edit.html.twig', array('form' 
-            => $form->createView(),'activite' => $activite, 'debutStage' => $debutStage,
-            'finStage' => $finStage));
+            => $form->createView(),'activite' => $activite, 'debutStage' => $debut,
+            'finStage' => $fin));
     }
  
     public function mailStageCancelled($email, $debutStage, $finStage, $lieu) {

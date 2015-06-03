@@ -138,6 +138,19 @@ class SecurityController extends Controller
         
         if ($adhesion == null){
             
+            
+            $season = new Saison;
+            $year = $season->connaitreSaison();
+            $request->getSession()->set('year', $year);
+            $saison = $em -> getRepository('SCActiviteBundle:Saison') -> find($year);
+        
+            if (null === $saison) {
+                $saison = new Saison();
+                $saison->setAnnee($year);
+                $em->persist($saison);
+                $em->flush();
+            }    
+            
             $saison_actuel = $em->getRepository('SC\ActiviteBundle\Entity\Saison')->find($annee);
             $adhesion = new Adhesion;
             $adhesion->setAdhesionAnnuel(false);

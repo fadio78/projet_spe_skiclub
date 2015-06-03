@@ -146,3 +146,9 @@ sc_activite_deleteInscriptionStage:
         prenomEnfant: "[^/]+"
         debutStage: "[0-9-]+"
         finStage: "[0-9-]+"
+        
+sc_activite_editSortie:
+    path:      /editSortie/{id}/{dateSortie}/{nomLieu}
+    defaults:  { _controller: SCActiviteBundle:Sortie:editSortie}
+    requirements:
+        id: \d+    

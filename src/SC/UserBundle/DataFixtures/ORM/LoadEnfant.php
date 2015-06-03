@@ -23,14 +23,27 @@ class LoadEnfant extends AbstractFixture implements OrderedFixtureInterface
         $enfant = new Enfant;
         $enfant->setDateNaissance(new \DateTime("2012-07-08")); 
         $enfant->setNiveauSki('bon'); 
-        $enfant->setNomEnfant($i.' '.'monNom'); 
-        $enfant->setPrenomEnfant($i.' '.'monPrenom');
+        $enfant->setNomEnfant('nomEnfant'.$i); 
+        $enfant->setPrenomEnfant('prenomEnfant'.$i);
         $enfant->setUserParent($client);
         
         //ajout dans la base
         $manager->persist($enfant);
     }
         $manager->flush(); 
+        foreach ($advertRepository as $client) {
+        $i = $i+1;
+        $enfant = new Enfant;
+        $enfant->setDateNaissance(new \DateTime("2012-07-08")); 
+        $enfant->setNiveauSki('bon'); 
+        $enfant->setNomEnfant('nomEnfant'.$i); 
+        $enfant->setPrenomEnfant('prenomEnfant'.$i);
+        $enfant->setUserParent($client);
+        
+        //ajout dans la base
+        $manager->persist($enfant);
+    }
+        $manager->flush();     
   }
   
   public function getOrder()

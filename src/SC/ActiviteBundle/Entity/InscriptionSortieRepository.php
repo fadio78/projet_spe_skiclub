@@ -25,4 +25,17 @@ class InscriptionSortieRepository extends EntityRepository
 
        $query->execute();
     }
+    public function modifSortie($id,$dateSortieNew,$lieuNew,$year,$dateSortie,$lieu) {
+      $query = $this->_em->createQuery('UPDATE SCActiviteBundle:InscriptionSortie a SET a.lieu =:nomLieuNew , a.dateSortie = :dateSortieNew where a.idActivite = :id AND a.saison = :year AND a.dateSortie = :date AND a.lieu = :lieu')
+                       ->setParameter('id', $id)
+                       ->setParameter('year', $year)
+                       ->setParameter('date', $dateSortie)
+                       ->setParameter('lieu', $lieu)
+                       ->setParameter('dateSortieNew', $dateSortieNew)
+                       ->setParameter('nomLieuNew', $lieuNew); 
+
+
+       $query->execute();
+           
+    }    
 }

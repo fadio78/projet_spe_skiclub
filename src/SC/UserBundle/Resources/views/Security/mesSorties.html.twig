@@ -20,18 +20,35 @@
     <br/>
     {%if choix is defined and choix == 1 %}
         Vous pouvez confirmer ou annuler la participation de {{ prenomEnfant }} à la sortie : {{ dateSortie }} à {{ lieu }} <br/>
-        Pour rappel voici les inscrits (il est normal que le nom de votre enfant n'apparaisse pas): <br/> <br/>
-        {%for inscrit in inscrits %} 
-            {%if (inscrit.emailParent != app.session.get('email')) or (inscrit.emailParent == app.session.get('email') and inscrit.nomEnfant != nomEnfant and inscrit.prenomEnfant != prenomEnfant) %}
-                {{ inscrit.nomEnfant }} {{ inscrit.prenomEnfant }} 
-                    {%if inscrit.participation == 1 %} 
-                        a confirmé
-                    {%else%}
-                        n'a pas confirmé
-                    {%endif%}
-            {%endif%}
-        {%endfor%}     
+        Pour rappel voici les inscrits <br/> <br/>
+
+        <table border="1" cellpadding="10" cellspacing="1" width="100%">
+            <tr> 
+            <th><center>Nom </center></th>
+            <th><center>Prénom</center></th>
+            <th><center>Confirmation</center></th>
     
+            <tr/>       
+        {%for inscrit in inscrits %}
+   
+          {#  {%if (inscrit.emailParent != app.session.get('email')) or (inscrit.emailParent == app.session.get('email') and inscrit.nomEnfant != nomEnfant and inscrit.prenomEnfant != prenomEnfant) %} #}
+                
+                <tr>     
+                    <td><center> {{ inscrit.nomEnfant }} </center></td>  
+                    <td><center> {{ inscrit.prenomEnfant }}  </center></td>  
+                
+                    {%if inscrit.participation == 1 %} 
+                       <td  bgcolor="#01DF01"><center></center></td>
+                    {%else%}
+                        <td  bgcolor="#DF0101"><center></center></td>
+                    {%endif%}
+                </tr> 
+          {#  {%endif%} #}
+        {%endfor%}
+     </table>
+     <br/>
+     <br/>
+     <br/>     
     <a href="{{path('sc_inscription_validation', { 'id': activite.id,'dateSortie' : dateSortie  , 'lieu': lieu,'nomEnfant': nomEnfant,'prenomEnfant': prenomEnfant }) }}" class="btn btn-default">
         <i class="glyphicon glyphicon-edit"></i>
             Je valide cette sortie  
@@ -40,5 +57,6 @@
         <i class="glyphicon glyphicon-edit"></i>
             J'annule ma participation  
     </a>
+            
     {%endif%}     
 {% endblock %}    
