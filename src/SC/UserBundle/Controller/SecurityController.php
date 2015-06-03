@@ -199,7 +199,7 @@ class SecurityController extends Controller
       //création du salt aléatoire
       $salt = substr(md5(time()),0,10);
       $user->setSalt($salt );
-      $user->setType('user');
+      $user->setType('client');
       $user->setIsActive(false);
       $user->setIsPrimaire(true);
       $form = $this->get('form.factory')->create(new UserType(), $user);

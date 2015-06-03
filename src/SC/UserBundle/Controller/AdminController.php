@@ -345,4 +345,32 @@ $message = \Swift_Message::newInstance()
         }
     }
     
+    public function tresorerieAction(Request $request)
+    {   $em = $this->getDoctrine()->getManager();
+         
+        $listUser = $em->getRepository('SCUserBundle:User')->findAll();
+        $saison =new Saison;
+        $annee = $saison->connaitreSaison();
+        $payés = $em->getRepository('SCUserBundle:Adhesion')->findby(array('saison'=> $annee));
+        $somme = 0;
+        foreach( $listUser as $user){
+          $email = $user->getUsername();
+            $dette = $em->getRepository('SCActiviteBundle:InscriptionActivite')->getSommeApayer($email);
+            
+            $dettes[$email]= $dette;
+            $sommeDette = $somme + $dette ; 
+            
+        }
+        
+
+        return $this->render('SCUserBundle:Admin:tresorerie.html.twig',
+                array('listUser' => $listUser,
+                     'listDette'=>$dettes,
+                    'listAdhesion'=>$payés,
+                    'sommeDette'=> $sommeDette
+                )
+                
+                );
+    } 
+    
 }

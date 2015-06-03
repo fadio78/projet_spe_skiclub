@@ -18,7 +18,7 @@ class EnfantType extends AbstractType
             ->add('nomEnfant')
             ->add('prenomEnfant')
             ->add('niveauSki')
-            ->add('dateNaissance','date')
+            ->add('dateNaissance')
             ->add('ajouter enfant', 'submit')
         ;
     }

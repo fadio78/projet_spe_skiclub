@@ -1,0 +1,71 @@
+
+
+
+{# src/SC/UserBundle/Resources/views/Admin/listUsers.html.twig #}
+
+{% extends "SCUserBundle::layout.html.twig" %}
+
+
+{% block user_body %}
+
+    
+    <table border="1" cellpadding="10" cellspacing="1" width="100%">
+        <tr>
+        <th><center>e-mail</center></th>  
+        <th><center>Nom</center></th>
+        <th><center>Prénom</center></th>
+        <th><center>Telephone</center></th>
+        <th><center>Adresse</center></th>
+        <th><center>Commune</center></th>
+        <th><center>Actif</center></th>
+        <th><center>Type</center></th> 
+        <th><center>Total à payer </center></th>
+        <th><center>Total payé </center></th>
+        </tr>
+    {% for user in listUser %}
+        
+<tr>
+        <td><center> {{ user.email }}</center></td>  
+        <td><center>{{ user.nom }}</center></td>
+        <td><center>{{ user.prenom }}</center></td>
+        <td><center>{{ user.telephone}}</center></td>
+        <td><center>{{ user.adresse}}</center></td>
+        <td><center>{{ user.commune}}</center></td>
+        {% if  user.isActive == 0 %}
+            <td  bgcolor="#DF0101"><center></center></td>
+        {% else %}
+            <td  bgcolor="#01DF01"><center></center></td>
+        {% endif %}
+        <td><center>{{ user.type }}</center></td> 
+        {%for key, dette in listDette%}
+            {%if user.email == key%}
+                <th><center>{{dette}} </center></th>
+            {%endif%}
+       {% endfor %}
+       {%for adhesion in listAdhesion%}
+            {%if user.email == adhesion.user.email%}
+                <th><center>{{adhesion.montantPaye}} </center></th>
+            {%endif%}
+       {% endfor %}
+        </tr>  
+         
+        
+    {% endfor %}
+    
+            <tr>
+        <th><center>Somme</center></th>  
+        <th><center></center></th>
+        <th><center></center></th>
+        <th><center></center></th>
+        <th><center></center></th>
+        <th><center></center></th>
+        <th><center></center></th>
+        <th><center></center></th> 
+        <th><center>{{sommeDette}}</center></th>
+        <th><center>Total payé </center></th>
+        </tr>
+    </table> 
+    
+ 
+    
+{% endblock %}
