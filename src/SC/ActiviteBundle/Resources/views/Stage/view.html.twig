@@ -41,10 +41,13 @@
                  Supprimer
             </a>
        {%endif%}
-        <br><br/>
-        <br><br/>        
+        <br><br/>     
     {% endfor %}    
 </ul> 
- 
+
+    <a <a href="{{ path('sc_activite_view', {'id': activite.id}) }}" class="btn btn-default">
+      <i class="glyphicon glyphicon-chevron-left"></i>
+      Retour
+    </a>
 {% endblock %} 
 
