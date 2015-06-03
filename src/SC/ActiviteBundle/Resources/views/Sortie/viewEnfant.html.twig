@@ -10,7 +10,7 @@
         <br/><br/>
         <ul>
             {% for enfant in enfants %}
-                <a href="{{path('sc_activite_inscrireEnfant', {'id': activite.id, 'userParent': enfant.userParent.email,
+                <a href="{{path('sc_activite_inscrireEnfant', {'id': activite.id, 
                                  'nomEnfant': enfant.nomEnfant, 'prenomEnfant': enfant.prenomEnfant}) }}"                 
                 </a><br/>
                 {{ enfant.nomEnfant }}

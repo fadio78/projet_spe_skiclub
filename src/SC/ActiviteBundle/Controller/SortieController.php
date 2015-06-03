@@ -24,6 +24,9 @@ class SortieController extends Controller
     //permet d'ajouter une nouvelle sortie
     public function ajoutSortieAction($id,Request $request) {
         
+        if ($request->getSession()->get('email') == null) {
+            return $this->pageErreur("Vous devez être connecté pour accèder à ce lien");
+        }        
         
         $year = $request->getSession()->get('year');
         $sortie = new Sortie();
@@ -127,6 +130,11 @@ class SortieController extends Controller
     //supprime une sortie de l'activite id, la date est passée dans l'url
     public function deleteSortieAction($id, Request $request, $dateSortie, $lieu) {
         
+        
+        if ($request->getSession()->get('email') == null) {
+            return $this->pageErreur("Vous devez être connecté pour accèder à ce lien");
+        }
+        
         $em = $this->getDoctrine()->getManager();
         $saison = new Saison;
         $year = $saison->connaitreSaison();
@@ -157,6 +165,11 @@ class SortieController extends Controller
     // propose des choix a l'utilisateur
     // essentiellement pour la vue
     public function actionSortieAction($id, Request $request, $dateSortie, $lieu) {
+        
+        if ($request->getSession()->get('email') == null) {
+            return $this->pageErreur("Vous devez être connecté pour accèder à ce lien");
+        }
+        
         $em = $this->getDoctrine()->getManager();
         $saison = new Saison;
         $year = $saison->connaitreSaison();
@@ -212,6 +225,9 @@ class SortieController extends Controller
     
     public function editSortieAction($id, Request $request,$dateSortie,$nomLieu)
     {
+        if ($request->getSession()->get('email') == null) {
+            return $this->pageErreur("Vous devez être connecté pour accèder à ce lien");
+        }
      
         $em = $this->getDoctrine()->getManager();
         $saison = new Saison;

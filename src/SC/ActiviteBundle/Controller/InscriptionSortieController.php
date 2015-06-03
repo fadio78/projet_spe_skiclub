@@ -32,7 +32,11 @@ class InscriptionSortieController extends Controller
     
     //liste les enfants d'un utilisateur
     public function getEnfantAction($id,Request $request,$dateSortie,$lieu) {
-           
+        
+        if ($request->getSession()->get('email') == null) {
+            return $this->pageErreur("Vous devez être connecté pour accèder à ce lien");
+        }             
+        
         $em = $this->getDoctrine()->getManager();
         $season = new Saison;
         $year = $season->connaitreSaison();
@@ -90,13 +94,18 @@ class InscriptionSortieController extends Controller
     }
     
     // met a jout la table  inscriptionSortie
-    public function inscrireEnfantAction($id,Request $request,$userParent,$nomEnfant,$prenomEnfant) {
+    public function inscrireEnfantAction($id,Request $request,/*$userParent,*/$nomEnfant,$prenomEnfant) {
+        
+        if ($request->getSession()->get('email') == null) {
+            return $this->pageErreur("Vous devez être connecté pour accèder à ce lien");
+        }             
+        
         $em = $this->getDoctrine()->getManager();
         $activite = $em->getRepository('SC\ActiviteBundle\Entity\Activite')->find($id);
         $season = new Saison;
         $year = $season->connaitreSaison();
         $saison = $em->getRepository('SC\ActiviteBundle\Entity\Saison')->find($year);
-        
+        $userParent = $request->getSession()->get('email');
         //on verifie que les parametres sont bons
         if (is_null($saison) OR is_null($activite)) {
             return $this->pageErreur('paramètres entrés invalides');
@@ -163,6 +172,11 @@ class InscriptionSortieController extends Controller
     }
     //permet de lister les personnes inscrites aux sorties
     public function inscritsAction($id,Request $request) {
+        
+        if ($request->getSession()->get('email') == null) {
+            return $this->pageErreur("Vous devez être connecté pour accèder à ce lien");
+        }         
+        
         $em = $this->getDoctrine()->getManager();
         $season = new Saison;
         $year = $season->connaitreSaison();        
@@ -184,6 +198,11 @@ class InscriptionSortieController extends Controller
     }
     
     public function voirActiviteAction(Request $request) {
+        
+        if ($request->getSession()->get('email') == null) {
+            return $this->pageErreur("Vous devez être connecté pour accèder à ce lien");
+        }     
+        
         $em = $this->getDoctrine()->getManager();
         $saison = new Saison;
         $year = $saison->connaitreSaison();
@@ -211,6 +230,11 @@ class InscriptionSortieController extends Controller
     // permet de proposer deux choix a l'utilisateur lorsqu'il clique sur un lien
     // annuler sortie ou confirmer participation
     public function getChoixAction($id,Request $request,$dateSortie,$lieu,$nomEnfant,$prenomEnfant) {
+        
+        if ($request->getSession()->get('email') == null) {
+            return $this->pageErreur("Vous devez être connecté pour accèder à ce lien");
+        }             
+        
         $em = $this->getDoctrine()->getManager();
         $saison = new Saison;
         $year = $saison->connaitreSaison();
@@ -229,6 +253,11 @@ class InscriptionSortieController extends Controller
     
     //met a jour la valeur participation lorsque qu'un utilisateur confirme sa participation a une sortie
     public function validationAction($id,Request $request,$dateSortie,$lieu,$nomEnfant,$prenomEnfant) {
+        
+        if ($request->getSession()->get('email') == null) {
+            return $this->pageErreur("Vous devez être connecté pour accèder à ce lien");
+        }             
+        
         $em = $this->getDoctrine()->getManager();       
         //on verifie que les infos sont correctes
         if($this->parametreValide($id, $dateSortie, $lieu) == false) {
@@ -268,6 +297,11 @@ class InscriptionSortieController extends Controller
     
     // supprime de la table inscription sortie l'enfant pour la sortie consideree sur l'annee et l'activite
     public function annulationAction($id,Request $request,$dateSortie,$lieu,$nomEnfant,$prenomEnfant) {
+        
+        if ($request->getSession()->get('email') == null) {
+            return $this->pageErreur("Vous devez être connecté pour accèder à ce lien");
+        }            
+        
         $saison = new Saison;
         $year = $saison->connaitreSaison(); 
         $em = $this->getDoctrine()->getManager();
