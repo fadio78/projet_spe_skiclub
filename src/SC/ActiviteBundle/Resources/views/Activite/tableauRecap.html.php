@@ -20,7 +20,7 @@
                         ->findBy(array('dateSortie'=>$sortie->getDateSortie(),'idActivite'=>$id,'saison'=>$year,'lieu'=>$sortie->getLieu()->getNomLieu()));
 ?>   <?php      
         if(empty($inscrits)) { ?> 
-       <ul> <li>  <?php  echo 'aucuns enfants inscrits'; ?></li> </ul>
+       <ul> <li>  <?php  echo 'aucun enfant inscrit'; ?></li> </ul>
         <?php } ?>
      
         <?php

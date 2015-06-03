@@ -123,7 +123,8 @@ class InscriptionSortieController extends Controller
         
         //on persist
         $em->persist($inscriptionSortie);
-        $em->flush(); 
+        $em->flush();
+        $request->getSession()->getFlashBag()->add('info', 'votre inscription a bien été prise en compte');
         $mesInscriptions = $em->getRepository('SC\ActiviteBundle\Entity\InscriptionSortie')->findBy(array('emailParent'=>$userParent,'saison'=>$year));
         $request->getSession()->set('mesInscriptions', $mesInscriptions);
         return $this->render('SCActiviteBundle:Activite:view.html.twig', array('activite'=> $activite));
