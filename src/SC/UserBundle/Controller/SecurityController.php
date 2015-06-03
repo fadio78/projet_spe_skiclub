@@ -61,10 +61,16 @@ class SecurityController extends Controller
                    array('user' => $email,
                          'saison'=> $annee
                    ));
+        //On cherche le montant que l'utilisateur doit au total pour une saison 
+                $em = $this->getDoctrine()->getManager();
+
+           $dette = $em->getRepository('SCActiviteBundle:InscriptionActivite')->getSommeApayer($email);
               
         return $this->render('SCUserBundle:Security:paramCompte.html.twig',array(
             'user' => $usr ,
-            'adhesion'=>$adhesion
+            'adhesion'=>$adhesion,
+            'dette'=>$dette
+        
                 
             )
         );
