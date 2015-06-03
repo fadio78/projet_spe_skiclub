@@ -215,7 +215,7 @@ class AdminController extends Controller
           ->getManager()
           ->getRepository('SCActiviteBundle:InscriptionActivite');
 
-        $listeEnfantsInscrits = $repository -> listeEnfantsinscrits($email);   
+        $listeEnfantsInscrits = $repository -> listeDeMesInscriptions($email);   
         return $this->render('SCUserBundle:Admin:gestionEnfant.html.twig',array('listeEnfantsInscrits' => $listeEnfantsInscrits, 'valide' => $valide));
         
     }
@@ -246,8 +246,8 @@ class AdminController extends Controller
                                                'nomEnfant'=>$nom, 'prenomEnfant' =>$prenom, 'email'=>$email));
         $inscriptionActivite -> setLicenceValide(1);
         $em->flush();
-        $listeEnfantsInscrits = $repository -> listeDeMesInscriptions($email);   
-        return $this->render('SCUserBundle:Admin:gestionEnfant.html.twig',array('listeDeMesInscriptions' => $listeDeMesInscriptions));
+        $listeEnfantsInscrits= $repository -> listeDeMesInscriptions($email);   
+        return $this->render('SCUserBundle:Admin:gestionEnfant.html.twig',array('listeEnfantsInscrits' => $listeEnfantsInscrits));
         
     }
     

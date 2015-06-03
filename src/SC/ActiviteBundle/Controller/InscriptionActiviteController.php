@@ -28,9 +28,6 @@ class InscriptionActiviteController extends Controller
         $em = $this->getDoctrine()->getManager();
         $session = $request->getSession();
         $email = $session->get('email');   
-        
-        
-                
         $inscriptionActivite = new InscriptionActivite();
         $activite = $em->getRepository('SC\ActiviteBundle\Entity\Activite')->find($id);
         if (null === $activite) {
@@ -93,9 +90,8 @@ class InscriptionActiviteController extends Controller
         $r = $em -> getRepository('SC\ActiviteBundle\Entity\InscriptionActivite') ;
         $listeDeMesInscriptions = $r -> listeDeMesInscriptions($email); 
         $prix = $r -> getSommeApayer($email);
-        return $this->render('SCActiviteBundle:InscriptionActivite:viewinscription.html.twig',array('listeDeMesInscriptions' => $listeDeMesInscriptions,'prix' => $prix
+        return $this->render('SCUserBundle:Security:viewinscriptionactivite.html.twig',array('listeDeMesInscriptions' => $listeDeMesInscriptions,'prix' => $prix
         ));
-        
     }
 
     

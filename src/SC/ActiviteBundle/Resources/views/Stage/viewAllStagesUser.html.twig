@@ -2,6 +2,14 @@
 {% extends "SCActiviteBundle:Activite:layout.html.twig" %}
 {% block title %}{{ parent() }} - Index{% endblock %}
 {% block activité_body %}
+    
+    <p><FONT color="green">
+      {# On affiche tous les messages flash dont le nom est « info » #}
+        {% for message in app.session.flashbag.get('info') %}
+          <p>{{ message }}</p>
+        {% endfor %}
+    </FONT></p>
+    
     <h3>Stages pour les enfants pour la saison en cours</h3>
     <br/>
     <p>En vert les inscriptions payées, en rouge les inscriptions pas encore payées.

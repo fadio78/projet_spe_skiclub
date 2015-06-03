@@ -8,9 +8,9 @@
       
   <p>
     {# On affiche tous les messages flash dont le nom est « info » #}
-      {% for message in app.session.flashbag.get('info') %}
+      <FONT color="green">{% for message in app.session.flashbag.get('info') %}
         <p>{{ message }}</p>
-      {% endfor %}
+      {% endfor %}</FONT>
   </p>
     
   <h2>{{ activite.nomActivite }}</h2>
@@ -28,11 +28,12 @@
     {% endif %}
   <p>
     
-     
+    {% if   app.session.get('email')    !=null  %}
     <a href="{{ path('sc_activite_inscriptionActivite' , {'id': activite.id})}}" class="btn btn-default">
-      <i class="glyphicon glyphicon-edit"></i>
+      <i class="glyphicon glyphicon-plus-sign"></i>
       Inscription à l'activité
     </a>
+    {% endif %}
     {% if is_granted('ROLE_ADMIN') %}
     <a href="{{ path('sc_activite_edit', {'id': activite.id}) }}" class="btn btn-default">
       <i class="glyphicon glyphicon-edit"></i>
@@ -55,7 +56,7 @@
     </a>
     {% if is_granted('ROLE_ADMIN') %}
     <a href="{{ path('sc_activite_ajoutSortie', {'id': activite.id}) }}" class="btn btn-default">
-      <i class="glyphicon glyphicon-edit"></i>
+      <i class="glyphicon glyphicon-plus-sign"></i>
       Ajouter une sortie
     </a>
     {% endif %}
@@ -70,7 +71,7 @@
     </a>
     {% if is_granted('ROLE_ADMIN') %}
     <a href="{{ path('sc_activite_addStage', {'id': activite.id}) }}" class="btn btn-default">
-      <i class="glyphicon glyphicon-edit"></i>
+      <i class="glyphicon glyphicon-plus-sign"></i>
       Ajouter un stage
     </a>
     {% endif %}

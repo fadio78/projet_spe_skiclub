@@ -1,24 +1,24 @@
 sc_licence_homepage:
-    path:     /{page}
+    path:     /admin/licence/{page}
     defaults: { _controller: SCLicenceBundle:Licence:index, page: 1 }    
     requirements:
         page: \d* 
 
 sc_licence_view:
-    path:      /view/{typeLicence}
+    path:      /admin/licence/view/{typeLicence}
     defaults:  { _controller: SCLicenceBundle:Licence:view }
     requirements:
         typeLicence : "[^/]+"
 sc_licence_add:
-    path:      /add
+    path:      /admin/licence/add
     defaults:  { _controller: SCLicenceBundle:Licence:add }
 sc_licence_edit:
-    path:      /edit/{typeLicence}
+    path:      /admin/licence/edit/{typeLicence}
     defaults:  { _controller: SCLicenceBundle:Licence:edit}
     requirements:
         typeLicence : "[^/]+"
 sc_licence_delete:
-    path:      /delete/{typeLicence}
+    path:      /admin/licence/delete/{typeLicence}
     defaults:  { _controller: SCLicenceBundle:Licence:delete}
     requirements:
         typeLicence : "[^/]+"

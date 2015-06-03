@@ -24,7 +24,7 @@ use SC\UserBundle\Entity\Enfant;
 use Doctrine\ORM\EntityRepository;
 use SC\UserBundle\Entity\EnfantRepository;
 use SC\ActiviteBundle\Entity\ActiviteRepository;
-
+use SC\ActiviteBundle\Entity\InscriptionActiviteRepository;
 
 
 class ActiviteController extends Controller 
@@ -53,13 +53,8 @@ class ActiviteController extends Controller
             throw new NotFoundHttpException('Page "'.$page.'" inexistante.');
         } */
       // Ici, on récupérera la liste des activités d'une saison donnée, puis on la passera au template
-         /*      
-        $repository = $em ->getRepository('SC\ActiviteBundle\Entity\Saison');
-        $listeSaison = $repository-> activitesSaison($year);
-        foreach ($listeSaison as $saison) 
-            $listeActivites = $saison -> getActivites(); */
-        $listeActivites = $em->getRepository('SCActiviteBundle:Activite')->findAll();
-        
+
+        $listeActivites =$saison -> getActivites();        
         return $this->render('SCActiviteBundle:Activite:index.html.twig',array('listeActivites' => $listeActivites,'year' =>$year
         ));
     }
@@ -168,16 +163,13 @@ class ActiviteController extends Controller
   
     public function deleteAction($id,Request $request)
     {
-
         $season = new Saison;
         $year = $season->connaitreSaison();
         $session = $request->getSession();
 
         $em = $this->getDoctrine()->getManager();
         $repository = $em->getRepository('SCActiviteBundle:Activite');
- 
         $activite = $repository->find($id);
-        
         //si n'existe pas -> message d'erreur
         if (is_null($activite)) {
             $response = new Response;
@@ -186,18 +178,65 @@ class ActiviteController extends Controller
             return $response;          
         }
         else {
+
             $saison = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Saison')->find($year);
+            $repository = $em -> getRepository('SC\ActiviteBundle\Entity\InscriptionActivite');
+            // liste des inscrits à l'activité cette saison
+            $inscriptions = $repository-> inscriptions($id);
+            // liste des inscrits à l'activité des saisons précédentes
+            $inscriptionsSaisons = $repository -> inscriptionsSaisons($id);
             $saison -> removeActivite($activite);
+            $saisonactuelle  = null;
+            $saisonsprecedentes = null;
+            
+            foreach ($inscriptions as $inscription) 
+            {
+              $saisonactuelle = $inscription -> getEmail();
+            }
+            foreach ($inscriptionsSaisons as $inscription) 
+            {
+              $saisonsprecedentes = $inscription -> getEmail();
+            }
+            //je supprime l'activité s'il n'y a pas d'inscription
+            if (is_null($saisonactuelle) AND is_null($saisonsprecedentes) )
+            {
+                
+                $em->remove($activite);
+            }
+            //je supprime l'activité s'il y a des inscriptions que cette saison
+            if (is_null($saisonsprecedentes)  AND   isset($saisonactuelle))
+            {
+                //envoi des mails aux inscrits à l'activité
+                $this -> envoiMail($id,$request);
+                foreach ($inscriptions as $inscription)
+                {
+                //je supprime les inscriptions de cette saison
+                    $em ->remove($inscription);
+                }
+                $em->remove($activite);
+            }
+            // je ne supprime que les inscriptions de cette saison 
+            //s'il y a des inscriptions cette saison et les saisons précédentes  
+            if ( isset($saisonsprecedentes) AND isset($saisonactuelle))
+            {
+                //envoi des mails aux inscrits à l'activité
+                $this -> envoiMail($id,$request);                
+                foreach ($inscriptions as $inscription)
+                {
+                    $em ->remove($inscription);
+                }
+            }
+       
             $this->suppSoritesEtInscrit($activite,$saison);
             $this->deleteStagesInscriptionStages($activite,$saison);
-            $em->remove($activite);
-            $re = $em ->getRepository('SC\ActiviteBundle\Entity\InscriptionActivite');           
-            $em->flush();
-            $listeActivites = $em->getRepository('SCActiviteBundle:Activite')->findAll();
             
-            return $this->render('SCActiviteBundle:Activite:index.html.twig', array('listeActivites' => $listeActivites));
+            $re = $em ->getRepository('SC\ActiviteBundle\Entity\InscriptionActivite');           
 
-        }    
+            $em->flush();
+            $listeActivites =$saison -> getActivites();
+            return $this->render('SCActiviteBundle:Activite:index.html.twig', array('listeActivites' => $listeActivites));
+            }
+           
     }
     
     public function suppSoritesEtInscrit($activite,$saison) {
@@ -220,7 +259,7 @@ class ActiviteController extends Controller
                 $em->remove($stage);
             }
         $inscriptionStages = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\InscriptionStage')->findBy(array('activite'=> $activite,'saison'=>$saison));    
-            foreach ($inscrits as $enfant) {
+            foreach ($inscriptionStages as $enfant) {
                 $em->remove($enfant);
             }        
         $em->flush();
@@ -269,6 +308,28 @@ class ActiviteController extends Controller
         }
     }
     
+    /** fonction qui envoie des mails à tous les utilisateurs inscrits à une activité donnée en cas d'annulation */
+    public function envoiMail($id,$request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $repository = $em->getRepository('SCActiviteBundle:Activite');
+        $activite = $repository->find($id);
+        $nomActivite = $activite -> getNomActivite();
+        // message envoyé en cas d'annulation de l'activité
+        $msg = "Veuillez nous excusez, l''activité " . $nomActivite ." est annulée";
+        $repository = $em -> getRepository('SC\ActiviteBundle\Entity\InscriptionActivite');
+        $emails = $repository -> getListeMails($id);
+            foreach( $emails as $email)
+            {
+                $mail = $email['email'] ;
+                $message = \Swift_Message::newInstance()
+                    ->setSubject('Compte activé')
+                    ->setFrom($request->getSession()->get('email'))
+                    ->setTo($mail)
+                    ->setBody($msg);
+                $this->get('mailer')->send($message);
+            }
+    }
     
 
 }

@@ -137,8 +137,12 @@ class StageController extends Controller {
                 }
                 
                 $em->flush();
+                $saison = new Saison();
+                $year = $saison->connaitreSaison();
+                $saison = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Saison')->findOneByAnnee($year);
+                $listeStages2 = $em->getRepository('SC\ActiviteBundle\Entity\Stage')->findBy(array('saison'=>$saison));
                 return $this->redirect($this->generateUrl('sc_activite_viewStage', 
-                        array('id' => $stage->getActivite()->getId(), 'listeStages' => $listeStages)));
+                        array('id' => $stage->getActivite()->getId(), 'listeStages' => $listeStages2)));
             }
                 return $this->render('SCActiviteBundle:Stage:add.html.twig', array(
                     'form' => $form->createView(),
@@ -176,9 +180,24 @@ class StageController extends Controller {
             $request->getSession()->getFlashBag()->add('info', 'Le stage a bien été supprimé, '
                     . 'et un mail a été envoyé aux personnes inscrites');
             //envoyer les emails aux utilisateurs inscrits
+            $em = $this->getDoctrine()->getManager();
+            $saison = new Saison();
+            $year = $saison->connaitreSaison();
+            
+            // On supprime ici l'inscription de chaque enfant du stage qui va être supprimé
+            $inscrits = $em->getRepository('SC\ActiviteBundle\Entity\InscriptionStage')
+                            ->findBy(array('debutStage'=>$debutStage,'finStage'=>$finStage,'id'=>$id,'saison'=> $year));
+            foreach ($inscrits as $enfant) {
+            $this->mailStageCancelled($enfant->getEmailParent(), $debutStage, $finStage, $lieu);
+            $em->remove($enfant);
+            }
+            // On supprime le stage
             $em->remove($stage);
             $em->flush();
-            $listeStages = $em->getRepository('SC\ActiviteBundle\Entity\Stage')->findAll();
+            $saison = new Saison();
+            $year = $saison->connaitreSaison();
+            $saison = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Saison')->findOneByAnnee($year);
+            $listeStages = $em->getRepository('SC\ActiviteBundle\Entity\Stage')->findBy(array('saison'=>$saison));
             if ($listeStages == null) {
                 $request->getSession()->getFlashBag()->add('info', 'Il n\'y a pas de stage pour cette activité');
             }
@@ -205,6 +224,7 @@ class StageController extends Controller {
 
         if ($form->handleRequest($request)->isValid()) {
             // Inutile de persister ici, Doctrine connait déjà notre stage
+            
             $em->flush();
             $request->getSession()->getFlashBag()->add('info', 'Stage bien modifiée.');
             return $this->redirect($this->generateUrl('sc_activite_viewStage', 
@@ -213,6 +233,35 @@ class StageController extends Controller {
         return $this->render('SCActiviteBundle:Stage:edit.html.twig', array('form' 
             => $form->createView(),'activite' => $activite, 'debutStage' => $debutStage,
             'finStage' => $finStage));
+    }
+ 
+    public function mailStageCancelled($email, $debutStage, $finStage, $lieu) {
+            
+        $message = \Swift_Message::newInstance()                     
+                            ->setSubject('SKICLUB : Stage annulé')
+                            ->setFrom('sfr@hotmail.com')
+                            ->setTo($email)
+                            ->setBody('Bonjour, nous avons le regret de vous '
+                                    . 'annoncer que le stage prévue du '
+                                    .$debutStage.' au '.$finStage.' : '.$lieu.' '
+                                    . 'est annulé. Nous vous prions de nous excuser.'
+                                    . 'Le SKICLUB');
+                    
+        $this->get('mailer')->send($message);
+    }
+    
+    public function mailStageCreated($email, $debutStage, $finStage, $lieu) {
+            
+        $message = \Swift_Message::newInstance()                     
+                            ->setSubject('SKICLUB : Stage programmé')
+                            ->setFrom('sfr@hotmail.com')
+                            ->setTo($email)
+                            ->setBody('Bonjour, nous vous informons de la création d\'un stage prévue du '
+                                    .$debutStage.' au '.$finStage.' à '.$lieu.' Veuillez vous rendre sur '
+                                    . 'le site pour plus d\'informations. A très bientôt.'
+                                    . 'Le SKICLUB');
+                    
+        $this->get('mailer')->send($message);
     }
     
 }

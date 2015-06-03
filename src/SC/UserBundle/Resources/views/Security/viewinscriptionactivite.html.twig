@@ -1,7 +1,7 @@
-{# src/SC/ActiviteBundle/Resources/views/InscriptionActivite/viewinscription.html.twig #}
-{% extends "SCActiviteBundle:Activite:layout.html.twig" %}
+{# src/SC/UserBundle/Resources/views/Security/viewinscriptionactivite.html.twig #}
+{% extends "SCUserBundle::layout.html.twig" %}
 {% block title %}{{ parent() }} - Index{% endblock %}
-{% block activité_body %}
+{% block user_body %}
 
     
     {% for inscription in listeDeMesInscriptions %}
@@ -10,7 +10,7 @@
         
         <br>
     {% endfor %}  
-    
-    <p> le prix des total à payer est {{prix}} </p>
-    
+    {% if prix != 0 %}
+    <p> le prix total à payer:(prix activités + licences) est: {{prix}} </p>
+    {%endif%}
 {% endblock %} 
