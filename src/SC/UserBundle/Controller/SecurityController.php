@@ -61,10 +61,16 @@ class SecurityController extends Controller
                    array('user' => $email,
                          'saison'=> $annee
                    ));
+        //On cherche le montant que l'utilisateur doit au total pour une saison 
+                $em = $this->getDoctrine()->getManager();
+
+           $dette = $em->getRepository('SCActiviteBundle:InscriptionActivite')->getSommeApayer($email);
               
         return $this->render('SCUserBundle:Security:paramCompte.html.twig',array(
             'user' => $usr ,
-            'adhesion'=>$adhesion
+            'adhesion'=>$adhesion,
+            'dette'=>$dette
+        
                 
             )
         );
@@ -132,6 +138,19 @@ class SecurityController extends Controller
         
         if ($adhesion == null){
             
+            
+            $season = new Saison;
+            $year = $season->connaitreSaison();
+            $request->getSession()->set('year', $year);
+            $saison = $em -> getRepository('SCActiviteBundle:Saison') -> find($year);
+        
+            if (null === $saison) {
+                $saison = new Saison();
+                $saison->setAnnee($year);
+                $em->persist($saison);
+                $em->flush();
+            }    
+            
             $saison_actuel = $em->getRepository('SC\ActiviteBundle\Entity\Saison')->find($annee);
             $adhesion = new Adhesion;
             $adhesion->setAdhesionAnnuel(false);
@@ -193,7 +212,7 @@ class SecurityController extends Controller
       //création du salt aléatoire
       $salt = substr(md5(time()),0,10);
       $user->setSalt($salt );
-      $user->setType('user');
+      $user->setType('client');
       $user->setIsActive(false);
       $user->setIsPrimaire(true);
       $form = $this->get('form.factory')->create(new UserType(), $user);

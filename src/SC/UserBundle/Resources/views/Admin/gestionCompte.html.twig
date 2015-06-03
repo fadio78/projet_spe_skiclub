@@ -4,23 +4,34 @@
 {% block user_body %}
 
     
-    <h2> Gestion du compte de {{user.prenom}} {{user.nom}} pour la saison  {{adhesion.saison.annee}}<h2/>
-       {# <h4> Adhésion 2014 payer:{{adhesion.adhesionAnnuel}} <h4/>#}
-        <h4>Montant payé : {{adhesion.montantPaye}} €<h4/>
-          
-         <h4>Montant remise : {{adhesion.remise}} €<h4/>   
+    <h4>Informations concernant le compte</h4>
+  <br/>
+  <p><u>Montant payé pour la saison <b>{{adhesion.saison.annee }}</b></u> : {{adhesion.montantPaye}} €<p/>
+  <br/>
+  <p><u>Montant de la remise  pour la saison <b>{{adhesion.saison.annee }}</b></u> : {{adhesion.remise}} €<p/>
+   <br/>
+  <p><u>Montant total à payer*  pour la saison <b>{{adhesion.saison.annee }}</b></u> : {{dette}} € 
+  <br/>
+  *Ce montant correspond à la somme des activité des différents enfants et de leurs licences. Il faut donc ajouter <u>l'adhésion Annuel</u>.
+  <p/> 
+  <br/>
+           
              
     <form action="{{ path('sc_admin_ajoutMontant',{'email': user.email}) }}" method="post">
     <label for="montant">Valeur du paiement : </label>
     <input type="number" id="montant" name="_montant" value="" />        
      <input type="submit" value="ajouter" />
- </form>
+    </form>
+    <br/>  
          
       <form action="{{ path('sc_admin_ajoutRemise',{'email': user.email}) }}" method="post">
     <label for="remise">Valeur de la remise : </label>
     <input type="number" id="remise" name="_remise" value="" />        
      <input type="submit" value="ajouter" />
      </form>
+    <br/>  
+    
+    
     
       <form action="{{ path('sc_admin_adherer',{'email': user.email}) }}" method="post">
     <label for="adhesion">Adhésion : </label>

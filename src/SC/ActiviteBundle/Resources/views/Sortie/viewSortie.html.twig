@@ -1,16 +1,26 @@
 {# src/SC/ActiviteBundle/Resources/views/index.html.twig #}
 {% extends "SCActiviteBundle:Activite:layout.html.twig" %}
-{% block title %}{{ parent() }} - Index{% endblock %}
+{% block title %}{{ parent() }} - Index {% endblock %} 
 {% block activité_body %}
+    <h3> Sorties : {{ activite.nomActivite }} </h3> <br/>
 <ul>
 {%if (inscription is not defined or inscription != 1) and (enfant is not defined or enfant != 1) %} 
-    {% for message in app.session.flashbag.get('info') %}
+    <FONT color="green">{% for message in app.session.flashbag.get('info') %}
         <p>{{ message }}</p>
-    {% endfor %}
-    
+    {% endfor %}</FONT>
+
+        {%if listSortie == null %}
+            aucune sortie prevue
+        {%else%}    
+        
+        
+    <b>Date Lieu </b><br/> <br/> 
     {% for sortie in listSortie %}
         <a href="{{ path('sc_activite_actionSortie', {'id': activite.id, 'dateSortie': sortie.dateSortie, 'lieu': sortie.lieu.nomLieu}) }}" >
-                {{ sortie.dateSortie  }} {{ sortie.lieu.nomLieu }} 
+
+             {{ sortie.dateSortie  }} 
+            {{ sortie.lieu.nomLieu }}  
+
         </a>
             {%if dateSortie is defined and lieu is defined and dateSortie == sortie.dateSortie and lieu == sortie.lieu.nomLieu %}
                 <a href="{{path('sc_activite_getEnfant', {'id': activite.id, 'dateSortie': sortie.dateSortie, 'lieu': sortie.lieu.nomLieu}) }}" class="btn btn-default">
@@ -22,12 +32,21 @@
                         <i class="glyphicon glyphicon-trash"></i>
                             Supprimer cette sortie 
                     </a>
+                   <a href="{{path('sc_activite_editSortie', {'id': activite.id, 'dateSortie': sortie.dateSortie, 'nomLieu': sortie.lieu.nomLieu}) }}" class="btn btn-default">
+                        <i class="glyphicon glyphicon-edit"></i>
+                            Modifier cette sortie 
+                    </a>
                 {%endif%}
             {%endif%}        
         <br/>        
-    {% endfor %}    
+    {% endfor %} 
+    {%endif%}
 </ul> 
- 
+     <br/>  <br/> 
+     <a href="{{ path('sc_activite_view', {'id': activite.id}) }}" class="btn btn-default">
+      <i class="glyphicon glyphicon-chevron-left"></i>
+      Retour à la liste
+    </a>
 {%else%}
     {{ form(form) }}
 {%endif%}    

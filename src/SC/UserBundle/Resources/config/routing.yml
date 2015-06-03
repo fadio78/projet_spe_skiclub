@@ -127,3 +127,9 @@ sc_inscription_annulation:
 sc_activite_listeEnfantsInscrits:
     path:      /moncompte/mesinscriptions
     defaults:  { _controller: SCActiviteBundle:InscriptionActivite:viewInscriActivite }
+    
+    
+    
+sc_admin_Tresorerie:
+    path:     /admin/tresorerie
+    defaults: { _controller: SCUserBundle:Admin:tresorerie }

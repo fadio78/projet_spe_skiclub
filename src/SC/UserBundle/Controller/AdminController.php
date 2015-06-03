@@ -45,8 +45,10 @@ class AdminController extends Controller
           ->getDoctrine()
           ->getManager()
           ->getRepository('SCUserBundle:User');
-           
-          $listNoAdmin = $repository->noAdmin();
+          
+        
+          $listNoAdmin = $repository->findAll();//tous le monde 
+         //$listNoAdmin = $repository->noAdmin();//Que les clients 
         
         return $this->render('SCUserBundle:Admin:listNoAdmin.html.twig',
                 array('listNoAdmin'=>$listNoAdmin )
@@ -126,8 +128,7 @@ class AdminController extends Controller
      
         
         //on le rentre dans la table adhesion si il est pas encore inscrit 
-        
-        
+               
         $adhesion = $em->getRepository('SCUserBundle:Adhesion')->findOneby(
                    array('user' => $email,
                          'saison'=> $annee
@@ -157,11 +158,16 @@ class AdminController extends Controller
                    array('user' => $email,
                          'saison'=> $annee
                    ));
+           
+           //On cherche le montant que l'utilisateur doit au total pour une saison 
+           $dette = $em->getRepository('SCActiviteBundle:InscriptionActivite')->getSommeApayer($email);
+           
               
            
         return $this->render('SCUserBundle:Admin:gestionCompte.html.twig',
                 array('user'=>$user ,
-                      'adhesion'=>$adhesion
+                      'adhesion'=>$adhesion,
+                      'dette'=>$dette
                 )
                 
                 );
@@ -308,5 +314,33 @@ $message = \Swift_Message::newInstance()
                     array('listeInscriptionStages' => $listeInscriptionStages));
         }
     }
+    
+    public function tresorerieAction(Request $request)
+    {   $em = $this->getDoctrine()->getManager();
+         
+        $listUser = $em->getRepository('SCUserBundle:User')->findAll();
+        $saison =new Saison;
+        $annee = $saison->connaitreSaison();
+        $payés = $em->getRepository('SCUserBundle:Adhesion')->findby(array('saison'=> $annee));
+        $somme = 0;
+        foreach( $listUser as $user){
+          $email = $user->getUsername();
+            $dette = $em->getRepository('SCActiviteBundle:InscriptionActivite')->getSommeApayer($email);
+            
+            $dettes[$email]= $dette;
+            $sommeDette = $somme + $dette ; 
+            
+        }
+        
+
+        return $this->render('SCUserBundle:Admin:tresorerie.html.twig',
+                array('listUser' => $listUser,
+                     'listDette'=>$dettes,
+                    'listAdhesion'=>$payés,
+                    'sommeDette'=> $sommeDette
+                )
+                
+                );
+    } 
     
 }

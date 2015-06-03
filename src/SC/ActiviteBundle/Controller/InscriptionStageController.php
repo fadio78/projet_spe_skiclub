@@ -12,7 +12,8 @@ use SC\ActiviteBundle\Form\StageType;
 use SC\ActiviteBundle\Form\ActiviteEditType;
 use SC\UserBundle\Entity\User;
 use SC\UserBundle\Entity\EnfantRepository;
-use SC\UserBundle\Entity\Licence;
+use SC\LicenceBundle\Entity\Licence;
+use SC\UserBundle\Entity\LicenceEnfant;
 use SC\ActiviteBundle\Entity\Stage;
 use SC\ActiviteBundle\Entity\Lieu;
 use SC\ActiviteBundle\Entity\Saison;
@@ -71,16 +72,21 @@ class InscriptionStageController extends Controller
             $data = $form->getData();
             $enfant = $data ['Enfant'];
             
-            
-            
-            if ($this->inscritActivite($activite, $saison, $enfant->getNomEnfant()
+            $licence = new Licence();
+            $licence = $em->getRepository('SC\LicenceBundle\Entity\Licence')
+            ->findOneByTypeLicence($activite->getLicence());
+            // Si l'enfant n'a pas la licence pour l'activite, on la crée
+            if ($this->haveLicence($licence, $saison, $enfant->getNomEnfant()
                     ,$enfant->getPrenomEnfant(),$parents)==false) {
-            $request->getSession()->getFlashBag()->add('info', $enfant->getPrenomEnfant().'  non inscrit à cette activité');
-                return $this->render('SCActiviteBundle:Stage:viewEnfant.html.twig', array(
-            'form' => $form->createView()));
+                $request->getSession()->getFlashBag()->add('info', $enfant->getPrenomEnfant().'  ne possède pas la licence pour cette activité. La licence a été ajoutée.');
+                $licenceEnfant = new LicenceEnfant();
+                $licenceEnfant -> setEmail($email);
+                $licenceEnfant -> setNomEnfant($enfant->getNomEnfant());
+                $licenceEnfant -> setPrenomEnfant($enfant->getPrenomEnfant());
+                $licenceEnfant -> setSaison($saison);
+                $licenceEnfant -> setLicence($activite->getLicence());
+                $em->persist($licenceEnfant);
             }
-            
-            
             
             $inscriptionStage = new InscriptionStage();
             $inscriptionStage -> setActivite($activite);
@@ -146,13 +152,14 @@ class InscriptionStageController extends Controller
         }
     }
 
-    //retourne true si l'enfant est inscrit a l'activite pour la saison courante
+    //retourne true si l'enfant possède la licence pour la saison courante
     //false sinon
-    public function inscritActivite($activite,$saison,$nomEnfant,$prenomEnfant,$emailParent) {
+    public function haveLicence($licence,$saison,$nomEnfant,$prenomEnfant,$emailParent) {
         $em = $this->getDoctrine()->getManager();
-        //on regarde si l'enfant est inscrit a l'activite pour la saison donnee
-        $enfant = $em->getRepository('SC\ActiviteBundle\Entity\InscriptionActivite')
-                        ->findOneBy(array('activite' => $activite, 'saison' => $saison, 'email' => $emailParent, 'nomEnfant'=>$nomEnfant,'prenomEnfant'=>$prenomEnfant));
+        //on regarde si l'enfant possède la licence pour l'activite pour la saison donnee
+        $enfant = $em->getRepository('SC\UserBundle\Entity\LicenceEnfant')
+                        ->findOneBy(array('licence' => $licence, 'saison' => $saison,
+                            'email' => $emailParent, 'nomEnfant'=>$nomEnfant,'prenomEnfant'=>$prenomEnfant));
         if ($enfant == null) {
             return false;
         }
