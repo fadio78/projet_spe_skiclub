@@ -245,7 +245,7 @@ class ActiviteController extends Controller
             }
        
             $this->suppSoritesEtInscrit($activite,$saison);
-      //      $this->deleteStagesInscriptionStages($activite,$saison);
+            $this->deleteStagesInscriptionStages($activite,$saison);
             
             $re = $em ->getRepository('SC\ActiviteBundle\Entity\InscriptionActivite');           
 
@@ -268,7 +268,7 @@ class ActiviteController extends Controller
             }        
         $em->flush();
     }
-    /*
+    
     public function deleteStagesInscriptionStages($activite,$saison) {
         $em = $this->getDoctrine()->getManager();
         $stages = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Stage')->findBy(array('activite'=> $activite,'saison'=>$saison));
@@ -280,7 +280,7 @@ class ActiviteController extends Controller
                 $em->remove($enfant);
             }        
         $em->flush();
-    }*/
+    }
     
 
     public function ajoutSortieAction($id,Request $request) {
