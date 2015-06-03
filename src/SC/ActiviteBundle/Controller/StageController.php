@@ -218,7 +218,7 @@ class StageController extends Controller {
         }
         
         $stage = $em->getRepository('SC\ActiviteBundle\Entity\Stage')->findOneBy(
-                array('activite'=>$activite, 'debutStage'=>$debutStage, 'finStage', $finStage));
+                array('activite'=>$activite, 'debutStage'=>$debutStage, 'finStage'=> $finStage));
         
         $form = $this->createForm(new StageEditType(), $stage);
 
@@ -230,9 +230,11 @@ class StageController extends Controller {
             return $this->redirect($this->generateUrl('sc_activite_viewStage', 
                         array('id' => $stage->getActivite()->getId(), 'listeStages' => $listeStages)));
         }
+        $debut = strtotime($debutStage);
+        $fin = strtotime($finStage);
         return $this->render('SCActiviteBundle:Stage:edit.html.twig', array('form' 
-            => $form->createView(),'activite' => $activite, 'debutStage' => $debutStage,
-            'finStage' => $finStage));
+            => $form->createView(),'activite' => $activite, 'debutStage' => $debut,
+            'finStage' => $fin));
     }
  
     public function mailStageCancelled($email, $debutStage, $finStage, $lieu) {
