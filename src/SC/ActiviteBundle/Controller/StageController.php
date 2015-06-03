@@ -47,7 +47,7 @@ class StageController extends Controller {
             $saison = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Saison')->findOneByAnnee($year);
             if(is_null($activite) == false) {
                 // on recupere tous les stages
-                $listeStages = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Stage')->findBySaison($saison);
+                $listeStages = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Stage')->findBy(array('activite'=>$activite,'saison'  => $saison));
                 return $this->render('SCActiviteBundle:Stage:view.html.twig', array('listeStages' => $listeStages, 'activite' => $activite));
             } else {
                 $response = new Response;
