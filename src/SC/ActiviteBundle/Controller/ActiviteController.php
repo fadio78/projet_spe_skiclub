@@ -163,7 +163,6 @@ class ActiviteController extends Controller
   
     public function deleteAction($id,Request $request)
     {
-
         $season = new Saison;
         $year = $season->connaitreSaison();
         $session = $request->getSession();
@@ -179,20 +178,14 @@ class ActiviteController extends Controller
             return $response;          
         }
         else {
-            $nomActivite = $activite -> getNomActivite();
-            // message envoyé en cas d'annulation de l'activité
-            $msg = "Veuillez nous excusez, l''activité " . $nomActivite ." est annulée";
+
             $saison = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Saison')->find($year);
             $repository = $em -> getRepository('SC\ActiviteBundle\Entity\InscriptionActivite');
             // liste des inscrits à l'activité cette saison
             $inscriptions = $repository-> inscriptions($id);
-        //    $inscriptions = $repository ->findBy(array('activite' => $activite,'saison' => $saison));
             // liste des inscrits à l'activité des saisons précédentes
             $inscriptionsSaisons = $repository -> inscriptionsSaisons($id);
             $saison -> removeActivite($activite);
-         /*   if (is_null($inscriptions) == true) {
-                $em->remove($activite);
-            }*/
             $saisonactuelle  = null;
             $saisonsprecedentes = null;
             
@@ -213,14 +206,10 @@ class ActiviteController extends Controller
             //je supprime l'activité s'il y a des inscriptions que cette saison
             if (is_null($saisonsprecedentes)  AND   isset($saisonactuelle))
             {
-                //envoi des mails aux inscrits
+                //envoi des mails aux inscrits à l'activité
+                $this -> envoiMail($id,$request);
                 foreach ($inscriptions as $inscription)
-                    $message = \Swift_Message::newInstance()
-                      ->setSubject('Compte activé')
-                      ->setFrom($request->getSession()->get('email'))
-                      ->setTo($inscription ->getEmail())
-                      ->setBody($msg);
-                    $this->get('mailer')->send($message);
+                {
                 //je supprime les inscriptions de cette saison
                     $em ->remove($inscription);
                 }
@@ -230,18 +219,12 @@ class ActiviteController extends Controller
             //s'il y a des inscriptions cette saison et les saisons précédentes  
             if ( isset($saisonsprecedentes) AND isset($saisonactuelle))
             {
-
+                //envoi des mails aux inscrits à l'activité
+                $this -> envoiMail($id,$request);                
                 foreach ($inscriptions as $inscription)
-            {
-                // envoi des mails
-                $message = \Swift_Message::newInstance()
-                    ->setSubject('Compte activé')
-                    ->setFrom($request->getSession()->get('email'))
-                    ->setTo($inscription ->getEmail())
-                    ->setBody($msg);
-                    $this->get('mailer')->send($message);
-                $em ->remove($inscription);
-            }
+                {
+                    $em ->remove($inscription);
+                }
             }
        
             $this->suppSoritesEtInscrit($activite,$saison);
@@ -252,7 +235,7 @@ class ActiviteController extends Controller
             $em->flush();
             $listeActivites =$saison -> getActivites();
             return $this->render('SCActiviteBundle:Activite:index.html.twig', array('listeActivites' => $listeActivites));
-
+            }
            
     }
     
@@ -325,6 +308,28 @@ class ActiviteController extends Controller
         }
     }
     
+    /** fonction qui envoie des mails à tous les utilisateurs inscrits à une activité donnée en cas d'annulation */
+    public function envoiMail($id,$request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $repository = $em->getRepository('SCActiviteBundle:Activite');
+        $activite = $repository->find($id);
+        $nomActivite = $activite -> getNomActivite();
+        // message envoyé en cas d'annulation de l'activité
+        $msg = "Veuillez nous excusez, l''activité " . $nomActivite ." est annulée";
+        $repository = $em -> getRepository('SC\ActiviteBundle\Entity\InscriptionActivite');
+        $emails = $repository -> getListeMails($id);
+            foreach( $emails as $email)
+            {
+                $mail = $email['email'] ;
+                $message = \Swift_Message::newInstance()
+                    ->setSubject('Compte activé')
+                    ->setFrom($request->getSession()->get('email'))
+                    ->setTo($mail)
+                    ->setBody($msg);
+                $this->get('mailer')->send($message);
+            }
+    }
     
 
 }

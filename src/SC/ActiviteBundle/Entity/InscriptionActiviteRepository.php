@@ -161,4 +161,17 @@ class InscriptionActiviteRepository extends EntityRepository
         return $qb->getResult();
 
     }
+    
+    // retourne la liste des mails des inscrits à une activité donnée
+    public function getListeMails($id)
+    {
+        $saison = new Saison ();
+        $year = $saison->connaitreSaison(); 
+        $qb = $this->_em->createQuery('SELECT  distinct i.email from SCActiviteBundle:InscriptionActivite i WHERE i.activite =:id and i.saison =:annee')
+                        ->setParameter('id', $id)
+                        ->setParameter('annee', $year);
+
+        $liste =$qb ->getResult();
+        return $liste;
+    }
 }
