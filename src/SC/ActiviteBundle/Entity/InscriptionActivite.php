@@ -55,16 +55,7 @@ class InscriptionActivite
     
     private $prenomEnfant;
     
-    
-    
-    /**
-     * @var integer
-     * 
-     * @ORM\Column(name="licenceValide", type="integer")
-     */
-    
-    private $licenceValide;
-      
+
 
     /**
      * Set activite

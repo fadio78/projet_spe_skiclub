@@ -80,17 +80,6 @@ sc_admin_gestionEnfant:
         email : "[^/]+" 
         
 
-sc_admin_activerlicence:
-    path:     /admin/gestionCompte/gestionEnfant/{email}/{prenom}/{nom}/{annee}/{id}
-    defaults: { _controller: SCUserBundle:Admin:activerLicence }
-    requirements : 
-        email : "[^/]+" 
-        prenom : "[^/]+"
-        nom : "[^/]+"
-        annee : "[^/]+"
-        id : \d+
-    
-    
 
          
 sc_admin_ajoutRemise:
