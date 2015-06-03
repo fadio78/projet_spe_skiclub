@@ -75,8 +75,10 @@ class InscriptionStageController extends Controller
             $licence = new Licence();
             $licence = $em->getRepository('SC\LicenceBundle\Entity\Licence')
             ->findOneByTypeLicence($activite->getLicence());
-            // Si l'enfant n'a pas la licence pour l'activite, on la crée
-            if ($this->haveLicence($licence, $saison, $enfant->getNomEnfant()
+            
+            if (is_null($licence) == false) {
+                // Si l'enfant n'a pas la licence pour l'activite et que la licence est nécessaire, on la crée 
+                if ($this->haveLicence($licence, $saison, $enfant->getNomEnfant()
                     ,$enfant->getPrenomEnfant(),$parents)==false) {
                 $request->getSession()->getFlashBag()->add('info', $enfant->getPrenomEnfant().'  ne possède pas la licence pour cette activité. '
                         . 'La licence a été ajoutée et devra être payée.');
@@ -86,19 +88,21 @@ class InscriptionStageController extends Controller
                 $licenceEnfant -> setPrenomEnfant($enfant->getPrenomEnfant());
                 $licenceEnfant -> setSaison($saison);
                 $licenceEnfant -> setLicence($activite->getLicence());
+                
                 $em->persist($licenceEnfant);
+                }
+            // Sinon on ne crée pas de licence
             }
-            
-            $inscriptionStage = new InscriptionStage();
-            $inscriptionStage -> setActivite($activite);
-            $inscriptionStage -> setUser($parents);
-            $inscriptionStage -> setDebutStage($debutStage);
-            $inscriptionStage -> setFinStage($finStage);
-            $inscriptionStage -> setSaison($saison);
-            $inscriptionStage -> setPrixPayeStage(0);
-            $inscriptionStage -> setNomEnfant($enfant -> getNomEnfant());
-            $inscriptionStage -> setPrenomEnfant($enfant -> getPrenomEnfant());
-            $er = $em ->getRepository('SC\ActiviteBundle\Entity\InscriptionStage');
+                $inscriptionStage = new InscriptionStage();
+                $inscriptionStage -> setActivite($activite);
+                $inscriptionStage -> setUser($parents);
+                $inscriptionStage -> setDebutStage($debutStage);
+                $inscriptionStage -> setFinStage($finStage);
+                $inscriptionStage -> setSaison($saison);
+                $inscriptionStage -> setPrixPayeStage(0);
+                $inscriptionStage -> setNomEnfant($enfant -> getNomEnfant());
+                $inscriptionStage -> setPrenomEnfant($enfant -> getPrenomEnfant());
+                $er = $em ->getRepository('SC\ActiviteBundle\Entity\InscriptionStage'); 
             if ($this->estInscrit($activite, $stage, $parents, $enfant->
                     getNomEnfant(),$enfant->getPrenomEnfant()) === false)
             {
@@ -109,11 +113,11 @@ class InscriptionStageController extends Controller
             } else {
                 $request->getSession()->getFlashBag()->add('info', 'Enfant déjà inscrit');
                 return $this->render('SCActiviteBundle:Stage:viewEnfant.html.twig', array(
-            'form' => $form->createView()));
+            'form' => $form->createView(), 'activite'=>$activite));
             }
         } else {
             return $this->render('SCActiviteBundle:Stage:viewEnfant.html.twig',
-                    array('form' => $form->createView()));
+                    array('form' => $form->createView(), 'activite'=>$activite));
         }
     }
     
@@ -221,7 +225,6 @@ class InscriptionStageController extends Controller
         
         $request->getSession()->getFlashBag()->add('info', 'Inscription supprimée');
         return $this->render('SCActiviteBundle:Stage:viewAllStagesUser.html.twig', array('listeInscriptionStages'=>$listeInscriptionStages));
-        
         
     }
 }
