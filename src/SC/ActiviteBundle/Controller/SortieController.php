@@ -15,6 +15,7 @@ use SC\UserBundle\Entity\Licence;
 use SC\ActiviteBundle\Entity\Sortie;
 use SC\ActiviteBundle\Entity\Lieu;
 use SC\ActiviteBundle\Entity\Saison;
+use SC\ActiviteBundle\Form\SortieEditType;
 
 
 
@@ -207,4 +208,64 @@ class SortieController extends Controller
         
         
     }
+    
+    public function editSortieAction($id, Request $request,$dateSortie,$nomLieu)
+    {
+     
+        $em = $this->getDoctrine()->getManager();
+        $saison = new Saison;
+        $year = $saison->connaitreSaison();
+        $saison = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Saison')->findOneByAnnee($year); 
+        $activite = $em->getRepository('SCActiviteBundle:Activite')->find($id);
+        $lieu = $em->getRepository('SC\ActiviteBundle\Entity\Lieu')->findOneByNomLieu($nomLieu);
+        $user = $this->getDoctrine()->getManager()
+                                            ->getRepository('SC\UserBundle\Entity\User')
+                                                ->findOneByEmail(array('email' => $request->getSession()->get('email')));        
+        
+        if (null === $activite) {
+           return $this->pageErreur("activite inconnue");
+        }
+        $newSortie = new Sortie;
+        //la sortie qui va etre modifiee
+        $sortie = $em->getRepository('SCActiviteBundle:Sortie')->findOneBy(array('dateSortie'=>$dateSortie,'activite'=>$activite,'saison'=>$saison,'lieu'=>$lieu));
+        $form = $this->get('form.factory')->create(new SortieType(), $newSortie);
+        $form->handleRequest($request);
+        
+        $newSortie->setActivite($activite);        
+        $newSortie->setSaison($saison);        
+        $newSortie->setUser($user);
+        
+        if ($form->isValid()) {
+            
+            $date = $newSortie->getDateSortie();
+            $string = $date->format('Y').'-'.$date->format('m').'-'.$date->format('d').' '.$date->format('H').':'.$date->format('i').':'.$date->format('s');    // si il ya deja une meme date -> erreur                
+            if ($this->dateExiste($string,$activite,$saison) == true) {
+                    return $this->pageErreur("Une date identique a déjà été validée : deux sorties ne peuvent avoir même date");
+                } 
+            $newSortie->setDateSortie($string);
+            $em->persist($newSortie);
+            $listLieu = $em->getRepository('SC\ActiviteBundle\Entity\Lieu')->findAll();
+
+                foreach ($listLieu as $lieu) {
+                    if ($lieu->getNomLieu() === $newSortie->getLieu()->getNomLieu()) {
+                        $newSortie->setLieu($lieu);
+                        $em->remove($sortie);
+                        $em->flush();
+                        $em->getRepository('SCActiviteBundle:InscriptionSortie')->modifSortie($id,$newSortie->getDateSortie(),$newSortie->getLieu()->getNomLieu(),$year,$dateSortie,$nomLieu);
+                        $request->getSession()->getFlashBag()->add('info', 'La sortie a bien été modifiée');
+                        return $this->redirect($this->generateUrl('sc_activite_view', array('id' => $sortie->getActivite()->getId())));                
+                    }    
+                }
+            $em->remove($sortie);    
+            $em->persist($newSortie->getLieu());
+            $em->flush();
+            $em->getRepository('SCActiviteBundle:InscriptionSortie')->modifSortie($id,$newSortie->getDateSortie(),$newSortie->getLieu()->getNomLieu(),$year,$dateSortie,$nomLieu);
+            $request->getSession()->getFlashBag()->add('info', 'Sortie bien modifiée');
+            return $this->redirect($this->generateUrl('sc_activite_view', array('id' => $activite->getId())));
+        }
+
+        return $this->render('SCActiviteBundle:Activite:edit.html.twig', array('form'   => $form->createView(),'activite' => $activite,'edit' => 1));// Je passe également l'activité à la vue si jamais elle veut l'afficher))
+    }
+   
 }
+    

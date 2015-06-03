@@ -22,6 +22,10 @@
                         <i class="glyphicon glyphicon-trash"></i>
                             Supprimer cette sortie 
                     </a>
+                   <a href="{{path('sc_activite_editSortie', {'id': activite.id, 'dateSortie': sortie.dateSortie, 'nomLieu': sortie.lieu.nomLieu}) }}" class="btn btn-default">
+                        <i class="glyphicon glyphicon-edit"></i>
+                            Modifier cette sortie 
+                    </a>
                 {%endif%}
             {%endif%}        
         <br/>        
