@@ -78,7 +78,8 @@ class InscriptionStageController extends Controller
             // Si l'enfant n'a pas la licence pour l'activite, on la crée
             if ($this->haveLicence($licence, $saison, $enfant->getNomEnfant()
                     ,$enfant->getPrenomEnfant(),$parents)==false) {
-                $request->getSession()->getFlashBag()->add('info', $enfant->getPrenomEnfant().'  ne possède pas la licence pour cette activité. La licence a été ajoutée.');
+                $request->getSession()->getFlashBag()->add('info', $enfant->getPrenomEnfant().'  ne possède pas la licence pour cette activité. '
+                        . 'La licence a été ajoutée et devra être payée.');
                 $licenceEnfant = new LicenceEnfant();
                 $licenceEnfant -> setEmail($email);
                 $licenceEnfant -> setNomEnfant($enfant->getNomEnfant());
