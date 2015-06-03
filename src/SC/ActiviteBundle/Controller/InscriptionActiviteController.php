@@ -90,7 +90,7 @@ class InscriptionActiviteController extends Controller
         $r = $em -> getRepository('SC\ActiviteBundle\Entity\InscriptionActivite') ;
         $listeDeMesInscriptions = $r -> listeDeMesInscriptions($email); 
         $prix = $r -> getSommeApayer($email);
-        return $this->render('SCActiviteBundle:InscriptionActivite:viewinscription.html.twig',array('listeDeMesInscriptions' => $listeDeMesInscriptions,'prix' => $prix
+        return $this->render('SCUserBundle:Security:viewinscriptionactivite.html.twig',array('listeDeMesInscriptions' => $listeDeMesInscriptions,'prix' => $prix
         ));
     }
 

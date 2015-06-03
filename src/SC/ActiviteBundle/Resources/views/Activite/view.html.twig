@@ -28,11 +28,12 @@
     {% endif %}
   <p>
     
-     
+    {% if   app.session.get('email')    !=null  %}
     <a href="{{ path('sc_activite_inscriptionActivite' , {'id': activite.id})}}" class="btn btn-default">
       <i class="glyphicon glyphicon-edit"></i>
       Inscription à l'activité
     </a>
+    {% endif %}
     {% if is_granted('ROLE_ADMIN') %}
     <a href="{{ path('sc_activite_edit', {'id': activite.id}) }}" class="btn btn-default">
       <i class="glyphicon glyphicon-edit"></i>

@@ -1,10 +1,10 @@
 sc_licence:
     resource: "@SCLicenceBundle/Resources/config/routing.yml"
-    prefix:   /licence
+    prefix:   /
 
 sc_activite:
     resource: "@SCActiviteBundle/Resources/config/routing.yml"
-    prefix:   /activite
+    prefix:   /
 
 sc_user:
     resource: "@SCUserBundle/Resources/config/routing.yml"

@@ -134,3 +134,7 @@ sc_inscription_annulation:
     defaults:  { _controller: SCActiviteBundle:InscriptionSortie:annulation }
     requirements:
         id: \d+        
+
+sc_activite_listeEnfantsInscrits:
+    path:      /moncompte/mesinscriptions
+    defaults:  { _controller: SCActiviteBundle:InscriptionActivite:viewInscriActivite }

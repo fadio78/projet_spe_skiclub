@@ -1,62 +1,62 @@
 # src/SC/ActiviteBundle/Resources/config/routing.yml
 
 sc_activite_homepage:
-    path:     /{page}
+    path:     /activite/{page}
     defaults: { _controller: SCActiviteBundle:Activite:index, page: 1 }    
     requirements:
         page: \d* 
 
 sc_activite_view:
-    path:      /view/{id}
+    path:      /activite/view/{id}
     defaults:  { _controller: SCActiviteBundle:Activite:view }
     requirements:
         id: \d+
 sc_activite_add:
-    path:      /add
+    path:      /admin/activite/add
     defaults:  { _controller: SCActiviteBundle:Activite:add }
 sc_activite_edit:
-    path:      /edit/{id}
+    path:      /admin/activite/edit/{id}
     defaults:  { _controller: SCActiviteBundle:Activite:edit }
     requirements:
         id: \d+
 sc_activite_delete:
-    path:      /delete/{id}
+    path:      /admin/activite/delete/{id}
     defaults:  { _controller: SCActiviteBundle:Activite:delete }
     requirements:
         id: \d+ 
         
 sc_activite_ajoutSortie:
-    path:      /ajoutSortie/{id}
+    path:      /activite/ajoutSortie/{id}
     defaults:  { _controller: SCActiviteBundle:Sortie:ajoutSortie }
     requirements:
         id: \d+
         
 sc_activite_voirSortie:
-    path:      /voirSortie/{id}
+    path:      /activite/voirSortie/{id}
     defaults:  { _controller: SCActiviteBundle:Sortie:voirSortie }
     requirements:
         id: \d+ 
         
 sc_activite_deleteSortie:
-    path:      /deleteSortie/{id}/{dateSortie}/{lieu}
+    path:      /activite/deleteSortie/{id}/{dateSortie}/{lieu}
     defaults:  { _controller: SCActiviteBundle:Sortie:deleteSortie}
     requirements:
         id: \d+
         
 sc_activite_addStage:
-    path:      /addStage/{id}
+    path:      /activite/addStage/{id}
     defaults:  { _controller: SCActiviteBundle:Stage:add }
     requirements:
         id: \d+
         
 sc_activite_viewStage:
-    path:      /viewStage/{id}
+    path:      /activite/viewStage/{id}
     defaults:  { _controller: SCActiviteBundle:Stage:view }
     requirements:
         id: \d+ 
         
 sc_activite_deleteStage:
-    path:      /deleteStage/{id}/{debutStage}/{finStage}
+    path:      /activite/deleteStage/{id}/{debutStage}/{finStage}
     defaults:  { _controller: SCActiviteBundle:Stage:delete}
     requirements:
         id: \d+
@@ -64,7 +64,7 @@ sc_activite_deleteStage:
         finStage: "[0-9-]+"
         
 sc_activite_editStage:
-    path:      /editStage/{id}/{debutStage}/{finStage}
+    path:      /activite/editStage/{id}/{debutStage}/{finStage}
     defaults:  { _controller: SCActiviteBundle:Stage:edit}
     requirements:
         id: \d+
@@ -72,43 +72,41 @@ sc_activite_editStage:
         finStage: "[0-9-]+"
 
 sc_activite_inscriptionActivite:
-    path:      /inscriptionActivite/{id}
+    path:      /activite/inscriptionActivite/{id}
     defaults:  { _controller: SCActiviteBundle:InscriptionActivite:inscriptionActivite }
     requirements:
         id: \d+
         
 sc_activite_getEnfant:
-    path:      /getEnfant/{id}/{dateSortie}/{lieu}
+    path:      /activite/getEnfant/{id}/{dateSortie}/{lieu}
     defaults:  { _controller: SCActiviteBundle:InscriptionSortie:getEnfant }
     requirements:
         id: \d+
         
 sc_activite_actionSortie:
-    path:      /actionSortie/{id}/{dateSortie}/{lieu}
+    path:      /activite/actionSortie/{id}/{dateSortie}/{lieu}
     defaults:  { _controller: SCActiviteBundle:Sortie:actionSortie }
     requirements:
         id: \d+    
         
-sc_activite_listeEnfantsInscrits:
-    path:      /mesinscriptions
-    defaults:  { _controller: SCActiviteBundle:InscriptionActivite:viewInscriActivite }
+
 
         
 sc_activite_inscrireEnfant:
-    path:      /inscrireEnfant/{id}/{userParent}/{nomEnfant}/{prenomEnfant}
+    path:      /activite/inscrireEnfant/{id}/{userParent}/{nomEnfant}/{prenomEnfant}
     defaults:  { _controller: SCActiviteBundle:InscriptionSortie:inscrireEnfant }
     requirements:
         id: \d+          
 
 sc_activite_personnesInscrites:
-    path:      /personnesInscrites/{id}
+    path:      /activite/personnesInscrites/{id}
     defaults:  { _controller: SCActiviteBundle:InscriptionSortie:inscrits }
     requirements:
         id: \d+    
 
 
 sc_activite_viewChildren:
-    path:      /viewChildren/{id}/{debutStage}/{finStage}
+    path:      /activite/viewChildren/{id}/{debutStage}/{finStage}
     defaults: {_controller:SCActiviteBundle:InscriptionStage:viewChildren }
     requirements:
         id: \d+
@@ -116,19 +114,19 @@ sc_activite_viewChildren:
         finStage: "[0-9-]+"
         
 sc_activite_viewChildrenStages:
-    path:      /viewChildrenStages/{id}
+    path:      /activite/viewChildrenStages/{id}
     defaults:  {_controller:SCActiviteBundle:InscriptionStage:viewChildrenStages}
     requirements:
         id: \d+
 
 sc_activite_viewAllStagesUser:
-    path:      /viewAllStagesUser/{email}
+    path:      /activite/viewAllStagesUser/{email}
     defaults:   {_controller:SCUserBundle:Admin:viewAllStagesUser}
     requirements:
         email : "[^/]+"
         
 sc_activite_confirmPayment:
-    path:       /confirmPayment/{id}/{email}/{nomEnfant}/{prenomEnfant}/{debutStage}/{finStage}
+    path:       /activite/confirmPayment/{id}/{email}/{nomEnfant}/{prenomEnfant}/{debutStage}/{finStage}
     defaults:   {_controller:SCActiviteBundle:InscriptionStage:confirmPayment}
     requirements:
         id: \d+
@@ -139,7 +137,7 @@ sc_activite_confirmPayment:
         finStage: "[0-9-]+"
 
 sc_activite_deleteInscriptionStage:
-    path:       /deleteInscriptionStage/{id}/{email}/{nomEnfant}/{prenomEnfant}/{debutStage}/{finStage}
+    path:       /activite/deleteInscriptionStage/{id}/{email}/{nomEnfant}/{prenomEnfant}/{debutStage}/{finStage}
     defaults:   {_controller:SCActiviteBundle:InscriptionStage:deleteInscriptionStage}
     requirements:
         id: \d+

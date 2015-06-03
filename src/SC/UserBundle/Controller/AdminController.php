@@ -215,7 +215,7 @@ class AdminController extends Controller
           ->getManager()
           ->getRepository('SCActiviteBundle:InscriptionActivite');
 
-        $listeEnfantsInscrits = $repository -> listeEnfantsinscrits($email);   
+        $listeEnfantsInscrits = $repository -> listeDeMesInscriptions($email);   
         return $this->render('SCUserBundle:Admin:gestionEnfant.html.twig',array('listeEnfantsInscrits' => $listeEnfantsInscrits, 'valide' => $valide));
         
     }

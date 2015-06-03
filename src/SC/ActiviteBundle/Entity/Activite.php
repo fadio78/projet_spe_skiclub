@@ -87,7 +87,7 @@ class Activite
      *
      * @return string 
      */
-    public function getNomactivite()
+    public function getNomActivite()
     {
         return $this->nomActivite;
     }

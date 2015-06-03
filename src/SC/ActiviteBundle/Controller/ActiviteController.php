@@ -179,7 +179,7 @@ class ActiviteController extends Controller
             return $response;          
         }
         else {
-            $nomActivite = $activite -> getNomactivite();
+            $nomActivite = $activite -> getNomActivite();
             // message envoyé en cas d'annulation de l'activité
             $msg = "Veuillez nous excusez, l''activité " . $nomActivite ." est annulée";
             $saison = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Saison')->find($year);

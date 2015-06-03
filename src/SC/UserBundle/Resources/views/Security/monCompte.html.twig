@@ -13,11 +13,11 @@
     <h4><a href="{{ path('sc_user_paramCompte') }}">Paramètres du compte</a><h4/>
 
    
-        {% if is_granted('ROLE_ADMIN') %}
+ {#       {% if is_granted('ROLE_ADMIN') %}
             <h4><a href="{{ path('sc_admin_homepage') }}">Gestion Activité/utilisateur</a><h4/> 
         {%else%}
             <h4><a href="{{ path('sc_activite_homepage') }}">Liste des activités proposées</a><h4/>
-        {% endif %}
+        {% endif %}  #}
         
 
 
