@@ -4,9 +4,9 @@
 {% block activité_body %}
     <h3>Stages</h3>
 <ul>
-    {% for message in app.session.flashbag.get('info') %}
+    <FONT color="green">{% for message in app.session.flashbag.get('info') %}
         <p>{{ message }}</p>
-    {% endfor %}
+    {% endfor %}</FONT>
 
     {% for stage in listeStages %}
         <b>{{ stage.nomStage }}</b>

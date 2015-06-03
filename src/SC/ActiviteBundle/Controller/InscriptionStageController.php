@@ -56,6 +56,7 @@ class InscriptionStageController extends Controller
             $response->setStatusCode(Response::HTTP_NOT_FOUND);
             return $response;
         }
+        
         // On crée le formulaire pour faire la liste déroulante des enfants de l'utilisateur
         $defaultData = array('message' => 'Type your message here');
         
@@ -69,6 +70,17 @@ class InscriptionStageController extends Controller
         if ($form->isValid()) {
             $data = $form->getData();
             $enfant = $data ['Enfant'];
+            
+            
+            
+            if ($this->inscritActivite($activite, $saison, $enfant->getNomEnfant()
+                    ,$enfant->getPrenomEnfant(),$parents)==false) {
+            $request->getSession()->getFlashBag()->add('info', $enfant->getPrenomEnfant().'  non inscrit à cette activité');
+                return $this->render('SCActiviteBundle:Stage:viewEnfant.html.twig', array(
+            'form' => $form->createView()));
+            }
+            
+            
             
             $inscriptionStage = new InscriptionStage();
             $inscriptionStage -> setActivite($activite);
@@ -134,6 +146,21 @@ class InscriptionStageController extends Controller
         }
     }
 
+    //retourne true si l'enfant est inscrit a l'activite pour la saison courante
+    //false sinon
+    public function inscritActivite($activite,$saison,$nomEnfant,$prenomEnfant,$emailParent) {
+        $em = $this->getDoctrine()->getManager();
+        //on regarde si l'enfant est inscrit a l'activite pour la saison donnee
+        $enfant = $em->getRepository('SC\ActiviteBundle\Entity\InscriptionActivite')
+                        ->findOneBy(array('activite' => $activite, 'saison' => $saison, 'email' => $emailParent, 'nomEnfant'=>$nomEnfant,'prenomEnfant'=>$prenomEnfant));
+        if ($enfant == null) {
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+    
     public function confirmPaymentAction($id, $email, $nomEnfant, $prenomEnfant, $debutStage, $finStage, Request $request) {
         $em = $this->getDoctrine()->getManager();
         
@@ -157,7 +184,7 @@ class InscriptionStageController extends Controller
         $listeInscriptionStages = $em->getRepository('SC\ActiviteBundle\Entity\InscriptionStage')
                 ->findBy(array('saison'=>$saison, 'user'=>$user));
         
-        $request->getSession()->getFlashBag()->add('info', 'Confirmation de paiement pris en compte');
+        $request->getSession()->getFlashBag()->add('info', 'Paiement confirmé');
         return $this->render('SCActiviteBundle:Stage:viewAllStagesUser.html.twig', array('listeInscriptionStages'=>$listeInscriptionStages));
     }
     
@@ -184,7 +211,7 @@ class InscriptionStageController extends Controller
         $listeInscriptionStages = $em->getRepository('SC\ActiviteBundle\Entity\InscriptionStage')
                 ->findBy(array('saison'=>$saison, 'user'=>$user));
         
-        $request->getSession()->getFlashBag()->add('info', 'Confirmation de paiement pris en compte');
+        $request->getSession()->getFlashBag()->add('info', 'Inscription supprimée');
         return $this->render('SCActiviteBundle:Stage:viewAllStagesUser.html.twig', array('listeInscriptionStages'=>$listeInscriptionStages));
         
         
