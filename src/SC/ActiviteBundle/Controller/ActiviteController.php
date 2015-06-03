@@ -179,6 +179,9 @@ class ActiviteController extends Controller
             return $response;          
         }
         else {
+            $nomActivite = $activite -> getNomactivite();
+            // message envoyé en cas d'annulation de l'activité
+            $msg = "Veuillez nous excusez, l''activité " . $nomActivite ." est annulée";
             $saison = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Saison')->find($year);
             $repository = $em -> getRepository('SC\ActiviteBundle\Entity\InscriptionActivite');
             // liste des inscrits à l'activité cette saison
@@ -210,11 +213,16 @@ class ActiviteController extends Controller
             //je supprime l'activité s'il y a des inscriptions que cette saison
             if (is_null($saisonsprecedentes)  AND   isset($saisonactuelle))
             {
-                //envoi mail
-                //je supprime les inscriptions de cette saison
+                //envoi des mails aux inscrits
                 foreach ($inscriptions as $inscription)
-                {
-                $em ->remove($inscription);
+                    $message = \Swift_Message::newInstance()
+                      ->setSubject('Compte activé')
+                      ->setFrom($request->getSession()->get('email'))
+                      ->setTo($inscription ->getEmail())
+                      ->setBody($msg);
+                    $this->get('mailer')->send($message);
+                //je supprime les inscriptions de cette saison
+                    $em ->remove($inscription);
                 }
                 $em->remove($activite);
             }
@@ -225,12 +233,19 @@ class ActiviteController extends Controller
 
                 foreach ($inscriptions as $inscription)
             {
+                // envoi des mails
+                $message = \Swift_Message::newInstance()
+                    ->setSubject('Compte activé')
+                    ->setFrom($request->getSession()->get('email'))
+                    ->setTo($inscription ->getEmail())
+                    ->setBody($msg);
+                    $this->get('mailer')->send($message);
                 $em ->remove($inscription);
             }
             }
        
             $this->suppSoritesEtInscrit($activite,$saison);
-            $this->deleteStagesInscriptionStages($activite,$saison);
+      //      $this->deleteStagesInscriptionStages($activite,$saison);
             
             $re = $em ->getRepository('SC\ActiviteBundle\Entity\InscriptionActivite');           
 
@@ -238,7 +253,7 @@ class ActiviteController extends Controller
             $listeActivites =$saison -> getActivites();
             return $this->render('SCActiviteBundle:Activite:index.html.twig', array('listeActivites' => $listeActivites));
 
-        }    
+           
     }
     
     public function suppSoritesEtInscrit($activite,$saison) {
@@ -253,7 +268,7 @@ class ActiviteController extends Controller
             }        
         $em->flush();
     }
-    
+    /*
     public function deleteStagesInscriptionStages($activite,$saison) {
         $em = $this->getDoctrine()->getManager();
         $stages = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Stage')->findBy(array('activite'=> $activite,'saison'=>$saison));
@@ -265,7 +280,7 @@ class ActiviteController extends Controller
                 $em->remove($enfant);
             }        
         $em->flush();
-    }
+    }*/
     
 
     public function ajoutSortieAction($id,Request $request) {
