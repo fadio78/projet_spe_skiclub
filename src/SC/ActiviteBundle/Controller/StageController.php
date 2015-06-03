@@ -196,10 +196,7 @@ class StageController extends Controller {
             $em->remove($stage);
             $em->flush();
 
-            $listeStages = $em->getRepository('SC\ActiviteBundle\Entity\Stage')->findBy(array('saison'=>$saison));
-            if ($listeStages == null) {
-                $request->getSession()->getFlashBag()->add('info', 'Il n\'y a pas de stage pour cette activité');
-            }
+            $listeStages = $em->getRepository('SC\ActiviteBundle\Entity\Stage')->findBy(array('activite' =>$activite, 'saison'=>$saison));
             return $this->render('SCActiviteBundle:Stage:view.html.twig',array('listeStages' => $listeStages, 'activite' => $activite ));
         }
     }
@@ -217,7 +214,7 @@ class StageController extends Controller {
         }
         
         $stage = $em->getRepository('SC\ActiviteBundle\Entity\Stage')->findOneBy(
-                array('activite'=>$activite, 'debutStage'=>$debutStage, 'finStage', $finStage));
+                array('activite'=>$activite, 'debutStage'=>$debutStage, 'finStage'=> $finStage));
         
         $form = $this->createForm(new StageEditType(), $stage);
 
@@ -229,9 +226,11 @@ class StageController extends Controller {
             return $this->redirect($this->generateUrl('sc_activite_viewStage', 
                         array('id' => $stage->getActivite()->getId(), 'listeStages' => $listeStages)));
         }
+        $debut = strtotime($debutStage);
+        $fin = strtotime($finStage);
         return $this->render('SCActiviteBundle:Stage:edit.html.twig', array('form' 
-            => $form->createView(),'activite' => $activite, 'debutStage' => $debutStage,
-            'finStage' => $finStage));
+            => $form->createView(),'activite' => $activite, 'debutStage' => $debut,
+            'finStage' => $fin));
     }
  
     public function mailStageCancelled($email, $debutStage, $finStage, $lieu) {
