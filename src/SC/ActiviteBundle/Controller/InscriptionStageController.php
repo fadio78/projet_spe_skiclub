@@ -13,7 +13,7 @@ use SC\ActiviteBundle\Form\ActiviteEditType;
 use SC\UserBundle\Entity\User;
 use SC\UserBundle\Entity\EnfantRepository;
 use SC\LicenceBundle\Entity\Licence;
-use SC\LicenceBundle\Entity\LicenceEnfant;
+use SC\UserBundle\Entity\LicenceEnfant;
 use SC\ActiviteBundle\Entity\Stage;
 use SC\ActiviteBundle\Entity\Lieu;
 use SC\ActiviteBundle\Entity\Saison;
@@ -73,15 +73,20 @@ class InscriptionStageController extends Controller
             $enfant = $data ['Enfant'];
             
             $licence = new Licence();
-            $licence = $em->getRepository('SC\LicenceBundle\Entity\Licence')->find($activite->getLicence());
+            $licence = $em->getRepository('SC\LicenceBundle\Entity\Licence')
+            ->findOneByTypeLicence($activite->getLicence());
+            // Si l'enfant n'a pas la licence pour l'activite, on la crée
             if ($this->haveLicence($licence, $saison, $enfant->getNomEnfant()
                     ,$enfant->getPrenomEnfant(),$parents)==false) {
-            $request->getSession()->getFlashBag()->add('info', $enfant->getPrenomEnfant().'  ne possède pas la licence pour cette activité');
-                return $this->render('SCActiviteBundle:Stage:viewEnfant.html.twig', array(
-            'form' => $form->createView()));
+                $request->getSession()->getFlashBag()->add('info', $enfant->getPrenomEnfant().'  ne possède pas la licence pour cette activité. La licence a été ajoutée.');
+                $licenceEnfant = new LicenceEnfant();
+                $licenceEnfant -> setEmail($email);
+                $licenceEnfant -> setNomEnfant($enfant->getNomEnfant());
+                $licenceEnfant -> setPrenomEnfant($enfant->getPrenomEnfant());
+                $licenceEnfant -> setSaison($saison);
+                $licenceEnfant -> setLicence($activite->getLicence());
+                $em->persist($licenceEnfant);
             }
-            
-            
             
             $inscriptionStage = new InscriptionStage();
             $inscriptionStage -> setActivite($activite);
