@@ -23,8 +23,9 @@
 
      <h4><a href="{{ path('sc_activite_listeEnfantsInscrits') }}">Liste de mes enfants inscrits aux activités</a><h4/>
 
-   {%if voirActivite is not defined %}    
-   <h4><a href="{{ path('sc_activite_voirActivite') }}">Liste de mes inscriptions</a><h4/>
+   {%if voirActivite is not defined %}  
+       Pour  confirmer votre participation à une sortie: <br/>
+   <a href="{{ path('sc_activite_voirActivite') }}">Mes inscriptions</a>
    {%endif%}
 
    <h3><p>
@@ -35,6 +36,9 @@
   </p>
     
     {%if voirActivite is defined and voirActivite == 1 %}
+        
+          Choisissez l'activité voulue :
+        
           {{ form(form) }}
     {%endif%}    
   

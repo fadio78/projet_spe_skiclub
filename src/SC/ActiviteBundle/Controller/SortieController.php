@@ -74,6 +74,7 @@ class SortieController extends Controller
                     
                     $em->persist($sortie->getLieu());
                     $em->flush();
+                    $request->getSession()->getFlashBag()->add('info', 'La sortie a bien été enregistrée');
                     return $this->redirect($this->generateUrl('sc_activite_view', array('id' => $sortie->getActivite()->getId())));                
             } 
             return $this->render('SCActiviteBundle:Activite:add.html.twig', array(
