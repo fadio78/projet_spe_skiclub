@@ -3,6 +3,7 @@
 namespace SC\UserBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
+use SC\ActiviteBundle\Entity\Saison;
 
 /**
  * LicenceEnfantRepository
@@ -12,4 +13,29 @@ use Doctrine\ORM\EntityRepository;
  */
 class LicenceEnfantRepository extends EntityRepository
 {
+    // retourne la somme des licences à payer pour un enfant donné pour la saison en cours
+    public function getSommeLicences($email,$prenom,$nom)
+    {
+        $somme = 0;
+        $saison = new Saison ();
+        $year = $saison->connaitreSaison(); 
+        $qb= $this->createQueryBuilder('l')
+            ->where('l.prenomEnfant = :prenomEnfant')
+            ->setParameter('prenomEnfant', $prenom)
+            ->andwhere  ('l.nomEnfant = :nomEnfant')
+            ->setParameter('nomEnfant', $nom)
+            ->andwhere('l.saison = :annee')
+            ->setParameter('annee', $year)
+            ->andwhere('l.email = :email')
+            ->setParameter('email', $email);
+        
+        $licencesEnfant = $qb->getQuery()->getResult();
+        foreach ($licencesEnfant as $licenceEnfant)
+        {
+            $prixlicence= $licenceEnfant -> getLicence() -> getPrixLicence();
+            $somme = $somme + $prixlicence;
+        }
+        return $somme;
+    }
+    
 }

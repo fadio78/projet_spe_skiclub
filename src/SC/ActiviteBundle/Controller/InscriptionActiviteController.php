@@ -8,13 +8,15 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use SC\ActiviteBundle\Entity\Activite;
 use SC\UserBundle\Entity\User;
 use SC\UserBundle\Entity\Adhesion;
-use SC\UserBundle\Entity\Licence;
+use SC\LicenceBundle\Entity\Licence;
 use SC\ActiviteBundle\Entity\Saison;
 use SC\ActiviteBundle\Entity\SaisonRepository;
 use SC\ActiviteBundle\Entity\InscriptionActivite;
 use SC\UserBundle\Entity\Enfant;
 use Doctrine\ORM\EntityRepository;
 use SC\UserBundle\Entity\EnfantRepository;
+use SC\UserBundle\Entity\LicenceEnfant;
+
 
 
 
@@ -35,7 +37,6 @@ class InscriptionActiviteController extends Controller
         }
         $inscriptionActivite -> setActivite($activite);
         $inscriptionActivite -> setEmail($email);
-        $inscriptionActivite  -> setLicenceValide(0);
         $saison = new Saison ();
         $year = $saison->connaitreSaison();  
         $saison = $em->getRepository('SC\ActiviteBundle\Entity\Saison')->find($year);
@@ -60,7 +61,17 @@ class InscriptionActiviteController extends Controller
             $inscri = $er->est_Inscrit($inscriptionActivite);
             if ($inscri == null)
             {
-              
+                $r = $em -> getRepository('SC\UserBundle\Entity\LicenceEnfant');
+                $licence = $activite -> getLicence();
+                if (isset($licence))
+                {
+                    $licenceEnfantExiste = $r -> findOneBy(array('email' => $email,'prenomEnfant' => ($enfant -> getPrenomEnfant()),'nomEnfant' => ($enfant -> getNomEnfant()),'saison' => $saison,'licence' => $activite ->getLicence() ));
+                    if ($licenceEnfantExiste == null)
+                    {
+                        $this -> ajoutLicenceEnfant($licence,$enfant -> getPrenomEnfant(),$enfant -> getNomEnfant(),$saison,$email);
+                        
+                    }
+                }    
                 $em->persist($inscriptionActivite);
                 $em->flush();
                 $request->getSession()->getFlashBag()->add('info', 'Inscription bien enregistrée');
@@ -94,7 +105,19 @@ class InscriptionActiviteController extends Controller
         ));
     }
 
-    
+  
+    public function ajoutLicenceEnfant($licence,$prenom,$nom,$saison,$email)
+    {
+        $em = $this ->getDoctrine() ->getManager();
+        $licenceEnfant = new LicenceEnfant();
+        $licenceEnfant -> setLicence ($licence);
+        $licenceEnfant -> setEmail($email);
+        $licenceEnfant -> setPrenomEnfant($prenom);
+        $licenceEnfant -> setNomEnfant($nom); 
+        $licenceEnfant -> setSaison($saison);
+        $em->persist($licenceEnfant);
+        
+    }
     
     
 }

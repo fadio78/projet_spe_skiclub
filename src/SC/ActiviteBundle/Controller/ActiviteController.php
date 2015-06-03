@@ -95,8 +95,6 @@ class ActiviteController extends Controller
         // On fait le lien Requête <-> Formulaire
         // À partir de maintenant, la variable $activite contient les valeurs entrées dans le formulaire par l'e visiteur l'admin
         $form->handleRequest($request);
-
-
         $season = new Saison;
         $year = $season->connaitreSaison();
         $user = $this->getDoctrine()->getManager()->getRepository('SC\UserBundle\Entity\User')->find($email);
@@ -171,11 +169,8 @@ class ActiviteController extends Controller
         $repository = $em->getRepository('SCActiviteBundle:Activite');
         $activite = $repository->find($id);
         //si n'existe pas -> message d'erreur
-        if (is_null($activite)) {
-            $response = new Response;
-            $response->setContent("Error 404: not found");
-            $response->setStatusCode(Response::HTTP_NOT_FOUND);
-            return $response;          
+        if (null === $activite) {
+            throw new NotFoundHttpException("L'activité d'id ".$id." n'existe pas.");
         }
         else {
 

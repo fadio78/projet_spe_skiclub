@@ -7,16 +7,7 @@
     {% for inscription in listeEnfantsInscrits %}
         
         <p>      {{ inscription.prenomEnfant }}  {{ inscription.nomEnfant }}  est inscrit à l'activité {{ inscription.activite.nomActivite }}  
-        {% if inscription.activite.licence.typelicence !=null   %}
-            {% if inscription.licenceValide == 1 %}
-            <FONT COLOR="blue" > . Sa licence est validée.  </FONT>      
-            {% else %}
-        <a href="{{ path('sc_admin_activerlicence', {'email': inscription.email ,'prenom': inscription.prenomEnfant ,'nom': inscription.nomEnfant,'annee': inscription.saison.annee ,'id': inscription.activite.id}) }}" class="btn btn-default">
-          <i class="glyphicon glyphicon-plus"></i>
-        valider la  licence
-        </a>  </p>
-            {% endif %}
-        {% endif %}
+       
         <br>
     {% endfor %}   
     

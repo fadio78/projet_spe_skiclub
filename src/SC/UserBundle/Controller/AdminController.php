@@ -225,37 +225,7 @@ class AdminController extends Controller
         return $this->render('SCUserBundle:Admin:gestionEnfant.html.twig',array('listeEnfantsInscrits' => $listeEnfantsInscrits, 'valide' => $valide));
         
     }
-    
-    
-    public function activerLicenceAction($email,$prenom,$nom,$id, $annee)
-    {
-        $em = $this ->getDoctrine() ->getManager();
-        $licenceEnfant = new LicenceEnfant();
-        $re = $em -> getRepository('SCActiviteBundle:Activite');
-        $activite = $re ->find($id);
-        if (null === $activite) {
-          throw new NotFoundHttpException("L'activité d'id ".$id." n'existe pas.");
-        }
-        $licence = $activite -> getLicence();
-        $licenceEnfant -> setLicence ($licence);
-        $licenceEnfant -> setEmail($email);
-        $licenceEnfant -> setPrenomEnfant($prenom);
-        $licenceEnfant -> setNomEnfant($nom); 
-        $saison = $em->getRepository('SC\ActiviteBundle\Entity\Saison')->find($annee);
-        if (null === $saison) {
-          throw new NotFoundHttpException("La saison  d'année ".$annee." n'existe pas.");
-        }
-        $licenceEnfant -> setSaison($saison);
-        $em->persist($licenceEnfant);
-        $repository = $em -> getRepository('SCActiviteBundle:InscriptionActivite') ;
-        $inscriptionActivite = $repository ->findOneBy(array('activite' =>  $activite, 'saison'=> $saison,
-                                               'nomEnfant'=>$nom, 'prenomEnfant' =>$prenom, 'email'=>$email));
-        $inscriptionActivite -> setLicenceValide(1);
-        $em->flush();
-        $listeEnfantsInscrits= $repository -> listeDeMesInscriptions($email);   
-        return $this->render('SCUserBundle:Admin:gestionEnfant.html.twig',array('listeEnfantsInscrits' => $listeEnfantsInscrits));
-        
-    }
+
     
         public function adhererAction(Request $request, $email)
         {

@@ -69,7 +69,7 @@ class InscriptionActiviteRepository extends EntityRepository
     } 
     
     // retourne la somme des licence à payer à partir d'un enfant donné  pour la saison en cours
-    public function getSommeLicencesApayer($email,$prenom,$nom)
+/*    public function getSommeLicencesApayer($email,$prenom,$nom)
     {
         $somme = 0;
         $saison = new Saison ();
@@ -88,7 +88,7 @@ class InscriptionActiviteRepository extends EntityRepository
         }
         return $somme;
     
-    } 
+    } */
     
     
   
@@ -98,10 +98,11 @@ class InscriptionActiviteRepository extends EntityRepository
         $somme = 0;
         $r = $this -> _em-> getRepository('SCUserBundle:Enfant');
         $liste = $r->findBy(['userParent' => $email]);
+        $r = $this -> _em-> getRepository('SCUserBundle:LicenceEnfant');
         //pour chaque enfant, on calcule la somme de licence à payer
         foreach ($liste as $inscri)
         {
-            $s = $this -> getSommeLicencesApayer($email,$inscri -> getPrenomEnfant(),$inscri -> getNomEnfant());
+            $s = $r -> getSommeLicences($email,$inscri -> getPrenomEnfant(),$inscri -> getNomEnfant());
             $somme = $somme + $s;
             
         }
@@ -110,6 +111,11 @@ class InscriptionActiviteRepository extends EntityRepository
         $somme = $somme + $a ;
         return $somme;
     }
+    
+    
+    
+    
+    
     
     // retourne la somme des activités à payer pour un enfant donné pour la saison en cours 
     public function getSommeActivitesApayerParEnfant($email,$prenom,$nom)

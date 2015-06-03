@@ -27,4 +27,27 @@ class InscriptionStageRepository extends EntityRepository
 
        $query->execute();
     }
+    
+    public function getStage($activte,$debutStage,$finStage) {
+        
+    }
+    
+    // pour un utilisateur, tous les stages  ou les enfants sont inscrits
+    //return la somme
+    public function totalStage($email) {
+        $saison = new Saison;
+        $year = $saison->connaitreSaison();
+        $qb = $this->createQueryBuilder('a');
+        $qb->where('a.user = :user')
+            ->where('a.saison = :annee')
+            ->setParameter('user', $email)
+            ->setParameter('annee', $year);
+
+        $total = 0;
+        $inscription = $qb->getQuery()->getResult();
+        foreach ($inscription as $inscrit) {
+            $total = $total + $inscrit->getPrixPayeStage();
+        }
+        return $total;
+    }
 }

@@ -31,7 +31,7 @@
     {% if   app.session.get('email')    !=null  %}
     <a href="{{ path('sc_activite_inscriptionActivite' , {'id': activite.id})}}" class="btn btn-default">
       <i class="glyphicon glyphicon-plus-sign"></i>
-      Inscription à l'activité
+      Inscription 
     </a>
     {% endif %}
     {% if is_granted('ROLE_ADMIN') %}
