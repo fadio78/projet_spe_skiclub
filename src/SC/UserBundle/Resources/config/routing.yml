@@ -144,3 +144,4 @@ sc_affecter_groupe:
         prenomEnfant: "[^/]+"
         nomEnfant: "[^/]+"
  
+

@@ -27,6 +27,7 @@ class ActiviteType extends AbstractType
     }
     
     /**
+     * 
      * @param OptionsResolverInterface $resolver
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
