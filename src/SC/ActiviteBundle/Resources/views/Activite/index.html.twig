@@ -14,22 +14,17 @@
     <center> <h2> Saison: {{ app.session.get('year') }} </h2> </center>
 
     {% for activite in listeActivites %}
-        <a href="{{ path('sc_activite_view', {'id': activite.id}) }}">
+        <h4>  <a href="{{ path('sc_activite_view', {'id': activite.id}) }}">
           {{ activite.nomActivite }}
 
-        </a> 
-        <br>
+            </a>  <h4/>
+        
     {% endfor %}
         <br>
         {% if is_granted('ROLE_ADMIN') %}
-        <a href="{{ path('sc_activite_add')}}">
+            <h4>   <a href="{{ path('sc_activite_add')}}">
           Ajouter une activité
-        </a>
-          
-        <br>
-        <a href="{{ path('sc_licence_homepage')}}">
-          Voir la liste des licences  
-        </a>
+                </a> <h4/>
           
         {% endif %}
         
