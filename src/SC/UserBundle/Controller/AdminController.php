@@ -368,4 +368,5 @@ $message = \Swift_Message::newInstance()
         return $this->render('SCUserBundle:Admin:gestionEnfant.html.twig',array('listeEnfantsInscrits' => $listeEnfantsInscrits));
         
     }
+
 }
