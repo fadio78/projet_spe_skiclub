@@ -1,7 +1,7 @@
 # This file is auto-generated during the composer install
 parameters:
     database_driver: pdo_mysql
-    database_host: 127.0.0.1:1
+    database_host: '127.0.0.1'
     database_port: null
     database_name: ski_club
     database_user: root
@@ -11,4 +11,7 @@ parameters:
     mailer_user: null
     mailer_password: null
     locale: en
-    secret: 33f70e6e11caf1cc4cf3c2aeac2cbfc0672cec82
+    secret: c4b021742ace86ef5d105d22110ccb127
+    database_path: null 
+
+
