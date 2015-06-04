@@ -56,6 +56,12 @@ class InscriptionActivite
     private $prenomEnfant;
     
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(nullable = true,name="groupe", type="string", length=255)
+     */
+    private $groupe;
 
     /**
      * Set activite
@@ -198,5 +204,29 @@ class InscriptionActivite
     public function getLicenceValide()
     {
         return $this->licenceValide;
+    }
+
+    /**
+     * Set groupe
+     *
+     * @param string $groupe
+     * @return InscriptionActivite
+     * 
+     */
+    public function setGroupe($groupe = null)
+    {
+        $this->groupe = $groupe;
+
+        return $this;
+    }
+
+    /**
+     * Get groupe
+     *
+     * @return string 
+     */
+    public function getGroupe()
+    {
+        return $this->groupe;
     }
 }
