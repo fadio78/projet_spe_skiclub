@@ -9,12 +9,15 @@
         Cliquer sur un des enfants l'inscrira automatiquement à la sortie
         <br/><br/>
         <ul>
+            {%if enfants == null %}
+                <b> aucun enfant inscrit pour cette activite </b> 
+            {%else%}
             {% for enfant in enfants %}
                 <a href="{{path('sc_activite_inscrireEnfant', {'id': activite.id, 
                                  'nomEnfant': enfant.nomEnfant, 'prenomEnfant': enfant.prenomEnfant}) }}"                 
                 </a><br/>
                 {{ enfant.nomEnfant }}
-            {%endfor%}  
+            {%endfor%} {%endif%} 
         </ul>    
     </ul> 
     <br/><br/> 

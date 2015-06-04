@@ -92,7 +92,7 @@ class InscriptionActiviteRepository extends EntityRepository
     
     
   
-    // retourne la somme total à payer à part l'adhésion à partir d'un email donné pour la saison en cours en prenant en compte l'adhesion 
+    // retourne la somme total à payer à part l'adhésion à partir d'un email donné pour la saison en cours en prenant en compte l'adhesions 
     public function getSommeApayer($email)
     {
         $somme = 0;

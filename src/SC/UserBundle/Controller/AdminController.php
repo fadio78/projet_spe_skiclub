@@ -212,17 +212,16 @@ class AdminController extends Controller
         
     }
     
-
+    // récupère la liste des inscrits à une activité de la saison en cours
     public function gestionEnfantAction($email)
     {
-        $valide = false;
         $repository = $this
           ->getDoctrine()
           ->getManager()
           ->getRepository('SCActiviteBundle:InscriptionActivite');
 
         $listeEnfantsInscrits = $repository -> listeDeMesInscriptions($email);   
-        return $this->render('SCUserBundle:Admin:gestionEnfant.html.twig',array('listeEnfantsInscrits' => $listeEnfantsInscrits, 'valide' => $valide));
+        return $this->render('SCUserBundle:Admin:gestionEnfant.html.twig',array('listeEnfantsInscrits' => $listeEnfantsInscrits));
         
     }
 
@@ -369,4 +368,30 @@ $message = \Swift_Message::newInstance()
                 );
     } 
     
+    
+    public function affecterGroupeAction($id,$email,$prenomEnfant,$nomEnfant,Request $request)
+    {
+        $em = $this ->getDoctrine() ->getManager();
+        $activite = $em->getRepository('SC\ActiviteBundle\Entity\Activite')->find($id);
+        if (null === $activite) {
+          throw new NotFoundHttpException("L'activité d'id ".$id." n'existe pas.");
+        }
+        $saison = new Saison ();
+        $year = $saison->connaitreSaison();  
+        $saison = $em->getRepository('SC\ActiviteBundle\Entity\Saison')->find($year);
+        if (null === $saison) {
+          throw new NotFoundHttpException("La saison  d'année ".$annee." n'existe pas.");
+        }
+        $repository = $em ->getRepository('SCActiviteBundle:InscriptionActivite');
+        $groupe = $_POST['_groupe'];
+        $enfantInscrit = $repository -> findOneBy(array('email' => $email,'prenomEnfant' => $prenomEnfant,'nomEnfant' => $nomEnfant,'activite' => $activite, 'saison' =>$saison )) ; 
+        if (null === $enfantInscrit) {
+          throw new NotFoundHttpException("L'enfant n'existe pas ");
+        }
+        $enfantInscrit -> setGroupe($groupe);
+        $em -> flush();
+        $listeEnfantsInscrits = $repository -> listeDeMesInscriptions($email);
+        return $this->render('SCUserBundle:Admin:gestionEnfant.html.twig',array('listeEnfantsInscrits' => $listeEnfantsInscrits));
+        
+    }
 }

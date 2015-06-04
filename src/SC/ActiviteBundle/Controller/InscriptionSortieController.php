@@ -55,7 +55,8 @@ class InscriptionSortieController extends Controller
             return $this->pageErreur("paramètres entrés invalides");
         }
         $request->getSession()->set('sortie', $sortie);
-        $enfants = $em->getRepository('SC\UserBundle\Entity\Enfant')->findBy(array('userParent' => $parents));
+        //$enfants = $em->getRepository('SC\UserBundle\Entity\Enfant')->findBy(array('userParent' => $parents));
+        $enfants = $em->getRepository('SC\UserBundle\Entity\Enfant')->getEnfantId($request->getSession()->get('email'),$id,$year);
         
         return $this->render('SCActiviteBundle:Sortie:viewEnfant.html.twig', array('enfants'=> $enfants,'activite'=> $activite));        
         
