@@ -1,0 +1,10 @@
+
+{% extends "SCActiviteBundle:Activite:layout.html.twig" %}
+{% block title %}{{ parent() }} - Index{% endblock %}
+{% block activité_body %}
+
+    <h2> {{ activite.nomActivite }} </h2>  <h4 align="right"> Saison : {{ saison }} </h4>
+    <br/> <br/> 
+    {{ form(form) }}
+    
+{% endblock %}     
