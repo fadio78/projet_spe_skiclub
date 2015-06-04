@@ -126,7 +126,7 @@ sc_activite_viewAllStagesUser:
         email : "[^/]+"
         
 sc_activite_confirmPayment:
-    path:       /admin/activite/confirmPayment/{id}/{email}/{nomEnfant}/{prenomEnfant}/{debutStage}/{finStage}
+    path:       admin/activite/confirmPayment/{id}/{email}/{nomEnfant}/{prenomEnfant}/{debutStage}/{finStage}
     defaults:   {_controller:SCActiviteBundle:InscriptionStage:confirmPayment}
     requirements:
         id: \d+
@@ -137,7 +137,7 @@ sc_activite_confirmPayment:
         finStage: "[0-9-]+"
 
 sc_activite_deleteInscriptionStage:
-    path:       /admin/activite/deleteInscriptionStage/{id}/{email}/{nomEnfant}/{prenomEnfant}/{debutStage}/{finStage}
+    path:       admin/activite/deleteInscriptionStage/{id}/{email}/{nomEnfant}/{prenomEnfant}/{debutStage}/{finStage}
     defaults:   {_controller:SCActiviteBundle:InscriptionStage:deleteInscriptionStage}
     requirements:
         id: \d+
