@@ -25,6 +25,8 @@
 
        <th><center>Prénom</center></th>
 
+       <th><center>Activité</center></th>
+
        <th><center>Stages</center></th>
        
        <th><center>Paiement</center></th>
@@ -40,7 +42,10 @@
 
        <td><center>{{ stage.prenomEnfant}}</center></td>
 
+       <td><center>{{ stage.nomActivite}}</center></td>
+
        <td><center>{{ stage.debutStage }} au {{ stage.finStage }}</center></td>
+
        {% if  stage.prixPayeStage == 0 %}
        <td  bgcolor="#DF0101"><center></center></td>
        {% else %}
@@ -48,8 +53,9 @@
        {% endif %}
        {% if  stage.prixPayeStage == 0 %}
        <td><center><a href="{{path('sc_activite_confirmPayment', {
-            'id': stage.activite.id, 
-            'email': stage.user.email,
+            'id': stage.id,
+            'nomActivite': stage.nomActivite,
+            'email': email,
             'nomEnfant': stage.nomEnfant,
             'prenomEnfant': stage.prenomEnfant,
             'debutStage': stage.debutStage,
@@ -58,8 +64,9 @@
        <td><center>Paiement confirmé</center></td>
        {% endif %}
        <td><center><a href="{{path('sc_activite_deleteInscriptionStage', {
-            'id': stage.activite.id, 
-            'email': stage.user.email,
+            'id': stage.id,
+            'nomActivite': stage.nomActivite,
+            'email': email,
             'nomEnfant': stage.nomEnfant,
             'prenomEnfant': stage.prenomEnfant,
             'debutStage': stage.debutStage,

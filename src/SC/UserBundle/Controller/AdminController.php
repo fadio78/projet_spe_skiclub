@@ -309,9 +309,9 @@ $message = \Swift_Message::newInstance()
             $user = $em->getRepository('SC\UserBundle\Entity\User')->findOneByEmail($email);
         
             $listeInscriptionStages = $em->getRepository('SC\ActiviteBundle\Entity\InscriptionStage')
-                ->findBy(array('saison'=>$saison, 'user'=>$user));
+                ->inscriptionStageActivite($user->getEmail());
             return $this->render('SCActiviteBundle:Stage:viewAllStagesUser.html.twig',
-                    array('listeInscriptionStages' => $listeInscriptionStages));
+                    array('listeInscriptionStages' => $listeInscriptionStages, 'email'=>$email));
         }
     }
     
