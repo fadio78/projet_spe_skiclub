@@ -121,7 +121,7 @@ class LicenceController extends Controller
     
   
   
-  
+  /*
     public function deleteAction($typeLicence ,Request $request )
     {
         $session = $request->getSession();
@@ -143,7 +143,7 @@ class LicenceController extends Controller
             $listeLicences = $em->getRepository('SCLicenceBundle:Licence')->findAll();
             return $this->render('SCLicenceBundle::indexlicence.html.twig', array('listeLicences' => $listeLicences,'type' => $type));
         }    
-    }
+    }  */
     
             
             
