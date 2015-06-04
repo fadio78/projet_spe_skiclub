@@ -28,5 +28,14 @@ class EnfantRepository extends EntityRepository
         ->setParameter('email', $email);
       
   }
+  
+  public function getEnfantId($email,$id,$year) {
+        
+    $qb = $this->_em->createQuery('SELECT a.nomEnfant , a.prenomEnfant from SCUserBundle:Enfant a , SCActiviteBundle:InscriptionActivite b where a.nomEnfant = b.nomEnfant and a.prenomEnfant = b.prenomEnfant and a.userParent = b.email and b.saison = :annee and b.activite = :activite and b.email = :email ')
+                        ->setParameter('activite', $id)
+                        ->setParameter('annee', $year)    
+                        ->setParameter('email', $email);
+    return $qb->getResult();
+  }
 
 }

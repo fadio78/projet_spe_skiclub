@@ -168,16 +168,17 @@ class StageController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $activite = $em->getRepository('SC\ActiviteBundle\Entity\Activite')->find($id);
         // on verifie que les parametres sont bons
-        if (isset($activite) === false || isset($debutStage) === false || isset($finStage) === false ) {
+                $stage = $em->getRepository('SC\ActiviteBundle\Entity\Stage')
+                ->findOneBy(array('activite' =>  $activite, 'debutStage'=> $debutStage,
+                    'finStage'=>$finStage));
+        
+        if (isset($activite) === false || isset($stage) === false ) {
            $response = new Response;
            $response->setContent("Error 404: not found");
            $response->setStatusCode(Response::HTTP_NOT_FOUND);
            return $response; 
         }
-             
-        $stage = $em->getRepository('SC\ActiviteBundle\Entity\Stage')
-                ->findOneBy(array('activite' =>  $activite, 'debutStage'=> $debutStage,
-                    'finStage'=>$finStage));
+            
         
         if (isset($stage) == FALSE) {
             $listeStages = $em->getRepository('SC\ActiviteBundle\Entity\Stage')->findAll();
@@ -207,52 +208,31 @@ class StageController extends Controller {
             return $this->render('SCActiviteBundle:Stage:view.html.twig',array('listeStages' => $listeStages, 'activite' => $activite ));
         }
     }
-    
+    // debutStage, finStage les dates du stage a modifier 
     public function editAction($id, $debutStage, $finStage, Request $request)
     {
         $em = $this->getDoctrine()->getManager();
         $activite = $em->getRepository('SC\ActiviteBundle\Entity\Activite')->find($id);
-        // on verifie que les parametres sont bons
-        if (isset($activite) === false || isset($debutStage) === false || isset($finStage) === false ) {
-           $response = new Response;
-           $response->setContent("Error 404: not found");
-           $response->setStatusCode(Response::HTTP_NOT_FOUND);
-           return $response; 
-        }
+        
+        
         
         $stage = $em->getRepository('SC\ActiviteBundle\Entity\Stage')->findOneBy(
                 array('activite'=>$activite, 'debutStage'=>$debutStage, 'finStage'=> $finStage));
-        
-        $form = $this->createForm(new StageEditType(), $stage);
 
-        if ($form->handleRequest($request)->isValid()) {
-            // Inutile de persister ici, Doctrine connait déjà notre stage
-            
-            $em->flush();
-            $request->getSession()->getFlashBag()->add('info', 'Stage bien modifiée.');
-            return $this->redirect($this->generateUrl('sc_activite_viewStage', 
-                        array('id' => $stage->getActivite()->getId(), 'listeStages' => $listeStages)));
+        
+        if (isset($activite) === false || isset($stage) === false ) {
+           $response = new Response;
+           $response->setContent("Ekoijvrfjvrijvfijvoi");
+           $response->setStatusCode(Response::HTTP_NOT_FOUND);
+           return $response; 
         }
-        $debut = strtotime($debutStage);
-        $fin = strtotime($finStage);
-        return $this->render('SCActiviteBundle:Stage:edit.html.twig', array('form' 
-            => $form->createView(),'activite' => $activite, 'debutStage' => $debut,
-            'finStage' => $fin));
-    }
- 
-    public function mailStageCancelled($email, $debutStage, $finStage, $lieu) {
-            
-        $message = \Swift_Message::newInstance()                     
-                            ->setSubject('SKICLUB : Stage annulé')
-                            ->setFrom('sfr@hotmail.com')
-                            ->setTo($email)
-                            ->setBody('Bonjour, nous avons le regret de vous '
-                                    . 'annoncer que le stage prévue du '
-                                    .$debutStage.' au '.$finStage.' : '.$lieu.' '
-                                    . 'est annulé. Nous vous prions de nous excuser.'
-                                    . 'Le SKICLUB');
-                    
-        $this->get('mailer')->send($message);
+        $em->remove($stage);
+        // A FAIRE 
+        //$this->modifInscriptionStage($id, $debutStageAncien, $finStageAncien);
+        $em->flush();
+        
+        $this->addAction($id, $request);
+         
     }
     
     public function mailStageCreated($email, $debutStage, $finStage, $lieu) {
@@ -270,3 +250,63 @@ class StageController extends Controller {
     }
     
 }
+
+/*
+
+        $em = $this->getDoctrine()->getManager();
+        $saison = new Saison;
+        $year = $saison->connaitreSaison();
+        $saison = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Saison')->findOneByAnnee($year); 
+        $activite = $em->getRepository('SCActiviteBundle:Activite')->find($id);
+        $lieu = $em->getRepository('SC\ActiviteBundle\Entity\Lieu')->findOneByNomLieu($nomLieu);
+        $user = $this->getDoctrine()->getManager()
+                                            ->getRepository('SC\UserBundle\Entity\User')
+                                                ->findOneByEmail(array('email' => $request->getSession()->get('email')));        
+        
+        if (null === $activite) {
+           return $this->pageErreur("activite inconnue");
+        }
+        $newSortie = new Sortie;
+        //la sortie qui va etre modifiee
+        $sortie = $em->getRepository('SCActiviteBundle:Sortie')->findOneBy(array('dateSortie'=>$dateSortie,'activite'=>$activite,'saison'=>$saison,'lieu'=>$lieu));
+        $form = $this->get('form.factory')->create(new SortieType(), $newSortie);
+        $form->handleRequest($request);
+        
+        $newSortie->setActivite($activite);        
+        $newSortie->setSaison($saison);        
+        $newSortie->setUser($user);
+        
+        if ($form->isValid()) {
+            
+            $date = $newSortie->getDateSortie();
+            $string = $date->format('Y').'-'.$date->format('m').'-'.$date->format('d').' '.$date->format('H').':'.$date->format('i').':'.$date->format('s');    // si il ya deja une meme date -> erreur                
+            if ($this->dateExiste($string,$activite,$saison) == true) {
+                    return $this->pageErreur("Une date identique a déjà été validée : deux sorties ne peuvent avoir même date");
+                } 
+            $newSortie->setDateSortie($string);
+            $em->persist($newSortie);
+            $listLieu = $em->getRepository('SC\ActiviteBundle\Entity\Lieu')->findAll();
+
+                foreach ($listLieu as $lieu) {
+                    if ($lieu->getNomLieu() === $newSortie->getLieu()->getNomLieu()) {
+                        $newSortie->setLieu($lieu);
+                        $em->remove($sortie);
+                        $em->flush();
+                        $em->getRepository('SCActiviteBundle:InscriptionSortie')->modifSortie($id,$newSortie->getDateSortie(),$newSortie->getLieu()->getNomLieu(),$year,$dateSortie,$nomLieu);
+                        $request->getSession()->getFlashBag()->add('info', 'La sortie a bien été modifiée');
+                        return $this->redirect($this->generateUrl('sc_activite_view', array('id' => $sortie->getActivite()->getId())));                
+                    }    
+                }
+            $em->remove($sortie);    
+            $em->persist($newSortie->getLieu());
+            $em->flush();
+            $em->getRepository('SCActiviteBundle:InscriptionSortie')->modifSortie($id,$newSortie->getDateSortie(),$newSortie->getLieu()->getNomLieu(),$year,$dateSortie,$nomLieu);
+            $request->getSession()->getFlashBag()->add('info', 'Sortie bien modifiée');
+            return $this->redirect($this->generateUrl('sc_activite_view', array('id' => $activite->getId())));
+        }
+
+        return $this->render('SCActiviteBundle:Activite:edit.html.twig', array('form'   => $form->createView(),'activite' => $activite,'edit' => 1));// Je passe également l'activité à la vue si jamais elle veut l'afficher))
+    }
+
+
+ */
