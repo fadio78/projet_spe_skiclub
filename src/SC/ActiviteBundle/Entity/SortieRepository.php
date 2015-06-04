@@ -18,4 +18,14 @@ class SortieRepository extends EntityRepository
       ->where('a.activite = :idAct')
       ->setParameter('idAct', $act);
     }
+    
+    public function getSortie($id,$saison)
+    {
+    return $this->createQueryBuilder('a')
+      ->where('a.activite = :idAct')
+      ->setParameter('idAct', $id)
+      ->andWhere('a.saison = :saison')
+      ->setParameter('saison', $saison);
+    }
+    
 }

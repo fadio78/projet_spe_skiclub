@@ -92,7 +92,7 @@ class InscriptionActiviteRepository extends EntityRepository
     
     
   
-    // retourne la somme total à payer à part l'adhésion à partir d'un email donné pour la saison en cours 
+    // retourne la somme total à payer à part l'adhésion à partir d'un email donné pour la saison en cours en prenant en compte l'adhesion 
     public function getSommeApayer($email)
     {
         $somme = 0;
@@ -109,6 +109,11 @@ class InscriptionActiviteRepository extends EntityRepository
         $a = $this -> getSommeActivitesApayer($email);
         //on somme le total des licences des enfants avec la somme des prix des activités
         $somme = $somme + $a ;
+        //on enleve la remise
+        $saison = new Saison ();
+        $annee = $saison->connaitreSaison();
+        $remise = $this -> _em->getRepository('SCUserBundle:Adhesion')->findOneby(array('saison'=> $annee,'user'=>$email))->getRemise();
+        $somme =$somme - $remise;
         return $somme;
     }
     
@@ -139,6 +144,8 @@ class InscriptionActiviteRepository extends EntityRepository
         {
             $somme = $somme + ($inscri ->getActivite() -> getPrixActivite());
         }
+        
+        
         return $somme;
     }
     

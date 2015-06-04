@@ -34,14 +34,15 @@ class InscriptionStageRepository extends EntityRepository
     
     // pour un utilisateur, tous les stages  ou les enfants sont inscrits
     //return la somme
-    public function totalStage($email) {
+    public function totalStagePayé($email) {
         $saison = new Saison;
         $year = $saison->connaitreSaison();
         $qb = $this->createQueryBuilder('a');
         $qb->where('a.user = :user')
-            ->where('a.saison = :annee')
-            ->setParameter('user', $email)
-            ->setParameter('annee', $year);
+            ->andWhere('a.saison = :annee')
+                ->setParameter('user', $email)
+            ->andWhere('a.saison = :annee')
+                ->setParameter('annee', $year);
 
         $total = 0;
         $inscription = $qb->getQuery()->getResult();
@@ -50,4 +51,19 @@ class InscriptionStageRepository extends EntityRepository
         }
         return $total;
     }
+        public function totalStage($email) {
+        $total = 0;
+        $saison = new Saison ();
+        $year = $saison->connaitreSaison();
+        
+        $qb = $this->_em->createQuery('SELECT a.prixStage , a.charges from SCActiviteBundle:Stage a , SCActiviteBundle:InscriptionStage b where a.debutStage = b.debutStage and a.finStage = b.finStage and b.user = :email and a.saison = :annee ')
+                        ->setParameter('email', $email)
+                        ->setParameter('annee', $year);
+
+        $liste =$qb ->getResult();
+        foreach ($liste as $prix) {
+            $total = $total + $prix['prixStage'] +$prix['charges'] ;
+        }
+        return $total;
+       }
 }

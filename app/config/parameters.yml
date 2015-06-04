@@ -1,3 +1,4 @@
+
 # This file is auto-generated during the composer install
 parameters:
     database_driver: pdo_mysql
@@ -13,5 +14,4 @@ parameters:
     locale: en
     secret: c4b021742ace86ef5d105d22110ccb127
     database_path: null 
-
 
