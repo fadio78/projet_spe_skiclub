@@ -89,6 +89,11 @@ sc_activite_actionSortie:
     requirements:
         id: \d+    
         
+sc_activite_obtenirSortie:
+    path:      /activite/obtenirSortie/{id}
+    defaults:  { _controller: SCActiviteBundle:InscriptionSortie:obtenirSortie }
+    requirements:
+        id: \d+         
 
 
         
