@@ -35,8 +35,10 @@
         <ul class="nav nav-pills nav-stacked">
             {% if is_granted('ROLE_ADMIN') %} 
                 <li><a href="{{ path('sc_activite_homepage') }}">Gestion des activités</a></li>
+
                 <li><a href="{{ path('sc_licence_homepage')}}"> Gestion des licences</a></li>
                 <li><a href="{{ path('sc_admin_Tresorerie') }}">Trésorie</a></li>
+
             {%else%}
             <li><a href="{{ path('sc_activite_homepage') }}">Activités</a></li>
             {% endif %}

@@ -28,7 +28,7 @@
    <a href="{{ path('sc_activite_voirActivite') }}">Mes inscriptions</a>
    {%endif%}
 
-   <h3><p>
+   <p>
     {# On affiche tous les messages flash dont le nom est « info » #}
       {% for message in app.session.flashbag.get('info') %}
         <p>{{ message }}</p>
@@ -37,11 +37,11 @@
     
     {%if voirActivite is defined and voirActivite == 1 %}
         
-          Choisissez l'activité voulue :
+          Vous allez accèder à vos inscriptions, choisissez l'activité voulue :
         
           {{ form(form) }}
     {%endif%}    
   
-  </h3>
+  
 
 {% endblock %}
