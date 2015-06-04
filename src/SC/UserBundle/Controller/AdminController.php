@@ -317,26 +317,52 @@ $message = \Swift_Message::newInstance()
     public function tresorerieAction(Request $request)
     {   $em = $this->getDoctrine()->getManager();
          
-        $listUser = $em->getRepository('SCUserBundle:User')->findAll();
+        $listUser = $em->getRepository('SCUserBundle:User')->findAll();//tresorerie concernant tous les users mêmes les désactivé 
+        
         $saison =new Saison;
         $annee = $saison->connaitreSaison();
+        
         $payés = $em->getRepository('SCUserBundle:Adhesion')->findby(array('saison'=> $annee));
-        $somme = 0;
+        
+        $sommeDetteActivité = 0;
+        $sommeMontantActivité = 0;
+        $sommeDetteStage = 0;
+        $sommeMontantStage = 0;
+        
         foreach( $listUser as $user){
-          $email = $user->getUsername();
-            $dette = $em->getRepository('SCActiviteBundle:InscriptionActivite')->getSommeApayer($email);
+            $email = $user->getUsername();
             
-            $dettes[$email]= $dette;
-            $sommeDette = $somme + $dette ; 
+            $user = $em->getRepository('SCUserBundle:Adhesion')->findOneby(array('saison'=> $annee,'user'=>$email));
+            $listActivitéPayé[$email] = $user->getMontantPaye();
+            $sommeMontantActivité = $sommeMontantActivité + $user->getMontantPaye();
+            
+            $dette = $em->getRepository('SCActiviteBundle:InscriptionActivite')->getSommeApayer($email);
+            $listDetteActivité[$email]= $dette;
+            $sommeDetteActivité =$sommeDetteActivité +$dette;
+            
+            
+            $detteStage = $em->getRepository('SCActiviteBundle:InscriptionStage')->totalStage($email);
+            $listDetteStage[$email] = $detteStage;
+            $sommeDetteStage =$sommeDetteStage +$detteStage;
+                    
+            $stagePayé = $em->getRepository('SCActiviteBundle:InscriptionStage')->totalStagePayé($email);
+            $listStagePayé[$email] = $stagePayé ; 
+            $sommeMontantStage = $sommeMontantStage + $stagePayé;
+             
             
         }
         
 
         return $this->render('SCUserBundle:Admin:tresorerie.html.twig',
                 array('listUser' => $listUser,
-                     'listDette'=>$dettes,
-                    'listAdhesion'=>$payés,
-                    'sommeDette'=> $sommeDette
+                     'listDetteActivité'=>$listDetteActivité,
+                    'listActivitéPayé'=>$listActivitéPayé,
+                    'listDetteStage'=>$listDetteStage,
+                    'listStagePayé'=>$listStagePayé,
+                    'sommeMontantActivité'=> $sommeMontantActivité,
+                    'sommeDetteActivité'=>$sommeDetteActivité,
+                    'sommeMontantStage'=>$sommeMontantStage,
+                    'sommeDetteStage'=>$sommeDetteStage
                 )
                 
                 );

@@ -19,42 +19,27 @@ class LoadSortie extends AbstractFixture implements OrderedFixtureInterface
   {
     $user = $manager ->getRepository('SCUserBundle:User') ->findOneBy(array('email' => 'sfr@hotmail.com'));
     $lieux =  $manager->getRepository('SCActiviteBundle:Lieu')->findAll();
-    $saison =  $manager->getRepository('SCActiviteBundle:Saison')->findOneByAnnee(2014);
+    $listSaison =  $manager->getRepository('SCActiviteBundle:Saison')->findAll();
     $activites = $manager->getRepository('SCActiviteBundle:Activite')->findAll();
     
-    $i = 0;
     
-    foreach ($activites as $activite) {
-        foreach ($lieux as $lieu) {
-            $i =$i+1;
-            $sortie = new Sortie();
-            $sortie->setDateSortie($i.' '.$i.' '.$i);
-            $sortie->setLieu($lieu);
-            $sortie->setActivite($activite);
-            $sortie->setUser($user);
-            $sortie->setSaison($saison);
+    foreach ($listSaison as $saison){
+        foreach ($activites as $activite) {
+            foreach ($lieux as $lieu) {
+                $sortie = new Sortie();
+                $sortie->setDateSortie(rand(1,28).' '.rand(1,12).' '.$saison->getAnnee());
+                $sortie->setLieu($lieu);
+                $sortie->setActivite($activite);
+                $sortie->setUser($user);
+                $sortie->setSaison($saison);
             
             $manager->persist($sortie);
             $manager->flush();                        
+            }
         }
     }
-   $i = 0;
-   $saison =  $manager->getRepository('SCActiviteBundle:Saison')->findOneByAnnee(2015); 
-     
-    foreach ($activites as $activite) {
-        foreach ($lieux as $lieu) {
-            $i =$i+1;
-            $sortie = new Sortie();
-            $sortie->setDateSortie($i.' '.$i.' '.$i);
-            $sortie->setLieu($lieu);
-            $sortie->setActivite($activite);
-            $sortie->setUser($user);
-            $sortie->setSaison($saison);
-            
-            $manager->persist($sortie);
-            $manager->flush();                        
-        }
-    }   
+   
+   
   }
 
   public function getOrder()

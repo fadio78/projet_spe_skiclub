@@ -55,7 +55,8 @@ class InscriptionSortieController extends Controller
             return $this->pageErreur("paramètres entrés invalides");
         }
         $request->getSession()->set('sortie', $sortie);
-        $enfants = $em->getRepository('SC\UserBundle\Entity\Enfant')->findBy(array('userParent' => $parents));
+        //$enfants = $em->getRepository('SC\UserBundle\Entity\Enfant')->findBy(array('userParent' => $parents));
+        $enfants = $em->getRepository('SC\UserBundle\Entity\Enfant')->getEnfantId($request->getSession()->get('email'),$id,$year);
         
         return $this->render('SCActiviteBundle:Sortie:viewEnfant.html.twig', array('enfants'=> $enfants,'activite'=> $activite));        
         
@@ -249,8 +250,9 @@ class InscriptionSortieController extends Controller
         //liste des des inscriptions des enfants de l'utilisateur
         $mesSorties = $em->getRepository('SC\ActiviteBundle\Entity\InscriptionSortie')->findBy(array('idActivite' => $id,'emailParent'=>$request->getSession()->get('email'),'saison' => $year));
         //liste des inscrits pour la sorties demandée
-        $inscrits = $em->getRepository('SC\ActiviteBundle\Entity\InscriptionSortie')->findBy(array('idActivite' => $id,'saison' => $year,'dateSortie' => $dateSortie, 'lieu'=>$lieu));
-        
+        //$inscrits = $em->getRepository('SC\ActiviteBundle\Entity\InscriptionSortie')->findBy(array('idActivite' => $id,'saison' => $year,'dateSortie' => $dateSortie, 'lieu'=>$lieu));
+        $inscrits = $em->getRepository('SC\ActiviteBundle\Entity\InscriptionSortie')->getGroupe($id,$year,$lieu,$dateSortie);
+
         return $this->render('SCUserBundle:Security:mesSorties.html.twig', array('activite'=> $activite, 'mesSorties' => $mesSorties,'choix'=>1,'inscrits'=>$inscrits,'nomEnfant'=>$nomEnfant,'prenomEnfant' => $prenomEnfant, 'dateSortie' => $dateSortie, 'lieu'=>$lieu,'saison'=>$year));
     }
     
@@ -393,7 +395,8 @@ class InscriptionSortieController extends Controller
         if ($form->isValid()){
             $data = $form->getData();
             $sortie = $data['sortie'];
-            $inscrits = $em->getRepository('SC\ActiviteBundle\Entity\InscriptionSortie')->findBy(array('idActivite' => $id,'saison' => $year,'lieu' => $sortie->getLieu()->getNomLieu(), 'dateSortie' => $sortie->getDateSortie()));
+            //$inscrits = $em->getRepository('SC\ActiviteBundle\Entity\InscriptionSortie')->findBy(array('idActivite' => $id,'saison' => $year,'lieu' => $sortie->getLieu()->getNomLieu(), 'dateSortie' => $sortie->getDateSortie()));
+            $inscrits = $em->getRepository('SC\ActiviteBundle\Entity\InscriptionSortie')->getGroupe($id,$year,$sortie->getLieu()->getNomLieu(),$sortie->getDateSortie());
             
             return $this->render('SCActiviteBundle:Sortie:inscritSortie.html.twig', array('activite'=> $activite, 'inscrits' => $inscrits,'saison' => $year, 'sortie' => $sortie ));
         }

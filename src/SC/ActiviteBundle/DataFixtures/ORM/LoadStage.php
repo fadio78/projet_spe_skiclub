@@ -15,28 +15,31 @@ class LoadStage extends AbstractFixture implements OrderedFixtureInterface
   public function load(ObjectManager $manager)
   {
     $user = $manager ->getRepository('SCUserBundle:User') ->findOneBy(array('email' => 'sfr@hotmail.com'));
-    $activite = $manager ->getRepository('SCActiviteBundle:Activite') ->findOneByNomActivite('Ski alpin');
-    $saison =  $manager->getRepository('SCActiviteBundle:Saison')->findOneByAnnee(2014);
+    $listActivite = $manager ->getRepository('SCActiviteBundle:Activite') ->findAll();
+    $listSaison =  $manager->getRepository('SCActiviteBundle:Saison')->findAll();
     $lieu =  $manager->getRepository('SCActiviteBundle:Lieu')->findOneByNomLieu('evrest');
 
-    
-    $stage1 = new Stage();
-    $stage1 ->setActivite($activite);
-    $stage1 ->setNomStage('super Stage');
-    $stage1 ->setDebutStage('2010-01-01');
-    $stage1 ->setFinStage('2010-01-05');
-    $stage1 ->setCharges(20);
-    $stage1 ->setPrixStage(50);
-    $stage1 ->setLieu($lieu);
-    $stage1 ->setSaison($saison);
-    $stage1 ->setUser($user);
-    $manager->persist($stage1);
-    
-    
+    foreach ($listActivite as $activite) {
+        foreach ($listSaison as $saison){
+            $stage1 = new Stage();
+            $stage1 ->setActivite($activite);
+            $stage1 ->setNomStage('super Stage de '.$activite->getNomActivite());
+            $mois = rand(9,12);
+            $stage1 ->setDebutStage($saison->getAnnee().'-'.$mois.'-'.rand(1,15));
+            $stage1 ->setFinStage($saison->getAnnee().'-'.$mois.'-'.rand(16,30));
+            $stage1 ->setCharges(rand(1,99));
+            $stage1 ->setPrixStage(rand(50,199));
+            $stage1 ->setLieu($lieu);
+            $stage1 ->setSaison($saison);
+            $stage1 ->setUser($user);
+            $manager->persist($stage1);
+        }
+    }
     $manager->flush();
       
 
 
+  
   }
   public function getOrder()
   {
