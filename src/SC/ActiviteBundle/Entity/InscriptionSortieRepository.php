@@ -37,5 +37,16 @@ class InscriptionSortieRepository extends EntityRepository
 
        $query->execute();
            
-    }    
+    }
+    
+    public function getGroupe($id,$year,$lieu,$dateSortie) {
+        
+        $qb = $this->_em->createQuery('SELECT DISTINCT a.nomEnfant , a.prenomEnfant, a.participation ,b.groupe from SCActiviteBundle:InscriptionSortie a , SCActiviteBundle:InscriptionActivite b where a.idActivite = b.activite and a.saison = b.saison and b.saison = :annee and b.activite = :activite and a.nomEnfant = b.nomEnfant and a.prenomEnfant = b.prenomEnfant and a.emailParent = b.email  and a.dateSortie = :dateSortie and a.lieu = :lieu')
+            ->setParameter('activite', $id)
+            ->setParameter('annee', $year)    
+            ->setParameter('lieu', $lieu)    
+            ->setParameter('dateSortie', $dateSortie);    
+        return $qb->getResult();
+    }
+    
 }
