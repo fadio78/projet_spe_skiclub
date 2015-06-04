@@ -18,10 +18,10 @@
   <div class="container">
     <div id="header" class="jumbotron">
       <h1>SkiClub des petites rocheuses</h1>
-      <p>
+   <!--   <p>
         Ce projet est propulsé par Symfony2,
         et construit par les élèves de Ensimag.
-      </p>
+      </p>  -->
       <p>
         <a class="btn btn-primary btn-lg" href="https://scpetitesroches.wordpress.com/">
           Voir l'ancien site web»
@@ -35,12 +35,14 @@
         <ul class="nav nav-pills nav-stacked">
             {% if is_granted('ROLE_ADMIN') %} 
                 <li><a href="{{ path('sc_activite_homepage') }}">Gestion des activités</a></li>
+                <li><a href="{{ path('sc_licence_homepage')}}"> Gestion des licences</a></li>
                 <li><a href="{{ path('sc_admin_Tresorerie') }}">Trésorie</a></li>
             {%else%}
             <li><a href="{{ path('sc_activite_homepage') }}">Activités</a></li>
             {% endif %}
           {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %} 
              {% if is_granted('ROLE_ADMIN') %} 
+ 
                <li><a href="{{ path('sc_admin_homepage') }}">Gestion des utilisateurs</a></li>
              {% endif %}
             <li><a href="{{ path('sc_user_compte') }}">Mon compte</a></li>
@@ -62,7 +64,7 @@
     <hr>
 
     <footer>
-      <p>The sky's the limit © {{ 'now'|date('Y') }} and beyond.</p>
+ <!--     <p>The sky's the limit © {{ 'now'|date('Y') }} and beyond.</p>  -->
     </footer>
   </div>
   {% block javascripts %}

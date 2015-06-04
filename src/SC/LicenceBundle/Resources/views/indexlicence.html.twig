@@ -9,24 +9,24 @@
 <ul>
     
     {% for licence in listeLicences %}
-         <a href="{{ path('sc_licence_view', {'typeLicence': licence.typeLicence}) }}">
+        <h4> <a href="{{ path('sc_licence_view', {'typeLicence': licence.typeLicence}) }}">
           {{ licence.typeLicence }}
-        </a>
-    <br>
+            </a>  </h4>
+   
         
     {% endfor %}
     
     
     <br>
-    <a href="{{ path('sc_licence_add')}}">
+    <h4>  <a href="{{ path('sc_licence_add')}}">
       Ajouter une licence
-    </a>
+        </a> </h4>
       
-    <br>
+  
     
-    <a href="{{ path('sc_activite_homepage')}}">
+    <h4> <a href="{{ path('sc_activite_homepage')}}">
       Voir la liste des activités
-    </a>
+        </a> </h4>
 </ul>
     
     {% endif %}
