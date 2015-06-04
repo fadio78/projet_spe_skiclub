@@ -133,3 +133,14 @@ sc_activite_listeEnfantsInscrits:
 sc_admin_Tresorerie:
     path:     /admin/tresorerie
     defaults: { _controller: SCUserBundle:Admin:tresorerie }
+
+
+sc_affecter_groupe:
+    path:   /admin/gestionCompte/gestionEnfant/groupe/{id}/{email}/{prenomEnfant}/{nomEnfant}
+    defaults: { _controller: SCUserBundle:Admin:affecterGroupe }
+    requirements:
+        id: \d+ 
+        email: "[^/]+"
+        prenomEnfant: "[^/]+"
+        nomEnfant: "[^/]+"
+ 

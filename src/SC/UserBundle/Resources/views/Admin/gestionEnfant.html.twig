@@ -7,9 +7,19 @@
     {% for inscription in listeEnfantsInscrits %}
         
         <p>      {{ inscription.prenomEnfant }}  {{ inscription.nomEnfant }}  est inscrit à l'activité {{ inscription.activite.nomActivite }}  
-       
-        <br>
+    {% if inscription.groupe != null %}
+       au groupe {{ inscription.groupe }} 
+    {%else %}
+     
+          <form action="{{ path('sc_affecter_groupe',{'id' : inscription.activite.id ,'email': inscription.email, 'prenomEnfant': inscription.prenomEnfant , 'nomEnfant' : inscription.nomEnfant }) }}"  method="post" >
+          <label for="groupe"> Affecter un groupe:</label>
+          <input type="text" id="groupe" name="_groupe" value="" />
+          <br/>
+          <input type="submit" value="valider" />
+          </form>
+    {% endif %}
     {% endfor %}   
     
-    
+  
+ 
 {% endblock %} 
