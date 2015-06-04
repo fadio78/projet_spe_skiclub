@@ -38,10 +38,8 @@ class Enfant
     private $prenomEnfant;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="niveauSki", type="string", length=255)
-     * 
+     * @ORM\ManyToOne(targetEntity="SC\UserBundle\Entity\NiveauSki")
+     * @ORM\JoinColumn(nullable=false, name="niveau", referencedColumnName="niveau")
      * 
      */
     private $niveauSki;
@@ -109,29 +107,6 @@ class Enfant
     }
 
     /**
-     * Set niveauSki
-     *
-     * @param string $niveauSki
-     * @return Enfant
-     */
-    public function setNiveauSki($niveauSki)
-    {
-        $this->niveauSki = $niveauSki;
-
-        return $this;
-    }
-
-    /**
-     * Get niveauSki
-     *
-     * @return string 
-     */
-    public function getNiveauSki()
-    {
-        return $this->niveauSki;
-    }
-
-    /**
      * Set dateNaissance
      *
      * @param \DateTime $dateNaissance
@@ -184,5 +159,30 @@ class Enfant
     public function getPrenomNom()
     {
         return ($this -> prenomEnfant).' '.($this -> nomEnfant) ;
+    }
+
+
+
+    /**
+     * Set niveauSki
+     *
+     * @param \SC\UserBundle\Entity\NiveauSki $niveauSki
+     * @return Enfant
+     */
+    public function setNiveauSki(\SC\UserBundle\Entity\NiveauSki $niveauSki)
+    {
+        $this->niveauSki = $niveauSki;
+
+        return $this;
+    }
+
+    /**
+     * Get niveauSki
+     *
+     * @return \SC\UserBundle\Entity\NiveauSki 
+     */
+    public function getNiveauSki()
+    {
+        return $this->niveauSki;
     }
 }
