@@ -1,0 +1,50 @@
+
+{% extends "SCActiviteBundle:Activite:layout.html.twig" %}
+{% block title %}{{ parent() }} - Index{% endblock %}
+{% block activité_body %}
+
+    <h2> {{ activite.nomActivite }} </h2>  <h4 align="right"> Saison : {{ saison }} </h4>
+    <br/><br/>
+    <center> <b>Sortie : {{sortie.dateSortie }} à {{ sortie.lieu.nomLieu }} </b> </center>
+            <br/><br/>
+    
+            
+             {%if inscrits == null %} 
+                 <center><b> aucun enfant inscrit </b> </center>
+             {%else%}   
+            <sricpt>
+
+            <table border="1" cellpadding="10" cellspacing="1" width="100%" id="monTableau">
+            <tr> 
+            <th><center>Nom </center></th>
+            <th><center>Prénom</center></th>
+            <th><center>Confirmation</center></th>
+            <th><center>Groupe</center></th>
+    
+            <tr/>       
+
+            
+            
+        {%for inscrit in inscrits %}
+   
+          {#  {%if (inscrit.emailParent != app.session.get('email')) or (inscrit.emailParent == app.session.get('email') and inscrit.nomEnfant != nomEnfant and inscrit.prenomEnfant != prenomEnfant) %} #}
+                
+                <tr>     
+                    <td><center> {{ inscrit.nomEnfant }} </center></td>  
+                    <td><center> {{ inscrit.prenomEnfant }}  </center></td>  
+                
+                    {%if inscrit.participation == 1 %} 
+                       <td  bgcolor="#01DF01"><center></center></td>
+                    {%else%}
+                        <td  bgcolor="#DF0101"><center></center></td>
+                    {%endif%}
+                    <td><center> {{ inscrit.groupe }}  </center></td> 
+
+                </tr> 
+          {#  {%endif%} #}
+        {%endfor%}
+        </table>
+        {%endif%}
+        
+    
+{% endblock %}     
