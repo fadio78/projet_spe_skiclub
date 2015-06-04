@@ -1,2 +1,0 @@
-
-{ parameters: { database_driver: pdo_mysql, database_host: '127.0.0.1', database_port: null, database_name: ski_club, database_user: root, database_password: null, mailer_transport: smtp, mailer_host: 127.0.0.1, mailer_user: null, mailer_password: null, locale: en, secret: 33f70e6e11caf1cc4cf3c2aeac2cbfc0672cec82, database_path: null } }
