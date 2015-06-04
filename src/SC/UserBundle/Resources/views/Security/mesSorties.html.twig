@@ -27,6 +27,7 @@
             <th><center>Nom </center></th>
             <th><center>Prénom</center></th>
             <th><center>Confirmation</center></th>
+            <th><center>Groupe</center></th>
     
             <tr/>       
         {%for inscrit in inscrits %}
@@ -42,6 +43,8 @@
                     {%else%}
                         <td  bgcolor="#DF0101"><center></center></td>
                     {%endif%}
+                    <td><center> {{ inscrit.groupe }}  </center></td>
+                        
                 </tr> 
           {#  {%endif%} #}
         {%endfor%}
