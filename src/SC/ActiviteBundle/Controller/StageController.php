@@ -62,13 +62,6 @@ class StageController extends Controller {
         $stage = new Stage();
         $activite = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Activite')->find($id);
         
-        if (is_null($request->getSession()->get('email'))) {
-                $response = new Response;
-                $response->setContent("Vous devez vous connecter");
-                $response->setStatusCode(Response::HTTP_NOT_FOUND);
-                return $response;
-        }
-         
         if (is_null($activite)==false) {
             
             $stage = $stage->setActivite($activite);        

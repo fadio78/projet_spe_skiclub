@@ -44,7 +44,7 @@ sc_activite_deleteSortie:
         id: \d+
         
 sc_activite_addStage:
-    path:      admin/activite/addStage/{id}
+    path:      /activite/addStage/{id}
     defaults:  { _controller: SCActiviteBundle:Stage:add }
     requirements:
         id: \d+
@@ -56,7 +56,7 @@ sc_activite_viewStage:
         id: \d+ 
         
 sc_activite_deleteStage:
-    path:      admin/activite/deleteStage/{id}/{debutStage}/{finStage}
+    path:      /activite/deleteStage/{id}/{debutStage}/{finStage}
     defaults:  { _controller: SCActiviteBundle:Stage:delete}
     requirements:
         id: \d+
@@ -64,7 +64,7 @@ sc_activite_deleteStage:
         finStage: "[0-9-]+"
         
 sc_activite_editStage:
-    path:      admin/activite/editStage/{id}/{debutStage}/{finStage}
+    path:      /activite/editStage/{id}/{debutStage}/{finStage}
     defaults:  { _controller: SCActiviteBundle:Stage:edit}
     requirements:
         id: \d+
@@ -120,7 +120,7 @@ sc_activite_viewChildrenStages:
         id: \d+
 
 sc_activite_viewAllStagesUser:
-    path:      admin/activite/viewAllStagesUser/{email}
+    path:      /activite/viewAllStagesUser/{email}
     defaults:   {_controller:SCUserBundle:Admin:viewAllStagesUser}
     requirements:
         email : "[^/]+"
