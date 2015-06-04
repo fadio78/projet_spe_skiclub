@@ -14,11 +14,14 @@ use SC\ActiviteBundle\Form\voirActiviteType;
 use SC\UserBundle\Entity\User;
 use SC\UserBundle\Entity\Licence;
 use SC\ActiviteBundle\Entity\Sortie;
+use SC\ActiviteBundle\Entity\SortieRepository;
 use SC\ActiviteBundle\Entity\Lieu;
 use SC\ActiviteBundle\Entity\Saison;
 use SC\ActiviteBundle\Entity\InscriptionSortie;
 use SC\ActiviteBundle\Form\InscriptionSortieType;
 use Symfony\Component\HttpFoundation\Cookie;
+
+
 
 class InscriptionSortieController extends Controller 
 {
@@ -362,6 +365,41 @@ class InscriptionSortieController extends Controller
                                                                                             'saison'=>$saison,'lieu'=>$nomLieu));        
     
         return $sortie;
+    }
+    
+    
+    public function obtenirSortieAction($id,Request $request) {
+        
+        if ($request->getSession()->get('email') == null) {
+            return $this->pageErreur("Vous devez être connecté pour accèder à ce lien");
+        }
+        $em = $this->getDoctrine()->getManager();
+        $activite = $em->getRepository('SC\ActiviteBundle\Entity\Activite')->find($id);
+        
+        if(is_null($activite)) {
+            return $this->pageErreur("activite inconnue");
+        }
+        
+        $saison = new Saison;
+        $year = $saison->connaitreSaison();
+        $defaultData = array('message' => 'Type your message here');
+
+        $form = $this->createFormBuilder($defaultData)
+           ->add('sortie', 'entity', array('class'=> 'SC\ActiviteBundle\Entity\Sortie','multiple' => false,'expanded' => false,'required' => true,  'query_builder' => function (SortieRepository $repository) use ($id,$year) { return $repository-> 
+             getSortie($id,$year); }))
+            ->add('valider','submit')    
+            ->getForm();
+        $form->handleRequest($request);
+        if ($form->isValid()){
+            $data = $form->getData();
+            $sortie = $data['sortie'];
+            $inscrits = $em->getRepository('SC\ActiviteBundle\Entity\InscriptionSortie')->findBy(array('idActivite' => $id,'saison' => $year,'lieu' => $sortie->getLieu()->getNomLieu(), 'dateSortie' => $sortie->getDateSortie()));
+            
+            return $this->render('SCActiviteBundle:Sortie:inscritSortie.html.twig', array('activite'=> $activite, 'inscrits' => $inscrits,'saison' => $year, 'sortie' => $sortie ));
+        }
+        
+        return $this->render('SCActiviteBundle:Sortie:ListSorties.html.twig', array('form' => $form->createView(),'activite'=> $activite,'saison' => $year ));        
+        
     }
     
 }    
