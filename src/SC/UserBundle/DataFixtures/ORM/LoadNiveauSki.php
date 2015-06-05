@@ -14,7 +14,7 @@ class LoadNiveauSki extends AbstractFixture implements OrderedFixtureInterface
   public function load(ObjectManager $manager)
   {
 
-    $listNiveaux = array('débutant', 'moyen', 'expert');
+    $listNiveaux = array('Pas d\'étoile', 'Flocon', '1ère étoile','2ème étoile','3ème étoile','Etoile de bronze','Etoile d\'or');
     foreach ($listNiveaux as $niveau) 
     {
       $niveauSki = new NiveauSki();

@@ -16,7 +16,7 @@ class LoadEnfant extends AbstractFixture implements OrderedFixtureInterface
   {
     //on recupere tous les user de la BD  
     $advertRepository = $manager->getRepository('SC\UserBundle\Entity\User')->findAll();
-    $niveauSki = $manager->getRepository('SC\UserBundle\Entity\NiveauSki')->findOneBy(array('niveau' => 'expert'));
+    $niveauSki = $manager->getRepository('SC\UserBundle\Entity\NiveauSki')->findOneBy(array('niveau' => 'Pas d\'étoile'));
     
     $i = 0;
     //on va creer un nouvel enfant
