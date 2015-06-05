@@ -17,14 +17,6 @@ class LicenceController extends Controller
     
     public function indexAction(Request $request)
     {
-            // On ne sait pas combien de pages il y a
-    // Mais on sait qu'une page doit être supérieure ou égale à 1
-       /*if ($page < 1) {
-      // On déclenche une exception NotFoundHttpException, cela va afficher
-      // une page d'erreur 404 (qu'on pourra personnaliser plus tard d'ailleurs)
-            throw new NotFoundHttpException('Page "'.$page.'" inexistante.');
-        } */
-      // Ici, on récupérera la liste des activités, puis on la passera au template
         $repository = $this
           ->getDoctrine()
           ->getManager()
