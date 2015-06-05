@@ -1,0 +1,19 @@
+{% extends "SCUserBundle::layout.html.twig" %}
+{% block user_body %}
+    
+        
+  {% if is_granted('ROLE_ADMIN') %}
+  {{ include("SCUserBundle:NiveauSki:form.html.twig") }}
+
+  <p>
+    <a href="{{ path('sc_niveauSki_view', {'niveau': niveauSki.niveau}) }}" class="btn btn-default">
+      <i class="glyphicon glyphicon-chevron-left"></i>
+      Retour au niveau de ski
+    </a>
+  </p>
+  {% endif %}
+    
+    
+    
+    
+{% endblock %}

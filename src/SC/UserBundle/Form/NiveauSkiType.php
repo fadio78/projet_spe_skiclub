@@ -6,7 +6,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class EnfantType extends AbstractType
+class NiveauSkiType extends AbstractType
 {
     /**
      * @param FormBuilderInterface $builder
@@ -15,12 +15,8 @@ class EnfantType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('nomEnfant')
-            ->add('prenomEnfant')
-            ->add('niveauSki', 'entity', array('class'=> 'SCUserBundle:NiveauSki','property' => 'niveau',
-          'multiple' => false,'expanded' => false,'required' => true))
-            ->add('dateNaissance')
-            ->add('ajouter enfant', 'submit')
+            ->add('niveau')
+            ->add('enregistrer','submit');   
         ;
     }
     
@@ -30,7 +26,7 @@ class EnfantType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'SC\UserBundle\Entity\Enfant'
+            'data_class' => 'SC\UserBundle\Entity\NiveauSki'
         ));
     }
 
@@ -39,6 +35,6 @@ class EnfantType extends AbstractType
      */
     public function getName()
     {
-        return 'sc_userbundle_enfant';
+        return 'sc_userbundle_niveauski';
     }
 }

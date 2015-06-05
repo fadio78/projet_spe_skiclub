@@ -16,6 +16,7 @@ use SC\LicenceBundle\Entity\Licence;
 use SC\UserBundle\Entity\LicenceEnfant;
 use SC\ActiviteBundle\Entity\Saison;
 
+
 class AdminController extends Controller
 {
     public function indexAction(Request $request)
@@ -394,5 +395,6 @@ $message = \Swift_Message::newInstance()
         return $this->render('SCUserBundle:Admin:gestionEnfant.html.twig',array('listeEnfantsInscrits' => $listeEnfantsInscrits));
         
     }
+
 
 }

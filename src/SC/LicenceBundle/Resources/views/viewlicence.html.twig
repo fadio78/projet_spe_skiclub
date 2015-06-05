@@ -8,9 +8,9 @@
   {% if is_granted('ROLE_ADMIN') %}    
   <p>
     {# On affiche tous les messages flash dont le nom est « info » #}
-      {% for message in app.session.flashbag.get('info') %}
+    <FONT color="green">  {% for message in app.session.flashbag.get('info') %}
         <p>{{ message }}</p>
-      {% endfor %}
+      {% endfor %}</FONT>
   </p>
     
  
@@ -31,10 +31,6 @@
       <i class="glyphicon glyphicon-edit"></i>
       Modifier la licence
     </a>    
- <!--   <a href="{{ path('sc_licence_delete', {'typeLicence': licence.typeLicence}) }}" class="btn btn-danger">
-      <i class="glyphicon glyphicon-trash"></i>
-      Supprimer la licence
-    </a>    -->
   </p>
   
   {% endif %}

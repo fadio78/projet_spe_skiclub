@@ -6,9 +6,9 @@
 
   <p>
     {# On affiche tous les messages flash dont le nom est « info » #}
-      {% for message in app.session.flashbag.get('info') %}
+    <FONT color="green">  {% for message in app.session.flashbag.get('info') %}
         <p>{{ message }}</p> 
-      {% endfor %}
+      {% endfor %} </FONT>
   </p>
 
     <center> <h2> Saison: {{ app.session.get('year') }} </h2> </center>
@@ -22,10 +22,10 @@
     {% endfor %}
         <br>
         {% if is_granted('ROLE_ADMIN') %}
-            <h4>   <a href="{{ path('sc_activite_add')}}">
-          Ajouter une activité
-                </a> <h4/>
-          
+            <a href="{{ path('sc_activite_add')}}" class="btn btn-default">
+               <i class="glyphicon glyphicon-plus-sign"></i>
+            Ajouter une activité
+            </a>
         {% endif %}
         
                    
