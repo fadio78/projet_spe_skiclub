@@ -194,10 +194,10 @@ class InscriptionStageController extends Controller
                                 ->validationPayment($prixTotal, $activite, $user, $nomEnfant, $prenomEnfant, $debutStage, $finStage);
         
         $listeInscriptionStages = $em->getRepository('SC\ActiviteBundle\Entity\InscriptionStage')
-                ->findBy(array('saison'=>$saison, 'user'=>$user));
+                ->inscriptionStageActivite($user->getEmail());
         
         $request->getSession()->getFlashBag()->add('info', 'Paiement confirmé');
-        return $this->render('SCActiviteBundle:Stage:viewAllStagesUser.html.twig', array('listeInscriptionStages'=>$listeInscriptionStages));
+        return $this->render('SCActiviteBundle:Stage:viewAllStagesUser.html.twig', array('listeInscriptionStages'=>$listeInscriptionStages, 'email'=>$email));
     }
     
     public function deleteInscriptionStageAction($id, $email, $nomEnfant, $prenomEnfant, $debutStage, $finStage, Request $request) {
@@ -221,10 +221,10 @@ class InscriptionStageController extends Controller
         $em->flush();
         
         $listeInscriptionStages = $em->getRepository('SC\ActiviteBundle\Entity\InscriptionStage')
-                ->findBy(array('saison'=>$saison, 'user'=>$user));
+                ->inscriptionStageActivite($user->getEmail());
         
         $request->getSession()->getFlashBag()->add('info', 'Inscription supprimée');
-        return $this->render('SCActiviteBundle:Stage:viewAllStagesUser.html.twig', array('listeInscriptionStages'=>$listeInscriptionStages));
+        return $this->render('SCActiviteBundle:Stage:viewAllStagesUser.html.twig', array('listeInscriptionStages'=>$listeInscriptionStages, 'email'=>$email));
         
     }
 }

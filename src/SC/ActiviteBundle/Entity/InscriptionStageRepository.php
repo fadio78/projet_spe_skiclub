@@ -51,6 +51,21 @@ class InscriptionStageRepository extends EntityRepository
         }
         return $total;
     }
+    
+    // jointure entre activite et inscriptionStage
+    public function inscriptionStageActivite($email) {
+        
+        $saison = new Saison;
+        $year = $saison->connaitreSaison();
+        
+        $qb = $this->_em->createQuery('SELECT i.nomEnfant, i.prenomEnfant, i.debutStage,'
+                . 'i.finStage, i.prixPayeStage, a.id, a.nomActivite FROM SCActiviteBundle:InscriptionStage i'
+                . ', SCActiviteBundle:Activite a WHERE a.id = i.activite AND i.saison =:saison AND i.user =:email')
+                ->setParameter('email', $email)
+                ->setParameter('saison', $year);
+        
+        return $qb->getResult();
+    }
         public function totalStage($email) {
         $total = 0;
         $saison = new Saison ();
