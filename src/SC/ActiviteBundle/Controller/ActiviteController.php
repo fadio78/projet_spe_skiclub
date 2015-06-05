@@ -301,7 +301,7 @@ class ActiviteController extends Controller
         }
     }
     
-    /** fonction qui envoie des mails à tous les utilisateurs inscrits à une activité donnée en cas d'annulation */
+    // fonction qui envoie des mails à tous les utilisateurs inscrits à une activité donnée en cas d'annulation */
     public function envoiMail($id,$request)
     {
         $em = $this->getDoctrine()->getManager();
@@ -324,5 +324,21 @@ class ActiviteController extends Controller
             }
     }
     
+    // retourne les inscrits à une activité donnée
+    public function viewInscritsAction($id,Request $request)
+    {
+        $em = $this ->getDoctrine() ->getManager();
+        $season = new Saison;
+        $year = $season->connaitreSaison();
+        $saison = $em -> getRepository('SCActiviteBundle:Saison') -> find($year);
+        $repository = $em ->getRepository('SCActiviteBundle:Activite');
+        $activite = $repository->find($id); 
+        if (null === $activite) {
+          throw new NotFoundHttpException("L'activité d'id ".$id." n'existe pas.");
+        }
+        $repository = $em -> getRepository('SCActiviteBundle:InscriptionActivite');
+        $listeInscrits = $repository -> findAll(array('activite' => $activite, 'saison' => $saison ));
+        return $this->render('SCActiviteBundle:Activite:viewAllActiviteUser.html.twig', array('listeInscrits' => $listeInscrits));
+    }
 
 }

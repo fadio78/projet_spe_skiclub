@@ -3,7 +3,7 @@
 namespace SC\ActiviteBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-
+use SC\UserBundle\Entity\Enfant;
 /**
  * InscriptionActivite
  *
@@ -229,4 +229,5 @@ class InscriptionActivite
     {
         return $this->groupe;
     }
+
 }

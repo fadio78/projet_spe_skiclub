@@ -36,6 +36,10 @@
       <i class="glyphicon glyphicon-plus-sign"></i>
       Inscription 
     </a>
+    <a href="{{ path('sc_activite_viewAllActiviteUser', {'id': activite.id}) }}" class="btn btn-default">
+      <i class="glyphicon glyphicon-edit"></i>
+      Voir les inscriptions à l'activité
+    </a>
     {% endif %}
     {% if is_granted('ROLE_ADMIN') %}
     <a href="{{ path('sc_activite_edit', {'id': activite.id}) }}" class="btn btn-default">

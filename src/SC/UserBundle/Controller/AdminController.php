@@ -216,13 +216,22 @@ class AdminController extends Controller
     // récupère la liste des inscrits à une activité de la saison en cours
     public function gestionEnfantAction($email)
     {
-        $repository = $this
-          ->getDoctrine()
-          ->getManager()
-          ->getRepository('SCActiviteBundle:InscriptionActivite');
+        $niveauSki = null;
+        $em =  $this ->getDoctrine() ->getManager();
+        $repository = $em ->getRepository('SCActiviteBundle:InscriptionActivite');
 
-        $listeEnfantsInscrits = $repository -> listeDeMesInscriptions($email);   
-        return $this->render('SCUserBundle:Admin:gestionEnfant.html.twig',array('listeEnfantsInscrits' => $listeEnfantsInscrits));
+        $listeEnfantsInscrits = $repository -> listeDeMesInscriptions($email); 
+        $repository = $em -> getRepository('SCUserBundle:User');
+        $user = $repository ->find($email);
+        $repository = $em -> getRepository('SCUserBundle:Enfant');
+        // pour chaque enfant inscrit à l'activité, on récupère son niveau de ski
+        foreach ( $listeEnfantsInscrits as $inscrit )
+        {
+            $enfant = $repository ->findOneBy(array('userParent' => $user,'prenomEnfant' => $inscrit -> getPrenomEnfant(),'nomEnfant' => $inscrit -> getNomEnfant()));
+            $niveauSki[$inscrit->getPrenomEnfant().$inscrit->getNomEnfant()] = $enfant -> getNiveauSki() -> getNiveau();
+            
+        }
+        return $this->render('SCUserBundle:Admin:gestionEnfant.html.twig',array('listeEnfantsInscrits' => $listeEnfantsInscrits,'niveauSki' => $niveauSki));
         
     }
 
@@ -372,6 +381,7 @@ $message = \Swift_Message::newInstance()
     
     public function affecterGroupeAction($id,$email,$prenomEnfant,$nomEnfant,Request $request)
     {
+        $niveauSki = null;
         $em = $this ->getDoctrine() ->getManager();
         $activite = $em->getRepository('SC\ActiviteBundle\Entity\Activite')->find($id);
         if (null === $activite) {
@@ -392,7 +402,18 @@ $message = \Swift_Message::newInstance()
         $enfantInscrit -> setGroupe($groupe);
         $em -> flush();
         $listeEnfantsInscrits = $repository -> listeDeMesInscriptions($email);
-        return $this->render('SCUserBundle:Admin:gestionEnfant.html.twig',array('listeEnfantsInscrits' => $listeEnfantsInscrits));
+        
+        $repository = $em -> getRepository('SCUserBundle:User');
+        $user = $repository ->find($email);
+        $repository = $em -> getRepository('SCUserBundle:Enfant');
+        // pour chaque enfant inscrit à l'activité, on récupère son niveau de ski
+        foreach ( $listeEnfantsInscrits as $inscrit )
+        {
+            $enfant = $repository ->findOneBy(array('userParent' => $user,'prenomEnfant' => $inscrit -> getPrenomEnfant(),'nomEnfant' => $inscrit -> getNomEnfant()));
+            $niveauSki[$inscrit->getPrenomEnfant().$inscrit->getNomEnfant()] = $enfant -> getNiveauSki() -> getNiveau();
+            
+        }
+        return $this->render('SCUserBundle:Admin:gestionEnfant.html.twig',array('listeEnfantsInscrits' => $listeEnfantsInscrits,'niveauSki' => $niveauSki));
         
     }
 

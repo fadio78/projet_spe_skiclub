@@ -3,16 +3,18 @@
 {% extends "SCUserBundle::layout.html.twig" %}
 
 {% block user_body %}
-
+    
+    <p>
+    {# On affiche tous les messages flash dont le nom est « info » #}
+      <FONT color="green">{% for message in app.session.flashbag.get('info') %}
+        <p>{{ message }}</p> 
+      {% endfor %}</FONT>
+    </p>
+     
+  <h3> Mon compte: </h3>
 <p><b> Adresse e-mail</b> : {{app.session.get('email')}}</p>
 
-     <p>
-    {# On affiche tous les messages flash dont le nom est « info » #}
-      {% for message in app.session.flashbag.get('info') %}
-        <p>{{ message }}</p>
-      {% endfor %}
-  </p>
-     
+
 
 
     <h4><a href="{{ path('sc_user_compteEnfant') }}">Gestion des enfants</a><h4/>
