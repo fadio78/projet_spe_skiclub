@@ -43,13 +43,6 @@ class LoadUser extends AbstractFixture implements OrderedFixtureInterface
       $i = $i+1;
       $user->setIsActive(1);
       $user->setIsPrimaire(1);
-      
-     
-      
-      
-      // On définit uniquement le role ROLE_USER qui est le role de base
-     // $user->setRoles(array('ROLE_USER'));
-
       // On le persiste
       $manager->persist($user);
     }
