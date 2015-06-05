@@ -55,13 +55,22 @@ class NiveauSkiController extends Controller
         $form->handleRequest($request);
             if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $em->persist($niveauSki);
-            $em->flush();
-            $request->getSession()->getFlashBag()->add('info', 'niveau ski bien enregistrée');
-            return $this->redirect($this->generateUrl('sc_niveauSki_view', array('niveau' => $niveauSki->getNiveau())));
+            $repository = $em ->getRepository('SCUserBundle:NiveauSki');
+            $niveauExiste = $repository ->findOneBy(array('niveau' => $niveauSki ->getNiveau()));
+            if ($niveauExiste == null)
+            {
+                $em->persist($niveauSki);
+                $em->flush();
+                $request->getSession()->getFlashBag()->add('info', 'niveau ski bien enregistrée');
+                return $this->redirect($this->generateUrl('sc_niveauSki_view', array('niveau' => $niveauSki->getNiveau())));
+            }
+            else
+            {
+                $request->getSession()->getFlashBag()->add('info', 'niveau ski existe déjà');
+                return $this->render('SCUserBundle:NiveauSki:add.html.twig', array('form' => $form->createView()));
+            }
         }
-        return $this->render('SCUserBundle:NiveauSki:add.html.twig', array('form' => $form->createView()
-        ));
+        return $this->render('SCUserBundle:NiveauSki:add.html.twig', array('form' => $form->createView()));
         
     }
 
@@ -77,9 +86,19 @@ class NiveauSkiController extends Controller
         $form = $this->createForm(new NiveauSkiEditType(), $niveauSki);
 
         if ($form->handleRequest($request)->isValid()) {
-            $em->flush();
-            $request->getSession()->getFlashBag()->add('info', 'NiveauSki bien modifiée.');
-            return $this->redirect($this->generateUrl('sc_niveauSki_view', array('niveau' => $niveauSki->getNiveau())));
+            $repository = $em ->getRepository('SCUserBundle:NiveauSki');
+            $niveauExiste = $repository ->findOneBy(array('niveau' => $niveauSki ->getNiveau()));
+            if ($niveauExiste == null)
+            {
+                $em->flush();
+                $request->getSession()->getFlashBag()->add('info', 'NiveauSki bien modifiée.');
+                return $this->redirect($this->generateUrl('sc_niveauSki_view', array('niveau' => $niveauSki->getNiveau())));
+            }
+            else
+            {
+                $request->getSession()->getFlashBag()->add('info', 'niveau ski existe déjà');
+                return $this->render('SCUserBundle:NiveauSki:add.html.twig', array('form' => $form->createView()));
+            }
         }
         return $this->render('SCUserBundle:NiveauSki:edit.html.twig', array('form'   => $form->createView(),'niveauSki' => $niveauSki));
     }

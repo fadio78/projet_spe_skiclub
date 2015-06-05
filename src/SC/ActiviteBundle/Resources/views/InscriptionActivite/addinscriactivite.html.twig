@@ -6,11 +6,8 @@
 
 
 {% block activité_body %}
+    {% if is_granted('ROLE_ADMIN') %}
   {{ include("SCActiviteBundle:InscriptionActivite:forminscriactivite.html.twig") }}
- 
-
-
-
   <p>
     {# On affiche tous les messages flash dont le nom est « info » #}
       {% for message in app.session.flashbag.get('info') %}
@@ -23,5 +20,7 @@
       <i class="glyphicon glyphicon-chevron-left"></i>
       Retour à la liste
     </a>
+    {% endif %}
+ 
   
 {% endblock %} 

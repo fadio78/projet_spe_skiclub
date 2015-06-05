@@ -10,10 +10,13 @@
     
    {% if is_granted('ROLE_ADMIN') %}
    <p> Si la licence de l'activité n'existe pas ci-dessous veuillez d'abord la créer </p> 
-    <a href="{{ path('sc_licence_add')}}">
+    <a href="{{ path('sc_licence_add')}}"class="btn btn-default">
+      <i class="glyphicon glyphicon-plus-sign"></i>
       Ajouter une licence
     </a>
   {{ include("SCActiviteBundle:Activite:form.html.twig") }}
   {% endif %}
  
 {% endblock %} 
+
+
