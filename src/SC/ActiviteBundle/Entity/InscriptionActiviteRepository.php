@@ -67,30 +67,6 @@ class InscriptionActiviteRepository extends EntityRepository
         }
         return $somme;
     } 
-    
-    // retourne la somme des licence à payer à partir d'un enfant donné  pour la saison en cours
-/*    public function getSommeLicencesApayer($email,$prenom,$nom)
-    {
-        $somme = 0;
-        $saison = new Saison ();
-        $year = $saison->connaitreSaison(); 
-        $qb = $this->_em->createQuery('SELECT  distinct c.typeLicence , c.prixLicence from SCActiviteBundle:InscriptionActivite a Left JOIN  SCActiviteBundle:Activite b WITH (a.activite =b.id ) Left join SCLicenceBundle:Licence c WITH (b.licence= c.typeLicence) WHERE a.email =:email and a.prenomEnfant =:prenom and a.nomEnfant =:nom and a.saison =:annee')
-                        ->setParameter('email', $email)
-                        ->setParameter('prenom', $prenom)
-                        ->setParameter('nom', $nom)
-                        ->setParameter('annee', $year);
-
-        $liste =$qb ->getResult();
-        $longueur = count($liste);
-        foreach( $liste as $l)
-        {
-          $somme = $somme + $l['prixLicence'] ;
-        }
-        return $somme;
-    
-    } */
-    
-    
   
     // retourne la somme total à payer à part l'adhésion à partir d'un email donné pour la saison en cours en prenant en compte l'adhesions 
     public function getSommeApayer($email)

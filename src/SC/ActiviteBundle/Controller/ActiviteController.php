@@ -99,25 +99,31 @@ class ActiviteController extends Controller
             $form->handleRequest($request);
             // On vérifie que les valeurs entrées sont correctes
             if ($form->isValid()) {
+                $em = $this->getDoctrine()->getManager();
                 $saison = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Saison')->find($year);
+                $activitesSaison = $saison -> getActivites();
+                foreach ($activitesSaison   as $activiteSaison)
+                {   
+                    //on vérifie si l'activité n'existe pas déjà cette saison
+                    if ($activiteSaison ->getNomActivite() == $activite -> getNomActivite())
+                    {
+                        $request->getSession()->getFlashBag()->add('info', 'Activité déjà existante');
+                        return $this->render('SCActiviteBundle:Activite:add.html.twig', array('form' => $form->createView()));
+                        
+                    }
+                }
                 $saison -> addActivite($activite);
-
-            // On l'enregistre notre objet $activite dans la base de données, par exemple
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($activite);
-            $em->flush();
-            $request->getSession()->getFlashBag()->add('info', 'Activité bien enregistrée');
-            // On redirige vers la page de visualisation de l'activité nouvellement créée
-            return $this->redirect($this->generateUrl('sc_activite_view', array('id' => $activite->getId())));
-        }
+                // On l'enregistre notre objet $activite dans la base de données, par exemple
+                $em->persist($activite);
+                $em->flush();
+                $request->getSession()->getFlashBag()->add('info', 'Activité bien enregistrée');
+                // On redirige vers la page de visualisation de l'activité nouvellement créée
+                return $this->redirect($this->generateUrl('sc_activite_view', array('id' => $activite->getId())));
+                }
         // À ce stade, le formulaire n'est pas valide car :
         // - Soit la requête est de type GET, donc l'admin vient d'arriver sur la page et veut voir le formulaire
         // - Soit la requête est de type POST, mais le formulaire contient des valeurs invalides, donc on l'affiche de nouveau
-        return $this->render('SCActiviteBundle:Activite:add.html.twig', array('form' => $form->createView()
-        ));
-        
-         
-    
+        return $this->render('SCActiviteBundle:Activite:add.html.twig', array('form' => $form->createView()));
     }
   
  
