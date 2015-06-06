@@ -3,10 +3,12 @@
 
     <h4>Activite : {{ activite.getNomactivite }}  <div align="right"> Saison : {{ saison }}</div></h4><br/> 
   
+    <p> Voici les inscriptions de vos enfants, pour l'activité {{ activite.getNomactivite }}<br/> En cliquant sur un des enfants vous pourrez annuler ou confirmer sa participation et vous obtiendrez egalement un rapel des autres enfants inscrits <p>
+    <br/>
     {% for sortie in mesSorties %}
         
-        {{ sortie.dateSortie }} à {{ sortie.lieu }} :
-        <a href="{{path('sc_inscription_getChoix', {'id': activite.id,'dateSortie' : sortie.dateSortie  , 'lieu': sortie.lieu,'nomEnfant': sortie.nomEnfant,'prenomEnfant': sortie.prenomEnfant }) }}"> 
+        {{ sortie.dateSortie }} à  {{ sortie.nomLieu }} :
+        <a href="{{path('sc_inscription_getChoix', {'id': activite.id,'dateSortie' : sortie.dateSortie  , 'lieu': sortie.nomLieu,'nomEnfant': sortie.nomEnfant,'prenomEnfant': sortie.prenomEnfant }) }}"> 
         {{ sortie.nomEnfant }} </a> {{sortie.participation}} <br/>
         
         
@@ -19,7 +21,7 @@
     <br/>
     <br/>
     {%if choix is defined and choix == 1 %}
-        Vous pouvez confirmer ou annuler la participation de {{ prenomEnfant }} à la sortie : {{ dateSortie }} à {{ lieu }} <br/>
+        <center>Vous pouvez confirmer ou annuler la participation de {{ prenomEnfant }} à la sortie :</center><br/><br/> <center><b>{{ dateSortie }} à {{ lieu }} </b></center><br/>
         Pour rappel voici les inscrits <br/> <br/>
 
         <table border="1" cellpadding="10" cellspacing="1" width="100%">
@@ -52,11 +54,11 @@
      <br/>
      <br/>
      <br/>     
-    <a href="{{path('sc_inscription_validation', { 'id': activite.id,'dateSortie' : dateSortie  , 'lieu': lieu,'nomEnfant': nomEnfant,'prenomEnfant': prenomEnfant }) }}" class="btn btn-default">
+    <a href="{{path('sc_inscription_validation', { 'id': activite.id,'dateSortie' : dateSortie  ,'nomEnfant': nomEnfant,'prenomEnfant': prenomEnfant }) }}" class="btn btn-default">
         <i class="glyphicon glyphicon-edit"></i>
             Je valide cette sortie  
     </a> 
-    <a href="{{path('sc_inscription_annulation', { 'id': activite.id,'dateSortie' : dateSortie  , 'lieu': lieu,'nomEnfant': nomEnfant,'prenomEnfant': prenomEnfant }) }}" class="btn btn-default">
+    <a href="{{path('sc_inscription_annulation', { 'id': activite.id,'dateSortie' : dateSortie  ,'nomEnfant': nomEnfant,'prenomEnfant': prenomEnfant }) }}" class="btn btn-default">
         <i class="glyphicon glyphicon-edit"></i>
             J'annule ma participation  
     </a>

@@ -106,7 +106,7 @@ class SortieController extends Controller
         
     }
     
-    //permet d'afficher toutes les sorties pour l'activite id sur la saison en cours
+    //permet d'afficher toutes les sorties pour l'activite id sur la saison en cours-> inutilisee
     public function voirSortieAction($id) {
                    
         $saison = new Saison;
@@ -128,7 +128,7 @@ class SortieController extends Controller
     }
     
     //supprime une sortie de l'activite id, la date est passée dans l'url
-    public function deleteSortieAction($id, Request $request, $dateSortie, $lieu) {
+    public function deleteSortieAction($id, Request $request, $dateSortie/*, $lieu*/) {
         
         
         if ($request->getSession()->get('email') == null) {
@@ -139,13 +139,13 @@ class SortieController extends Controller
         $saison = new Saison;
         $year = $saison->connaitreSaison();
         $saison = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Saison')->findOneByAnnee($year);
-        $nomLieu = $em->getRepository('SC\ActiviteBundle\Entity\Lieu')->findOneByNomLieu($lieu);
+        //$nomLieu = $em->getRepository('SC\ActiviteBundle\Entity\Lieu')->findOneByNomLieu($lieu);
         $activite = $em->getRepository('SC\ActiviteBundle\Entity\Activite')->find($id);
         $sortie = $em->getRepository('SC\ActiviteBundle\Entity\Sortie')
-                                                        ->findOneBy(array('dateSortie' => $dateSortie,'activite' =>  $activite, 'dateSortie'=>$dateSortie,'lieu'=>$nomLieu,'saison'=>$saison));
+                                                        ->findOneBy(array('dateSortie' => $dateSortie,'activite' =>  $activite /*,'dateSortie'=>$dateSortie,'lieu'=>$nomLieu*/,'saison'=>$saison));
         //au cas ou les paramètres seraient modifiés à la main par quelqu'un
         
-        if (is_null($activite)==true OR is_null($lieu)) {
+        if (is_null($activite)==true /*OR is_null($lieu)*/) {
             return $this->pageErreur("l'activité demandée n'existe pas ou le lieu n'est pas reference");
         }
         if (isset($sortie)==FALSE) {
@@ -154,7 +154,7 @@ class SortieController extends Controller
         }
         else {
             
-            $this->estInscrit($sortie->getDateSortie(),$id,$lieu);
+            $this->estInscrit($sortie->getDateSortie(),$id,/*$lieu*/$sortie->getLieu()->getNomLieu());
             $em->remove($sortie);
             $em->flush();
             $request->getSession()->getFlashBag()->add('info', 'La sortie a bien été supprimée, et un mail a été envoyé aux personnes inscrites');
@@ -223,7 +223,7 @@ class SortieController extends Controller
         
     }
     
-    public function editSortieAction($id, Request $request,$dateSortie,$nomLieu)
+    public function editSortieAction($id, Request $request,$dateSortie/*,$nomLieu*/)
     {
         if ($request->getSession()->get('email') == null) {
             return $this->pageErreur("Vous devez être connecté pour accèder à ce lien");
@@ -234,7 +234,7 @@ class SortieController extends Controller
         $year = $saison->connaitreSaison();
         $saison = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Saison')->findOneByAnnee($year); 
         $activite = $em->getRepository('SCActiviteBundle:Activite')->find($id);
-        $lieu = $em->getRepository('SC\ActiviteBundle\Entity\Lieu')->findOneByNomLieu($nomLieu);
+        //$lieu = $em->getRepository('SC\ActiviteBundle\Entity\Lieu')->findOneByNomLieu($nomLieu);
         $user = $this->getDoctrine()->getManager()
                                             ->getRepository('SC\UserBundle\Entity\User')
                                                 ->findOneByEmail(array('email' => $request->getSession()->get('email')));        
@@ -244,7 +244,7 @@ class SortieController extends Controller
         }
         $newSortie = new Sortie;
         //la sortie qui va etre modifiee
-        $sortie = $em->getRepository('SCActiviteBundle:Sortie')->findOneBy(array('dateSortie'=>$dateSortie,'activite'=>$activite,'saison'=>$saison,'lieu'=>$lieu));
+        $sortie = $em->getRepository('SCActiviteBundle:Sortie')->findOneBy(array('dateSortie'=>$dateSortie,'activite'=>$activite,'saison'=>$saison/*,'lieu'=>$lieu*/));
         $form = $this->get('form.factory')->create(new SortieType(), $newSortie);
         $form->handleRequest($request);
         
@@ -268,7 +268,7 @@ class SortieController extends Controller
                         $newSortie->setLieu($lieu);
                         $em->remove($sortie);
                         $em->flush();
-                        $em->getRepository('SCActiviteBundle:InscriptionSortie')->modifSortie($id,$newSortie->getDateSortie(),$newSortie->getLieu()->getNomLieu(),$year,$dateSortie,$nomLieu);
+                        $em->getRepository('SCActiviteBundle:InscriptionSortie')->modifSortie($id,$newSortie->getDateSortie()/*,$newSortie->getLieu()->getNomLieu()*/,$year,$dateSortie/*,$nomLieu*/);
                         $request->getSession()->getFlashBag()->add('info', 'La sortie a bien été modifiée');
                         return $this->redirect($this->generateUrl('sc_activite_view', array('id' => $sortie->getActivite()->getId())));                
                     }    
@@ -276,7 +276,7 @@ class SortieController extends Controller
             $em->remove($sortie);    
             $em->persist($newSortie->getLieu());
             $em->flush();
-            $em->getRepository('SCActiviteBundle:InscriptionSortie')->modifSortie($id,$newSortie->getDateSortie(),$newSortie->getLieu()->getNomLieu(),$year,$dateSortie,$nomLieu);
+            $em->getRepository('SCActiviteBundle:InscriptionSortie')->modifSortie($id,$newSortie->getDateSortie()/*,$newSortie->getLieu()->getNomLieu()*/,$year,$dateSortie/*,$nomLieu*/);
             $request->getSession()->getFlashBag()->add('info', 'Sortie bien modifiée');
             return $this->redirect($this->generateUrl('sc_activite_view', array('id' => $activite->getId())));
         }

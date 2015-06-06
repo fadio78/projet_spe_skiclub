@@ -114,12 +114,12 @@ sc_inscription_getChoix:
     requirements:
         id: \d+
 sc_inscription_validation:
-    path:      /validation/{id}/{dateSortie}/{lieu}/{nomEnfant}/{prenomEnfant}
+    path:      /validation/{id}/{dateSortie}/{nomEnfant}/{prenomEnfant}
     defaults:  { _controller: SCActiviteBundle:InscriptionSortie:validation }
     requirements:
         id: \d+
 sc_inscription_annulation:
-    path:      /annulation/{id}/{dateSortie}/{lieu}/{nomEnfant}/{prenomEnfant}
+    path:      /annulation/{id}/{dateSortie}/{nomEnfant}/{prenomEnfant}
     defaults:  { _controller: SCActiviteBundle:InscriptionSortie:annulation }
     requirements:
         id: \d+        

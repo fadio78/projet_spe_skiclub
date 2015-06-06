@@ -13,4 +13,13 @@ use Doctrine\ORM\EntityRepository;
 class SaisonRepository extends EntityRepository
 {
 
+      public function getActiviteSaison($saison) {
+      return $this->createQueryBuilder('a')
+                    ->where('a.annee = :annee')
+                    ->setParameter('annee', $saison);
+    
+
+              
+    }   
+    
 }

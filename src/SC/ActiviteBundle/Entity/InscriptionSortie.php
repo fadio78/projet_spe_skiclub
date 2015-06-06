@@ -32,12 +32,7 @@ class InscriptionSortie
      */   
     private $idActivite;  
     
-    /**
-     * @var string
-     * @ORM\Column(name="lieu", type="string",length=30)
-     * @ORM\Id
-     */    
-    private $lieu;     
+    
     
     /**
      * @var string
@@ -230,28 +225,6 @@ class InscriptionSortie
         return $this->saison;
     }
 
-    /**
-     * Set lieu
-     *
-     * @param string $lieu
-     * @return InscriptionSortie
-     */
-    public function setLieu($lieu)
-    {
-        $this->lieu = $lieu;
-
-        return $this;
-    }
-
-    /**
-     * Get lieu
-     *
-     * @return string 
-     */
-    public function getLieu()
-    {
-        return $this->lieu;
-    }
     
     public function __toString() {
         return $this->nomEnfant.' '.$this->dateSortie.' '.$this->lieu;
