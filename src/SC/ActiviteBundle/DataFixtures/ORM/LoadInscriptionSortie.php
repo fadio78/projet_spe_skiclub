@@ -32,7 +32,7 @@ class LoadInscriptionSortie extends AbstractFixture implements OrderedFixtureInt
                     $inscription = new InscriptionSortie();
                     $inscription ->setDateSortie($sortie->getDateSortie());
                     $inscription ->setIdActivite($sortie->getActivite()->getId());
-                    $inscription ->setLieu($sortie->getLieu()->getNomLieu());
+                    //$inscription ->setLieu($sortie->getLieu()->getNomLieu());
                     $inscription ->setEmailParent($inscriptionActivite->getEmail());
                     $inscription ->setNomEnfant($inscriptionActivite->getNomEnfant());
                     $inscription ->setPrenomEnfant($inscriptionActivite->getPrenomEnfant());
