@@ -417,5 +417,9 @@ $message = \Swift_Message::newInstance()
         
     }
 
-
+    public function contactAction(Request $request)
+    {       
+        return $this->render('SCUserBundle:Admin:contact.html.twig');
+    }
+   
 }

@@ -164,3 +164,7 @@ sc_niveauSki_edit:
     defaults:  { _controller: SCUserBundle:NiveauSki:edit}
     requirements:
         typeLicence : "[^/]+"
+
+sc_contact:
+    path: /contact
+    defaults:  { _controller: SCUserBundle:Admin:contact}

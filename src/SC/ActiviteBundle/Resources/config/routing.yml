@@ -160,8 +160,10 @@ sc_activite_editSortie:
 
 sc_activite_viewAllActiviteUser:
     path:      /activite/view/{id}/inscrits
-    defaults:  { _controller: SCActiviteBundle:Activite:viewInscrits }
+    defaults:  { _controller: SCActiviteBundle:Activite:viewInscrits}
     requirements:
         id: \d+
+
+
     
     

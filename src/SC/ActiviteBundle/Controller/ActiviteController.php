@@ -324,7 +324,7 @@ class ActiviteController extends Controller
             }
     }
     
-    // retourne les inscrits à une activité donnée
+    // retourne les inscrits à une activité donnée pour la saison en cours
     public function viewInscritsAction($id,Request $request)
     {
         $em = $this ->getDoctrine() ->getManager();
@@ -340,5 +340,7 @@ class ActiviteController extends Controller
         $listeInscrits = $repository -> findAll(array('activite' => $activite, 'saison' => $saison ));
         return $this->render('SCActiviteBundle:Activite:viewAllActiviteUser.html.twig', array('listeInscrits' => $listeInscrits));
     }
+    
+
 
 }
