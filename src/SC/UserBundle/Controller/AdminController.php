@@ -213,7 +213,7 @@ class AdminController extends Controller
         
     }
     
-    // récupère la liste des inscrits à une activité de la saison en cours
+    // récupère la liste des inscrits à une activité de la saison en cours pour un email donné
     public function gestionEnfantAction($email)
     {
         $niveauSki = null;
@@ -228,7 +228,7 @@ class AdminController extends Controller
         foreach ( $listeEnfantsInscrits as $inscrit )
         {
             $enfant = $repository ->findOneBy(array('userParent' => $user,'prenomEnfant' => $inscrit -> getPrenomEnfant(),'nomEnfant' => $inscrit -> getNomEnfant()));
-            $niveauSki[$inscrit->getPrenomEnfant().$inscrit->getNomEnfant()] = $enfant -> getNiveauSki() -> getNiveau();
+            $niveauSki[$email.$inscrit->getPrenomEnfant().$inscrit->getNomEnfant()] = $enfant -> getNiveauSki() -> getNiveau();
             
         }
         return $this->render('SCUserBundle:Admin:gestionEnfant.html.twig',array('listeEnfantsInscrits' => $listeEnfantsInscrits,'niveauSki' => $niveauSki));
@@ -410,7 +410,7 @@ $message = \Swift_Message::newInstance()
         foreach ( $listeEnfantsInscrits as $inscrit )
         {
             $enfant = $repository ->findOneBy(array('userParent' => $user,'prenomEnfant' => $inscrit -> getPrenomEnfant(),'nomEnfant' => $inscrit -> getNomEnfant()));
-            $niveauSki[$inscrit->getPrenomEnfant().$inscrit->getNomEnfant()] = $enfant -> getNiveauSki() -> getNiveau();
+            $niveauSki[$email.$inscrit->getPrenomEnfant().$inscrit->getNomEnfant()] = $enfant -> getNiveauSki() -> getNiveau();
             
         }
         return $this->render('SCUserBundle:Admin:gestionEnfant.html.twig',array('listeEnfantsInscrits' => $listeEnfantsInscrits,'niveauSki' => $niveauSki));

@@ -16,8 +16,10 @@
   <h2>{{ activite.nomActivite }}</h2>
     <br>
     </br>
-    <h4> <FONT color="blue"> Vous pouvez soit s'inscrire à l'activité et participer aux sorties prévues, soit s'inscire aux stages soit les deux.</FONT> </h4>
- 
+    <h4> <FONT color="blue"> Vous pouvez soit s'inscrire à l'activité et participer aux sorties prévues, soit s'inscire aux stages soit les deux.
+         {% if   app.session.get('email')    == null  %}
+         Mais tout d'abord enregistrez vous. 
+          {% endif %} </FONT> </h4>
   <ul> {{ activite.description }} </ul>
 
     

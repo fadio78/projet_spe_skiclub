@@ -23,7 +23,7 @@
        <td><center>{{ inscription.nomEnfant }}</center></td>
 
        <td><center>{{ inscription.activite.nomActivite }}</center></td>
-       <td><center>{{ niveauSki[inscription.prenomEnfant  ~ inscription.nomEnfant ] }}</center></td>
+       <td><center>{{ niveauSki[inscription.email  ~ inscription.prenomEnfant  ~ inscription.nomEnfant ] }}</center></td>
        <td><center> {% if inscription.groupe != null %}
                      {{ inscription.groupe }}
                         <form action="{{ path('sc_affecter_groupe',{'id' : inscription.activite.id ,'email': inscription.email, 'prenomEnfant': inscription.prenomEnfant , 'nomEnfant' : inscription.nomEnfant }) }}"  method="post" >
