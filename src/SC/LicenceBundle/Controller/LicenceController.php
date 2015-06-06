@@ -17,23 +17,12 @@ class LicenceController extends Controller
     
     public function indexAction(Request $request)
     {
-            // On ne sait pas combien de pages il y a
-    // Mais on sait qu'une page doit être supérieure ou égale à 1
-       /*if ($page < 1) {
-      // On déclenche une exception NotFoundHttpException, cela va afficher
-      // une page d'erreur 404 (qu'on pourra personnaliser plus tard d'ailleurs)
-            throw new NotFoundHttpException('Page "'.$page.'" inexistante.');
-        } */
-      // Ici, on récupérera la liste des activités, puis on la passera au template
         $repository = $this
           ->getDoctrine()
           ->getManager()
           ->getRepository('SCLicenceBundle:Licence');
         $listeLicences = $repository->findAll(); 
-        $session = $request->getSession();
-        $type = $session->get('type');
-        
-        return $this->render('SCLicenceBundle::indexlicence.html.twig',array('listeLicences' => $listeLicences ,'type' => $type ));
+        return $this->render('SCLicenceBundle::indexlicence.html.twig',array('listeLicences' => $listeLicences));
         
     }
     
@@ -42,8 +31,6 @@ class LicenceController extends Controller
         
     public function viewAction($typeLicence,Request $request)
     {
-        $session = $request->getSession();
-        $type = $session->get('type');
         // Ici, on récupérera la licence correspondant à typeLicence
         $repository = $this
           ->getDoctrine()
@@ -55,7 +42,7 @@ class LicenceController extends Controller
           throw new NotFoundHttpException("La licence de type ".$typeLicence." n'existe pas.");
         }
         
-        return $this->render('SCLicenceBundle::viewlicence.html.twig', array('licence' => $licence,'type' => $type));
+        return $this->render('SCLicenceBundle::viewlicence.html.twig', array('licence' => $licence));
     }
     
     
@@ -63,9 +50,6 @@ class LicenceController extends Controller
     
     public function addAction(Request $request)
     {
-
-        $session = $request->getSession();
-        $type = $session->get('type');
         // On crée un objet Licence
         $licence = new Licence();
         $form = $this->get('form.factory')->create(new LicenceType(), $licence);
@@ -73,29 +57,32 @@ class LicenceController extends Controller
         // À partir de maintenant, la variable $licence contient les valeurs entrées dans le formulaire par l'e visiteur l'admin
         $form->handleRequest($request);
         // On vérifie que les valeurs entrées sont correctes
-        if ($form->isValid()) {
+        if ($form->isValid())
+        {
         // On l'enregistre notre objet $licence dans la base de données, par exemple
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($licence);
-        $em->flush();
-        $request->getSession()->getFlashBag()->add('info', 'Licence bien enregistrée');
-        // On redirige vers la page de visualisation de la licence nouvellement créée
-        return $this->redirect($this->generateUrl('sc_licence_view', array('typeLicence' => $licence->getTypeLicence(),'type' => $type)));
+            $em = $this->getDoctrine()->getManager();
+            $repository = $em ->getRepository('SCLicenceBundle:Licence');
+            $licenceExiste = $repository ->findOneBy(array('typeLicence' => $licence ->getTypeLicence()));
+            if ($licenceExiste == null)
+            {
+                $em->persist($licence);
+                $em->flush();
+                $request->getSession()->getFlashBag()->add('info', 'Licence bien enregistrée');
+                // On redirige vers la page de visualisation de la licence nouvellement créée
+                return $this->redirect($this->generateUrl('sc_licence_view', array('typeLicence' => $licence->getTypeLicence())));
+            }
+            else
+            {
+                $request->getSession()->getFlashBag()->add('info', 'licence existe déjà');
+                return $this->render('SCLicenceBundle::addlicence.html.twig', array('form' => $form->createView()));
+            }
         }
-        // À ce stade, le formulaire n'est pas valide car :
-        // - Soit la requête est de type GET, donc l'admin vient d'arriver sur la page et veut voir le formulaire
-        // - Soit la requête est de type POST, mais le formulaire contient des valeurs invalides, donc on l'affiche de nouveau
-        return $this->render('SCLicenceBundle::addlicence.html.twig', array(
-        'form' => $form->createView(),'type' => $type
-        ));
+        return $this->render('SCLicenceBundle::addlicence.html.twig', array('form' => $form->createView()));
         
     }
     
     public function editAction($typeLicence , Request $request)
     {
-        
-        $session = $request->getSession();
-        $type = $session->get('type');
         $em = $this->getDoctrine()->getManager();
 
         // On récupère la licence de type typeLicence
@@ -109,48 +96,12 @@ class LicenceController extends Controller
 
         if ($form->handleRequest($request)->isValid()) {
         // Inutile de persister ici, Doctrine connait déjà notre licence
-        $em->flush();
+                $em->flush();
+                $request->getSession()->getFlashBag()->add('info', 'Licence bien modifiée.');
+                return $this->redirect($this->generateUrl('sc_licence_view', array('typeLicence' => $licence->getTypeLicence())));
 
-        $request->getSession()->getFlashBag()->add('info', 'Licence bien modifiée.');
-
-          return $this->redirect($this->generateUrl('sc_licence_view', array('typeLicence' => $licence->getTypeLicence())));
         }
 
-        return $this->render('SCLicenceBundle::editlicence.html.twig', array('form'   => $form->createView(),'licence' => $licence, 'type' =>$type ));
-    }
-    
-  
-  
-  /*
-    public function deleteAction($typeLicence ,Request $request )
-    {
-        $session = $request->getSession();
-        $type = $session->get('type');
-        //on recupere l'entity manager
-        $em = $this->getDoctrine()->getManager();
-        $repository = $em->getRepository('SCLicenceBundle:Licence');
-        //on recupere la licence
-        $licence = $repository -> find( $typeLicence);
-        
-        //si n'existe pas -> message d'erreur
-        if (is_null($licence)) {
-            // erreur a lance
-            //return new Response('probleme cette licence nexiste pas');
-        }
-        else {
-            $em->remove($licence);
-            $em->flush();
-            $listeLicences = $em->getRepository('SCLicenceBundle:Licence')->findAll();
-            return $this->render('SCLicenceBundle::indexlicence.html.twig', array('listeLicences' => $listeLicences,'type' => $type));
-        }    
-    }  */
-    
-            
-            
-            
-            
-            
-            
-            
-           
+        return $this->render('SCLicenceBundle::editlicence.html.twig', array('form'   => $form->createView(),'licence' => $licence));
+    }           
 }

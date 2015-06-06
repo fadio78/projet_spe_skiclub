@@ -16,17 +16,18 @@ class LoadEnfant extends AbstractFixture implements OrderedFixtureInterface
   {
     //on recupere tous les user de la BD  
     $advertRepository = $manager->getRepository('SC\UserBundle\Entity\User')->findAll();
+    $niveauSki = $manager->getRepository('SC\UserBundle\Entity\NiveauSki')->findOneBy(array('niveau' => 'Pas d\'étoile'));
+    
     $i = 0;
     //on va creer un nouvel enfant
     foreach ($advertRepository as $client) {
         $i = $i+1;
         $enfant = new Enfant;
-        $enfant->setDateNaissance(new \DateTime("2012-07-08")); 
-        $enfant->setNiveauSki('bon'); 
+        $enfant->setDateNaissance(new \DateTime("2012-07-08"));  
         $enfant->setNomEnfant('nomEnfant'.$i); 
         $enfant->setPrenomEnfant('prenomEnfant'.$i);
         $enfant->setUserParent($client);
-        
+        $enfant->setNiveauSki($niveauSki);
         //ajout dans la base
         $manager->persist($enfant);
     }
@@ -35,7 +36,7 @@ class LoadEnfant extends AbstractFixture implements OrderedFixtureInterface
         $i = $i+1;
         $enfant = new Enfant;
         $enfant->setDateNaissance(new \DateTime("2012-07-08")); 
-        $enfant->setNiveauSki('bon'); 
+        $enfant->setNiveauSki($niveauSki); 
         $enfant->setNomEnfant('nomEnfant'.$i); 
         $enfant->setPrenomEnfant('prenomEnfant'.$i);
         $enfant->setUserParent($client);

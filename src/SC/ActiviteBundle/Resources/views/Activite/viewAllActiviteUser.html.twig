@@ -1,0 +1,38 @@
+{# src/SC/ActiviteBundle/Resources/views/Activite/viewAllActiviteUser.html.twig #}
+{% extends "SCActiviteBundle:Activite:layout.html.twig" %}
+{% block title %}{{ parent() }} - Index{% endblock %}
+{% block activité_body %}
+    
+  
+    
+    <h3>Liste des inscrits à l'activité</h3>
+    <br/>
+
+    
+<table border="1" cellpadding="10" cellspacing="1" width="100%">
+   <tr>
+
+       <th><center>Nom</center></th>
+      <th><center>Prénom</center></th>
+       <th><center>Groupe</center></th>
+
+
+   </tr>
+
+   {% for inscrit in listeInscrits %}
+   <tr>
+
+       <td><center>{{ inscrit.nomEnfant }}</center></td>
+
+       <td><center>{{ inscrit.prenomEnfant}}</center></td>
+
+       <td><center>{{ inscrit.groupe }}</center></td>
+
+
+
+   </tr>
+   {% endfor %}
+   
+</table>
+ 
+{% endblock %}

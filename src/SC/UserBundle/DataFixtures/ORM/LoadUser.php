@@ -14,7 +14,7 @@ class LoadUser extends AbstractFixture implements OrderedFixtureInterface
   public function load(ObjectManager $manager)
   {
     // Les noms d'utilisateurs à créer
-    $listNames = array('sgbd@hotmail.com', 'test@hotmail.com', 'sfr@hotmail.com');
+    $listNames = array('sgbd@hotmail.com', 'test@hotmail.com', 'sfr@hotmail.com','dupont@gmail.com','bob@gmail.com','alice@gmail.com','john@gmail.com');
     $i = 0;
     foreach ($listNames as $name) {
       // On crée l'utilisateur
@@ -43,13 +43,6 @@ class LoadUser extends AbstractFixture implements OrderedFixtureInterface
       $i = $i+1;
       $user->setIsActive(1);
       $user->setIsPrimaire(1);
-      
-     
-      
-      
-      // On définit uniquement le role ROLE_USER qui est le role de base
-     // $user->setRoles(array('ROLE_USER'));
-
       // On le persiste
       $manager->persist($user);
     }

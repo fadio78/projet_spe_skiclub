@@ -3,23 +3,46 @@
 
 {% block user_body %}
 
-    
-    {% for inscription in listeEnfantsInscrits %}
-        
-        <p>      {{ inscription.prenomEnfant }}  {{ inscription.nomEnfant }}  est inscrit à l'activité {{ inscription.activite.nomActivite }}  
-    {% if inscription.groupe != null %}
-       au groupe {{ inscription.groupe }} 
-    {%else %}
-     
-          <form action="{{ path('sc_affecter_groupe',{'id' : inscription.activite.id ,'email': inscription.email, 'prenomEnfant': inscription.prenomEnfant , 'nomEnfant' : inscription.nomEnfant }) }}"  method="post" >
-          <label for="groupe"> Affecter un groupe:</label>
-          <input type="text" id="groupe" name="_groupe" value="" />
-          <br/>
-          <input type="submit" value="valider" />
-          </form>
-    {% endif %}
-    {% endfor %}   
-    
-  
- 
+<table border="1" cellpadding="10" cellspacing="1" width="100%">
+   <tr>
+
+       <th><center>Nom</center></th>
+       <th><center>Prénom</center></th>
+       <th><center>Activité</center></th>
+       <th><center>Niveau ski</center></th>
+       <th><center>Groupe</center></th>
+
+
+   </tr>
+   
+   {% for inscription in listeEnfantsInscrits %}
+   <tr>
+
+       <td><center>{{ inscription.prenomEnfant }}</center></td>
+
+       <td><center>{{ inscription.nomEnfant }}</center></td>
+
+       <td><center>{{ inscription.activite.nomActivite }}</center></td>
+       <td><center>{{ niveauSki[inscription.email  ~ inscription.prenomEnfant  ~ inscription.nomEnfant ] }}</center></td>
+       <td><center> {% if inscription.groupe != null %}
+                     {{ inscription.groupe }}
+                        <form action="{{ path('sc_affecter_groupe',{'id' : inscription.activite.id ,'email': inscription.email, 'prenomEnfant': inscription.prenomEnfant , 'nomEnfant' : inscription.nomEnfant }) }}"  method="post" >
+                        <label for="groupe"> Modifier le groupe:</label>
+                        <input type="text" id="groupe" name="_groupe" value="" />
+                        <input type="submit" value="valider" />
+                        </form>    </center></td>
+                    {%else %}
+                        <form action="{{ path('sc_affecter_groupe',{'id' : inscription.activite.id ,'email': inscription.email, 'prenomEnfant': inscription.prenomEnfant , 'nomEnfant' : inscription.nomEnfant }) }}"  method="post" >
+                        <label for="groupe"> Affecter un groupe:</label>
+                        <input type="text" id="groupe" name="_groupe" value="" />
+                        <input type="submit" value="valider" />
+                        </form>   
+                    {% endif %}
+
+   </tr>
+   {% endfor %}
+   
+</table>
+
+
 {% endblock %} 

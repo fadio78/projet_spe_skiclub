@@ -17,7 +17,8 @@ class EnfantType extends AbstractType
         $builder
             ->add('nomEnfant')
             ->add('prenomEnfant')
-            ->add('niveauSki')
+            ->add('niveauSki', 'entity', array('class'=> 'SCUserBundle:NiveauSki','property' => 'niveau',
+          'multiple' => false,'expanded' => false,'required' => true))
             ->add('dateNaissance')
             ->add('ajouter enfant', 'submit')
         ;

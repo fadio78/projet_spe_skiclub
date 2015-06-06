@@ -1,0 +1,55 @@
+{% extends "SCUserBundle::layout.html.twig" %}
+{% block user_body %}
+
+    
+  {% if is_granted('ROLE_ADMIN') %}    
+  <p>
+    {# On affiche tous les messages flash dont le nom est « info » #}
+    <FONT color="green">  {% for message in app.session.flashbag.get('info') %}
+        <p>{{ message }}</p>
+      {% endfor %}</FONT>
+  </p>
+    
+ 
+
+ 
+  <ul> Le niveau de ski:{{ niveauSki.niveau }} </ul>
+  <p>
+    <a href="{{ path('sc_niveauSki_homepage') }}" class="btn btn-default">
+      <i class="glyphicon glyphicon-chevron-left"></i>
+      Retour à la liste
+    </a>
+    <a href="{{ path('sc_niveauSki_edit', {'niveau': niveauSki.niveau}) }}" class="btn btn-default">
+      <i class="glyphicon glyphicon-edit"></i>
+      Modifier le niveau de ski
+    </a>    
+  </p>
+  
+  {% endif %} 
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+{% endblock %} 

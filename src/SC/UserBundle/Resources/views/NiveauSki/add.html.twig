@@ -1,0 +1,15 @@
+{% extends "SCUserBundle::layout.html.twig" %}
+{% block user_body %}
+   {% if is_granted('ROLE_ADMIN') %}
+    <p>
+    {# On affiche tous les messages flash dont le nom est « info » #}
+      {% for message in app.session.flashbag.get('info') %}
+        <FONT COLOR="red" > <p>{{ message }}</p> </FONT>
+      {% endfor %}
+  </p>
+
+  {{ include("SCUserBundle:NiveauSki:form.html.twig") }}
+  {{ form(form) }}
+  {% endif %}
+
+{% endblock %}

@@ -144,3 +144,23 @@ sc_affecter_groupe:
         prenomEnfant: "[^/]+"
         nomEnfant: "[^/]+"
  
+
+sc_niveauSki_homepage:
+    path:     /admin/niveauSki/{page}
+    defaults: { _controller: SCUserBundle:NiveauSki:index, page: 1 }    
+    requirements:
+        page: \d* 
+
+sc_niveauSki_view:
+    path:      /admin/niveauSki/view/{niveau}
+    defaults:  { _controller: SCUserBundle:NiveauSki:view }
+    requirements:
+        typeLicence : "[^/]+"
+sc_niveauSki_add:
+    path:      /admin/niveauSki/add
+    defaults:  { _controller: SCUserBundle:NiveauSki:add }
+sc_niveauSki_edit:
+    path:      /admin/niveauSki/edit/{niveau}
+    defaults:  { _controller: SCUserBundle:NiveauSki:edit}
+    requirements:
+        typeLicence : "[^/]+"

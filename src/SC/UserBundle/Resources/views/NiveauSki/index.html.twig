@@ -1,0 +1,28 @@
+{% extends "SCUserBundle::layout.html.twig" %}
+{% block user_body %}
+
+
+    {% if is_granted('ROLE_ADMIN') %}
+  
+<ul>
+    
+    {% for niveauSki in listeNiveauSki%}
+        <h4> <a href="{{ path('sc_niveauSki_view', {'niveau': niveauSki.niveau}) }}">
+          {{ niveauSki.niveau }}
+            </a>  </h4>
+   
+        
+    {% endfor %}
+    
+ 
+       <a href="{{ path('sc_niveauSki_add')}}" class="btn btn-default">
+           <i class="glyphicon glyphicon-plus-sign"></i>
+          Ajouter un niveau de ski
+       </a>
+    {% endif %}
+</ul>
+
+
+
+
+{% endblock %} 

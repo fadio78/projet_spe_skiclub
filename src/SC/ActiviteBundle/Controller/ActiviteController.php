@@ -44,14 +44,6 @@ class ActiviteController extends Controller
             $em->persist($saison);
             $em->flush();
         }
-
-    // On ne sait pas combien de pages il y a
-    // Mais on sait qu'une page doit être supérieure ou égale à 1
-       /*if ($page < 1) {
-      // On déclenche une exception NotFoundHttpException, cela va afficher
-      // une page d'erreur 404 (qu'on pourra personnaliser plus tard d'ailleurs)
-            throw new NotFoundHttpException('Page "'.$page.'" inexistante.');
-        } */
       // Ici, on récupérera la liste des activités d'une saison donnée, puis on la passera au template
 
         $listeActivites =$saison -> getActivites();        
@@ -107,25 +99,31 @@ class ActiviteController extends Controller
             $form->handleRequest($request);
             // On vérifie que les valeurs entrées sont correctes
             if ($form->isValid()) {
+                $em = $this->getDoctrine()->getManager();
                 $saison = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Saison')->find($year);
+                $activitesSaison = $saison -> getActivites();
+                foreach ($activitesSaison   as $activiteSaison)
+                {   
+                    //on vérifie si l'activité n'existe pas déjà cette saison
+                    if ($activiteSaison ->getNomActivite() == $activite -> getNomActivite())
+                    {
+                        $request->getSession()->getFlashBag()->add('info', 'Activité déjà existante');
+                        return $this->render('SCActiviteBundle:Activite:add.html.twig', array('form' => $form->createView()));
+                        
+                    }
+                }
                 $saison -> addActivite($activite);
-
-            // On l'enregistre notre objet $activite dans la base de données, par exemple
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($activite);
-            $em->flush();
-            $request->getSession()->getFlashBag()->add('info', 'Activité bien enregistrée');
-            // On redirige vers la page de visualisation de l'activité nouvellement créée
-            return $this->redirect($this->generateUrl('sc_activite_view', array('id' => $activite->getId())));
-        }
+                // On l'enregistre notre objet $activite dans la base de données, par exemple
+                $em->persist($activite);
+                $em->flush();
+                $request->getSession()->getFlashBag()->add('info', 'Activité bien enregistrée');
+                // On redirige vers la page de visualisation de l'activité nouvellement créée
+                return $this->redirect($this->generateUrl('sc_activite_view', array('id' => $activite->getId())));
+                }
         // À ce stade, le formulaire n'est pas valide car :
         // - Soit la requête est de type GET, donc l'admin vient d'arriver sur la page et veut voir le formulaire
         // - Soit la requête est de type POST, mais le formulaire contient des valeurs invalides, donc on l'affiche de nouveau
-        return $this->render('SCActiviteBundle:Activite:add.html.twig', array('form' => $form->createView()
-        ));
-        
-         
-    
+        return $this->render('SCActiviteBundle:Activite:add.html.twig', array('form' => $form->createView()));
     }
   
  
@@ -303,7 +301,7 @@ class ActiviteController extends Controller
         }
     }
     
-    /** fonction qui envoie des mails à tous les utilisateurs inscrits à une activité donnée en cas d'annulation */
+    // fonction qui envoie des mails à tous les utilisateurs inscrits à une activité donnée en cas d'annulation */
     public function envoiMail($id,$request)
     {
         $em = $this->getDoctrine()->getManager();
@@ -326,5 +324,21 @@ class ActiviteController extends Controller
             }
     }
     
+    // retourne les inscrits à une activité donnée
+    public function viewInscritsAction($id,Request $request)
+    {
+        $em = $this ->getDoctrine() ->getManager();
+        $season = new Saison;
+        $year = $season->connaitreSaison();
+        $saison = $em -> getRepository('SCActiviteBundle:Saison') -> find($year);
+        $repository = $em ->getRepository('SCActiviteBundle:Activite');
+        $activite = $repository->find($id); 
+        if (null === $activite) {
+          throw new NotFoundHttpException("L'activité d'id ".$id." n'existe pas.");
+        }
+        $repository = $em -> getRepository('SCActiviteBundle:InscriptionActivite');
+        $listeInscrits = $repository -> findAll(array('activite' => $activite, 'saison' => $saison ));
+        return $this->render('SCActiviteBundle:Activite:viewAllActiviteUser.html.twig', array('listeInscrits' => $listeInscrits));
+    }
 
 }

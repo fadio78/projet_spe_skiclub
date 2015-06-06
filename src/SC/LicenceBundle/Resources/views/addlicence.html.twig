@@ -6,10 +6,15 @@
 
 
 {% block licence_body %}
-    
-    
+     {% if is_granted('ROLE_ADMIN') %}
+      <p>
+    {# On affiche tous les messages flash dont le nom est « info » #}
+      {% for message in app.session.flashbag.get('info') %}
+        <FONT COLOR="red" > <p>{{ message }}</p> </FONT>
+      {% endfor %}
+  </p>
 
-    {% if is_granted('ROLE_ADMIN') %}
+   
     {{ include("SCLicenceBundle::formlicence.html.twig") }}
     {% endif %}
  
