@@ -65,6 +65,7 @@ class InscriptionActiviteController extends Controller
                 $licence = $activite -> getLicence();
                 if (isset($licence))
                 {
+                    // On ajoute une licence à l'enfant s'il ne la possède pas
                     $licenceEnfantExiste = $r -> findOneBy(array('email' => $email,'prenomEnfant' => ($enfant -> getPrenomEnfant()),'nomEnfant' => ($enfant -> getNomEnfant()),'saison' => $saison,'licence' => $activite ->getLicence() ));
                     if ($licenceEnfantExiste == null)
                     {
@@ -105,7 +106,7 @@ class InscriptionActiviteController extends Controller
         ));
     }
 
-  
+   
     public function ajoutLicenceEnfant($licence,$prenom,$nom,$saison,$email)
     {
         $em = $this ->getDoctrine() ->getManager();

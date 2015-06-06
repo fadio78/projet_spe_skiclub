@@ -125,7 +125,7 @@ class InscriptionActiviteRepository extends EntityRepository
         return $somme;
     }
     
-    // retourne la liste des inscriptions à une actvité donné d'id des saisons précédentes 
+    // retourne la liste des inscriptions à une actvité donné des saisons précédentes 
     public function  inscriptionsSaisons($id) 
     {
         $saison = new Saison ();

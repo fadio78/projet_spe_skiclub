@@ -3,8 +3,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+ <!-- <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1"> -->
+     <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
 
   <title>{% block title %}SkiClub des petites rocheuses{% endblock %}</title>
 
@@ -17,7 +22,8 @@
       'css/business-casual.css'%}
     <link rel="stylesheet" href="{{ asset_url }}" type="text/css" />
      {% endstylesheets %} 
-  {% endblock %}
+         <!-- Fonts -->
+    {% endblock %}
 </head>
 
 <body>
@@ -39,8 +45,9 @@
                 <ul class="nav navbar-nav">
                     
                       
-                    
+                <li class="active"> <a href="{{ path('sc_user_homepage') }}"> <span class="glyphicon glyphicon-home"></span> Accueil </a> </li>
             {% if is_granted('ROLE_ADMIN') %} 
+                
                 <li><a href="{{ path('sc_activite_homepage') }}">Gestion des activités</a></li>
 
                 <li><a href="{{ path('sc_licence_homepage')}}"> Gestion des licences</a></li>
@@ -112,7 +119,9 @@
                             <h2 class="brand-before">
                         <small>Bienvenue sur le site du </small>
                     </h2>
-                            <FONT color="blue">     <h1 class="brand-name"> Ski Club des Petites Roches </h1></FONT>
+                      
+                              <FONT COLOR=#01A9DB >   <h1 class="brand-name">  <strong> Ski Club des Petites Roches  </strong></h1> </FONT> 
+                   
                     <hr class="tagline-divider">
                 </div>
             </div>
