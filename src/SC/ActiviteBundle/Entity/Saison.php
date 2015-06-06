@@ -104,7 +104,7 @@ class Saison
         $date = new \DateTime();
         $annee = $date->format('Y');
         $mois = $date->format('m');
-
+        //return 2015;
         if ($mois > 8) {
             return $annee;
         }
@@ -113,6 +113,14 @@ class Saison
         }
     }    
 
+    public function __toString() {
+        $res ='';
+        foreach($this->activites as $act) {
+        $res = $res.' '.$act->getNomActivite();
+        }
+        return $res;
+        /*return $this->activites[0]->ge.' '.$this->activites[0];*/
+    }
 
 
 }

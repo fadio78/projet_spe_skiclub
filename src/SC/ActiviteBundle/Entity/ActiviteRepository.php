@@ -3,7 +3,8 @@
 namespace SC\ActiviteBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
-
+use SC\ActiviteBundle\Entity\Saison;
+use SC\ActiviteBundle\Entity\SaisonRepository;
 /**
  * ActiviteRepository
  *
@@ -12,6 +13,16 @@ use Doctrine\ORM\EntityRepository;
  */
 class ActiviteRepository extends EntityRepository
 {
+    public function getActiviteSaison($saison) {
+      return $this->createQueryBuilder('a')
+                    ->leftJoin('a.id','activites_saisons')
+                    ->addSelect('activites_saisons')
+                    ->where('a.annee = :annee')
+                    ->setParameter('annee', $saison);
+    
+
+              
+    }               
 
 }
 

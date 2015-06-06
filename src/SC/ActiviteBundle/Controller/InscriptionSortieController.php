@@ -12,9 +12,11 @@ use SC\ActiviteBundle\Form\SortieType;
 use SC\ActiviteBundle\Form\ActiviteEditType;
 use SC\ActiviteBundle\Form\voirActiviteType;
 use SC\UserBundle\Entity\User;
+use SC\ActiviteBundle\Entity\SaisonRepository;
 use SC\UserBundle\Entity\Licence;
 use SC\ActiviteBundle\Entity\Sortie;
 use SC\ActiviteBundle\Entity\SortieRepository;
+use SC\ActiviteBundle\Entity\ActiviteRepository;
 use SC\ActiviteBundle\Entity\Lieu;
 use SC\ActiviteBundle\Entity\Saison;
 use SC\ActiviteBundle\Entity\InscriptionSortie;
@@ -132,7 +134,7 @@ class InscriptionSortieController extends Controller
         $inscriptionSortie->setPreNomEnfant($prenomEnfant);
         $inscriptionSortie->setParticipation(0);
         $inscriptionSortie->setSaison($year);
-        $inscriptionSortie->setLieu($sortie->getLieu()->getNomLieu());
+        //$inscriptionSortie->setLieu($sortie->getLieu()->getNomLieu());
         
         //on persist
         $em->persist($inscriptionSortie);
@@ -151,7 +153,7 @@ class InscriptionSortieController extends Controller
         $em = $this->getDoctrine()->getManager();
         $listeInscrit = $em->getRepository('SC\ActiviteBundle\Entity\InscriptionSortie')
                                 ->findOneBy(array('dateSortie'=>$sortie->getDateSortie(),'idActivite'=>$id, 
-                                        'emailParent'=>$userParent,'nomEnfant' => $nomEnfant, 'prenomEnfant'=> $prenomEnfant,'saison'=>$year,'lieu'=>$sortie->getLieu()->getNomLieu()));
+                                        'emailParent'=>$userParent,'nomEnfant' => $nomEnfant, 'prenomEnfant'=> $prenomEnfant,'saison'=>$year/*,'lieu'=>$sortie->getLieu()->getNomLieu()*/));
         if($listeInscrit == null) {
             return false;
         }
@@ -174,7 +176,7 @@ class InscriptionSortieController extends Controller
             return true;
         }
     }
-    //permet de lister les personnes inscrites aux sorties
+    //permet de lister les personnes inscrites aux sorties -> inutiliseee !
     public function inscritsAction($id,Request $request) {
         
         if ($request->getSession()->get('email') == null) {
@@ -210,11 +212,14 @@ class InscriptionSortieController extends Controller
         $em = $this->getDoctrine()->getManager();
         $saison = new Saison;
         $year = $saison->connaitreSaison();
+        $saison = $em->getRepository('SC\ActiviteBundle\Entity\Saison')->findOneByAnnee($year);
         $defaultData = array('message' => 'Type your message here');
         $parents = $em->getRepository('SC\UserBundle\Entity\User')->findOneByEmail($request->getSession()->get('email'));
         $listEnfants = $em->getRepository('SC\UserBundle\Entity\Enfant')->findBy(array('userParent' => $parents));
+        $activite = $saison->getActivites();
         $form = $this->createFormBuilder($defaultData)
-           ->add('activite', 'entity', array('class'=> 'SC\ActiviteBundle\Entity\Activite','property' => 'nomActivite', 'multiple' => false,'expanded' => false,'required' => true 
+           ->add('activite', 'entity', array('class'=> 'SC\ActiviteBundle\Entity\Activite','property' => 'nomActivite', 'multiple' => false,'expanded' => false,'required' => true //,'query_builder' => function (SaisonRepository $repository) use ($year) { return $repository-> 
+            // getActiviteSaison($year); }
             ))
             ->add('valider','submit')    
             ->getForm();
@@ -223,7 +228,8 @@ class InscriptionSortieController extends Controller
             $data = $form->getData();
             $activite = $data['activite'];
             $id = $activite->getId();
-            $mesSorties = $em->getRepository('SC\ActiviteBundle\Entity\InscriptionSortie')->findBy(array('idActivite' => $id,'emailParent'=>$request->getSession()->get('email'),'saison' => $year));
+            //$mesSorties = $em->getRepository('SC\ActiviteBundle\Entity\InscriptionSortie')->findBy(array('idActivite' => $id,'emailParent'=>$request->getSession()->get('email'),'saison' => $year));
+            $mesSorties = $em->getRepository('SC\ActiviteBundle\Entity\InscriptionSortie')->jointureSortieInscriptionSortie($id,$request->getSession()->get('email'),$year);
             
             return $this->render('SCUserBundle:Security:mesSorties.html.twig', array('activite'=> $activite, 'mesSorties' => $mesSorties,'saison' => $year ));
         }
@@ -248,16 +254,16 @@ class InscriptionSortieController extends Controller
             return $this->pageErreur("informations fournies non correctes");
         }
         //liste des des inscriptions des enfants de l'utilisateur
-        $mesSorties = $em->getRepository('SC\ActiviteBundle\Entity\InscriptionSortie')->findBy(array('idActivite' => $id,'emailParent'=>$request->getSession()->get('email'),'saison' => $year));
-        //liste des inscrits pour la sorties demandée
+        //$mesSorties = $em->getRepository('SC\ActiviteBundle\Entity\InscriptionSortie')->findBy(array('idActivite' => $id,'emailParent'=>$request->getSession()->get('email'),'saison' => $year));
+        $mesSorties = $em->getRepository('SC\ActiviteBundle\Entity\InscriptionSortie')->jointureSortieInscriptionSortie($id,$request->getSession()->get('email'),$year);        //liste des inscrits pour la sorties demandée
         //$inscrits = $em->getRepository('SC\ActiviteBundle\Entity\InscriptionSortie')->findBy(array('idActivite' => $id,'saison' => $year,'dateSortie' => $dateSortie, 'lieu'=>$lieu));
-        $inscrits = $em->getRepository('SC\ActiviteBundle\Entity\InscriptionSortie')->getGroupe($id,$year,$lieu,$dateSortie);
+        $inscrits = $em->getRepository('SC\ActiviteBundle\Entity\InscriptionSortie')->getGroupe($id,$year/*,$lieu*/,$dateSortie);
 
         return $this->render('SCUserBundle:Security:mesSorties.html.twig', array('activite'=> $activite, 'mesSorties' => $mesSorties,'choix'=>1,'inscrits'=>$inscrits,'nomEnfant'=>$nomEnfant,'prenomEnfant' => $prenomEnfant, 'dateSortie' => $dateSortie, 'lieu'=>$lieu,'saison'=>$year));
     }
     
     //met a jour la valeur participation lorsque qu'un utilisateur confirme sa participation a une sortie
-    public function validationAction($id,Request $request,$dateSortie,$lieu,$nomEnfant,$prenomEnfant) {
+    public function validationAction($id,Request $request,$dateSortie/*,$lieu*/,$nomEnfant,$prenomEnfant) {
         
         if ($request->getSession()->get('email') == null) {
             return $this->pageErreur("Vous devez être connecté pour accèder à ce lien");
@@ -265,10 +271,10 @@ class InscriptionSortieController extends Controller
         
         $em = $this->getDoctrine()->getManager();       
         //on verifie que les infos sont correctes
-        if($this->parametreValide($id, $dateSortie, $lieu) == false) {
+        if($this->parametreValide2($id, $dateSortie/*, $lieu*/) == false) {
             return $this->pageErreur("informations fournies non correctes");
         }
-        $sortie = $this->getSortie($id, $dateSortie, $lieu);        
+        $sortie = $this->getSortie($id, $dateSortie/*, $lieu*/);        
         $parents = $em->getRepository('SC\UserBundle\Entity\User')->findOneByEmail($request->getSession()->get('email'));
         //on recupere les enfants pour la vue principale
         $listEnfants = $em->getRepository('SC\UserBundle\Entity\Enfant')->findBy(array('userParent' => $parents));
@@ -276,11 +282,11 @@ class InscriptionSortieController extends Controller
         $year = $saison->connaitreSaison(); 
         //on verifie que l'enfant est bien un des fils de l'utilisateur, et qu'il est bien inscirt a la sortie
         if($this->estEnfant($nomEnfant,$prenomEnfant,$parents) == false OR $this->estInscrit($id,$sortie,$request->getSession()->get('email'),$nomEnfant,$prenomEnfant,$year) == false) {
-            return $this->pageErreur("Erreur si l'identité de l'enfant");
+            return $this->pageErreur("Erreur sur l'identité de l'enfant");
         }
         //on met a jour l'entite
         $em->getRepository('SC\ActiviteBundle\Entity\InscriptionSortie')
-                                ->confirmationParticipation($id,$dateSortie,$lieu,$nomEnfant,$prenomEnfant,$year,$request->getSession()->get('email'));
+                                ->confirmationParticipation($id,$dateSortie/*,$lieu*/,$nomEnfant,$prenomEnfant,$year,$request->getSession()->get('email'));
         $request->getSession()->getFlashBag()->add('info', 'la confirmation de votre participation a bien ete prise en compte');
          
         return $this->render('SCUserBundle:Security:monCompte.html.twig',array('listEnfants'=>$listEnfants));
@@ -301,7 +307,7 @@ class InscriptionSortieController extends Controller
     }
     
     // supprime de la table inscription sortie l'enfant pour la sortie consideree sur l'annee et l'activite
-    public function annulationAction($id,Request $request,$dateSortie,$lieu,$nomEnfant,$prenomEnfant) {
+    public function annulationAction($id,Request $request,$dateSortie/*,$lieu*/,$nomEnfant,$prenomEnfant) {
         
         if ($request->getSession()->get('email') == null) {
             return $this->pageErreur("Vous devez être connecté pour accèder à ce lien");
@@ -312,10 +318,10 @@ class InscriptionSortieController extends Controller
         $em = $this->getDoctrine()->getManager();
         $parents = $em->getRepository('SC\UserBundle\Entity\User')->findOneByEmail($request->getSession()->get('email'));          
         //on verifie que les infos sont correctes
-        if($this->parametreValide($id, $dateSortie, $lieu) == false) {
+        if($this->parametreValide2($id, $dateSortie/*, $lieu*/) == false) {
             return $this->pageErreur("informations fournies non correctes");
         }
-        $sortie = $this->getSortie($id, $dateSortie, $lieu);
+        $sortie = $this->getSortie($id, $dateSortie/*, $lieu*/);
         //on verifie que l'enfant est bien un des fils de l'utilisateur, et qu'il est bien inscirt a la sortie        
         if($this->estEnfant($nomEnfant,$prenomEnfant,$parents) == false OR $this->estInscrit($id,$sortie,$request->getSession()->get('email'),$nomEnfant,$prenomEnfant,$year) == false) {
             return $this->pageErreur("Erreur si l'identité de l'enfant");
@@ -324,7 +330,7 @@ class InscriptionSortieController extends Controller
         $listEnfants = $em->getRepository('SC\UserBundle\Entity\Enfant')->findBy(array('userParent' => $parents));        
         //on supprime de la table
         $inscription = $em->getRepository('SC\ActiviteBundle\Entity\InscriptionSortie')
-                                ->findOneBy(array('idActivite' =>$id,'dateSortie'=>$dateSortie,'lieu' => $lieu,'emailParent'=> $request->getSession()->get('email'),'nomEnfant' => $nomEnfant, 'prenomEnfant' => $prenomEnfant, 'saison' => $year));
+                                ->findOneBy(array('idActivite' =>$id,'dateSortie'=>$dateSortie/*,'lieu' => $lieu*/,'emailParent'=> $request->getSession()->get('email'),'nomEnfant' => $nomEnfant, 'prenomEnfant' => $prenomEnfant, 'saison' => $year));
         if(is_null($inscription)) {
             return $this->pageErreur("vous n'etes pas inscrit à cette sortie");
         }
@@ -345,7 +351,7 @@ class InscriptionSortieController extends Controller
         $saison = $em->getRepository('SC\ActiviteBundle\Entity\Saison')->findOneByAnnee($year);
         $lieuObjet = $em->getRepository('SC\ActiviteBundle\Entity\Lieu')->findOneByNomLieu($lieu);
         $activite = $em->getRepository('SC\ActiviteBundle\Entity\Activite')->find($id);
-        $sortie = $em->getRepository('SC\ActiviteBundle\Entity\Sortie')->findOneBy(array('lieu'=> $lieuObjet, 'activite'=>$activite,'dateSortie'=>$dateSortie));        
+        $sortie = $em->getRepository('SC\ActiviteBundle\Entity\Sortie')->findOneBy(array('saison'=> $saison, 'activite'=>$activite,'dateSortie'=>$dateSortie));        
     
         if(is_null($activite) OR is_null($lieuObjet) OR is_null($sortie)) {
             return false;
@@ -354,17 +360,37 @@ class InscriptionSortieController extends Controller
             return true;
         }
     }
+        //pour s'assurer que les parametres n'ont pas ete modifie a la main
+        public function parametreValide2($id,$dateSortie) {
+        $em = $this->getDoctrine()->getManager();
+        $saison = new Saison;
+        $year = $saison->connaitreSaison();
+        //on s'assure que les parametres n'ont pas ete changer a la main
+        $saison = $em->getRepository('SC\ActiviteBundle\Entity\Saison')->findOneByAnnee($year);
+
+        $activite = $em->getRepository('SC\ActiviteBundle\Entity\Activite')->find($id);
+        $sortie = $em->getRepository('SC\ActiviteBundle\Entity\Sortie')->findOneBy(array('saison'=> $saison, 'activite'=>$activite,'dateSortie'=>$dateSortie));        
     
-    public function getSortie($id,$dateSortie,$lieu) {
+        if(is_null($activite) OR is_null($sortie)) {
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+    
+    
+    
+    public function getSortie($id,$dateSortie/*,$lieu*/) {
         $em = $this->getDoctrine()->getManager();
         $season = new Saison;
         $year = $season->connaitreSaison();
         $activite = $em->getRepository('SC\ActiviteBundle\Entity\Activite')->find($id);
         $saison = $em->getRepository('SC\ActiviteBundle\Entity\Saison')->findOneByAnnee($year);
-        $nomLieu = $em->getRepository('SC\ActiviteBundle\Entity\Lieu')->findOneByNomLieu($lieu);
+        //$nomLieu = $em->getRepository('SC\ActiviteBundle\Entity\Lieu')->findOneByNomLieu($lieu);
         $sortie = $em->getRepository('SC\ActiviteBundle\Entity\Sortie')
                                                         ->findOneBy(array('dateSortie' => $dateSortie,'activite' =>  $activite, 
-                                                                                            'saison'=>$saison,'lieu'=>$nomLieu));        
+                                                                                            'saison'=>$saison/*,'lieu'=>$nomLieu*/));        
     
         return $sortie;
     }
@@ -396,7 +422,7 @@ class InscriptionSortieController extends Controller
             $data = $form->getData();
             $sortie = $data['sortie'];
             //$inscrits = $em->getRepository('SC\ActiviteBundle\Entity\InscriptionSortie')->findBy(array('idActivite' => $id,'saison' => $year,'lieu' => $sortie->getLieu()->getNomLieu(), 'dateSortie' => $sortie->getDateSortie()));
-            $inscrits = $em->getRepository('SC\ActiviteBundle\Entity\InscriptionSortie')->getGroupe($id,$year,$sortie->getLieu()->getNomLieu(),$sortie->getDateSortie());
+            $inscrits = $em->getRepository('SC\ActiviteBundle\Entity\InscriptionSortie')->getGroupe($id,$year/*,$sortie->getLieu()->getNomLieu()*/,$sortie->getDateSortie());
             
             return $this->render('SCActiviteBundle:Sortie:inscritSortie.html.twig', array('activite'=> $activite, 'inscrits' => $inscrits,'saison' => $year, 'sortie' => $sortie ));
         }

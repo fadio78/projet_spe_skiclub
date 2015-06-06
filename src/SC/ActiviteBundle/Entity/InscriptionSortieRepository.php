@@ -12,41 +12,57 @@ use Doctrine\ORM\EntityRepository;
  */
 class InscriptionSortieRepository extends EntityRepository
 {
-    public function confirmationParticipation($id,$dateSortie,$lieu,$nomEnfant,$prenomEnfant,$year,$email) {
-      $query = $this->_em->createQuery('UPDATE SCActiviteBundle:InscriptionSortie a SET a.participation = :takePart where a.idActivite = :id AND a.saison = :year AND a.dateSortie = :date AND a.lieu = :lieu and a.nomEnfant = :nom AND a.prenomEnfant = :prenom AND a.emailParent = :email')
+    public function confirmationParticipation($id,$dateSortie/*,$lieu*/,$nomEnfant,$prenomEnfant,$year,$email) {
+      $query = $this->_em->createQuery('UPDATE SCActiviteBundle:InscriptionSortie a SET a.participation = :takePart where a.idActivite = :id AND a.saison = :year AND a.dateSortie = :date and a.nomEnfant = :nom AND a.prenomEnfant = :prenom AND a.emailParent = :email')
                        ->setParameter('takePart', 1)
                        ->setParameter('id', $id)
                        ->setParameter('year', $year)
                        ->setParameter('date', $dateSortie)
-                       ->setParameter('lieu', $lieu)
+                       //->setParameter('lieu', $lieu)
                        ->setParameter('nom', $nomEnfant)
                        ->setParameter('prenom', $prenomEnfant)
                        ->setParameter('email', $email);
 
        $query->execute();
     }
-    public function modifSortie($id,$dateSortieNew,$lieuNew,$year,$dateSortie,$lieu) {
-      $query = $this->_em->createQuery('UPDATE SCActiviteBundle:InscriptionSortie a SET a.lieu =:nomLieuNew , a.dateSortie = :dateSortieNew where a.idActivite = :id AND a.saison = :year AND a.dateSortie = :date AND a.lieu = :lieu')
+    public function modifSortie($id,$dateSortieNew,/*$lieuNew,*/$year,$dateSortie/*,$lieu*/) {
+      $query = $this->_em->createQuery('UPDATE SCActiviteBundle:InscriptionSortie a SET a.dateSortie = :dateSortieNew where a.idActivite = :id AND a.saison = :year AND a.dateSortie = :date')
                        ->setParameter('id', $id)
                        ->setParameter('year', $year)
                        ->setParameter('date', $dateSortie)
-                       ->setParameter('lieu', $lieu)
-                       ->setParameter('dateSortieNew', $dateSortieNew)
-                       ->setParameter('nomLieuNew', $lieuNew); 
+                       //->setParameter('lieu', $lieu)
+                       ->setParameter('dateSortieNew', $dateSortieNew);
+                       //->setParameter('nomLieuNew', $lieuNew); 
 
 
        $query->execute();
            
     }
     
-    public function getGroupe($id,$year,$lieu,$dateSortie) {
+    public function getGroupe($id,$year,/*$lieu,*/$dateSortie) {
         
-        $qb = $this->_em->createQuery('SELECT DISTINCT a.nomEnfant , a.prenomEnfant, a.participation ,b.groupe from SCActiviteBundle:InscriptionSortie a , SCActiviteBundle:InscriptionActivite b where a.idActivite = b.activite and a.saison = b.saison and b.saison = :annee and b.activite = :activite and a.nomEnfant = b.nomEnfant and a.prenomEnfant = b.prenomEnfant and a.emailParent = b.email  and a.dateSortie = :dateSortie and a.lieu = :lieu')
+        $qb = $this->_em->createQuery('SELECT DISTINCT a.nomEnfant , a.prenomEnfant, a.participation ,b.groupe '
+                . 'from SCActiviteBundle:InscriptionSortie a , SCActiviteBundle:InscriptionActivite b '
+                . 'where a.idActivite = b.activite and a.saison = b.saison and b.saison = :annee and b.activite = :activite '
+                . 'and a.nomEnfant = b.nomEnfant and a.prenomEnfant = b.prenomEnfant and a.emailParent = b.email '
+                . ' and a.dateSortie = :dateSortie')
             ->setParameter('activite', $id)
             ->setParameter('annee', $year)    
-            ->setParameter('lieu', $lieu)    
+            //->setParameter('lieu', $lieu)    
             ->setParameter('dateSortie', $dateSortie);    
         return $qb->getResult();
+    }
+    
+    public function jointureSortieInscriptionSortie($id,$email,$year) {
+        
+        $qb = $this->_em->createQuery('SELECT a.nomEnfant , a.prenomEnfant, a.dateSortie, a.participation , c.nomLieu from '
+                . 'SCActiviteBundle:InscriptionSortie a , SCActiviteBundle:Sortie b, SCActiviteBundle:Lieu c where a.idActivite = b.activite and a.saison = b.saison '
+                . 'and a.dateSortie = b.dateSortie and b.lieu = c.nomLieu and b.saison = :annee and b.activite = :activite and a.emailParent = :email')
+            ->setParameter('activite', $id)
+            ->setParameter('annee', $year)    
+            ->setParameter('email', $email);    
+  
+        return $qb->getResult();        
     }
     
 }
