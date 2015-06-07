@@ -74,7 +74,7 @@ class NiveauSkiController extends Controller
         
     }
 
-    public function editAction($niveau , Request $request)
+    public function editAction($niveau,Request $request)
     {
         $em = $this->getDoctrine()->getManager();
         $niveauSki = $em->getRepository('SCUserBundle:NiveauSki')-> find ($niveau);

@@ -6,8 +6,7 @@
 
 
 {% block activité_body %}
-     {% if   app.session.get('email')    !=null  %}
-  {{ include("SCActiviteBundle:InscriptionActivite:forminscriactivite.html.twig") }}
+    
   <p>
     {# On affiche tous les messages flash dont le nom est « info » #}
       {% for message in app.session.flashbag.get('info') %}
@@ -15,6 +14,9 @@
       {% endfor %}
   </p>
   
+     {% if   app.session.get('email')    !=null  %}
+  {{ include("SCActiviteBundle:InscriptionActivite:forminscriactivite.html.twig") }}
+
   <p>
     <a href="{{ path('sc_activite_homepage') }}" class="btn btn-default">
       <i class="glyphicon glyphicon-chevron-left"></i>

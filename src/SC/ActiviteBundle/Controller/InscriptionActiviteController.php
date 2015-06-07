@@ -94,7 +94,7 @@ class InscriptionActiviteController extends Controller
     }
   
     //retourne la liste des inscriptions aux activités d'un utilisateur donné pour la saison en cours
-    public function viewInscriActiviteAction (Request $request ) 
+    public function viewInscriActiviteAction (Request $request) 
     {
         $prixLicence = null;
         $typeLicence = null;
