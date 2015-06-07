@@ -252,7 +252,7 @@ class SecurityController extends Controller
         $ema = $this->getDoctrine()->getManager();
         $ema->persist($adhesion);
         $ema->flush();
-        $request->getSession()->getFlashBag()->add('info', 'User bien enregistré');
+        $request->getSession()->getFlashBag()->add('info', 'Utilisateur bien enregistré');
         // On redirige vers la page de visualisation de l'annonce nouvellement créée
         return $this->redirect($this->generateUrl('sc_user_homepage'));
         }
@@ -299,7 +299,7 @@ class SecurityController extends Controller
         $em = $this->getDoctrine()->getManager();
         $em->persist($user);
         $em->flush();
-        $request->getSession()->getFlashBag()->add('info', 'User secondaire bien enregistré');
+        $request->getSession()->getFlashBag()->add('info', 'Utilisateur secondaire bien enregistré');
         // On redirige vers la page de visualisation de l'annonce nouvellement créée
         return $this->redirect($this->generateUrl('sc_user_compte'));
         }
