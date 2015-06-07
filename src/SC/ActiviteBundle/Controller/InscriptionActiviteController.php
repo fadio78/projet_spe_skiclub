@@ -93,16 +93,32 @@ class InscriptionActiviteController extends Controller
     
     }
   
-    
+    //retourne la liste des inscriptions aux activités d'un utilisateur donné pour la saison en cours
     public function viewInscriActiviteAction (Request $request ) 
     {
+        $prixLicence = null;
+        $typeLicence = null;
         $em = $this->getDoctrine()->getManager();
         $session = $request->getSession();
         $email = $session->get('email');
         $r = $em -> getRepository('SC\ActiviteBundle\Entity\InscriptionActivite') ;
         $listeDeMesInscriptions = $r -> listeDeMesInscriptions($email); 
         $prix = $r -> getSommeApayer($email);
-        return $this->render('SCUserBundle:Security:viewinscriptionactivite.html.twig',array('listeDeMesInscriptions' => $listeDeMesInscriptions,'prix' => $prix
+        foreach ( $listeDeMesInscriptions as $inscrit )
+        {
+            $licence = $inscrit ->getActivite() ->getLicence();
+            if ($licence == null )
+            {
+                $typeLicence[$inscrit -> getPrenomEnfant().$inscrit -> getNomEnfant().$inscrit -> getEmail().$inscrit ->getActivite()->getNomActivite().$inscrit ->getSaison() -> getAnnee()] ="";
+                $prixLicence[$inscrit -> getPrenomEnfant().$inscrit -> getNomEnfant().$inscrit -> getEmail().$inscrit ->getActivite()->getNomActivite(). $inscrit ->getSaison() -> getAnnee()] = 0;
+            }
+            else
+            {
+                $typeLicence[$inscrit -> getPrenomEnfant().$inscrit -> getNomEnfant().$inscrit -> getEmail().$inscrit ->getActivite()->getNomActivite().$inscrit ->getSaison() -> getAnnee()] = $licence-> getTypeLicence();
+                $prixLicence[$inscrit -> getPrenomEnfant().$inscrit -> getNomEnfant().$inscrit -> getEmail().$inscrit ->getActivite()->getNomActivite().$inscrit ->getSaison() -> getAnnee()] = $licence -> getPrixLicence();
+            }
+        }
+        return $this->render('SCUserBundle:Security:viewinscriptionactivite.html.twig',array('listeDeMesInscriptions' => $listeDeMesInscriptions,'prix' => $prix,'typeLicence' =>$typeLicence,'prixLicence' =>$prixLicence
         ));
     }
 

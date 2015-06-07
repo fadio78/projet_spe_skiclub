@@ -6,7 +6,7 @@
 
 
 {% block activité_body %}
-    {% if is_granted('ROLE_ADMIN') %}
+     {% if   app.session.get('email')    !=null  %}
   {{ include("SCActiviteBundle:InscriptionActivite:forminscriactivite.html.twig") }}
   <p>
     {# On affiche tous les messages flash dont le nom est « info » #}

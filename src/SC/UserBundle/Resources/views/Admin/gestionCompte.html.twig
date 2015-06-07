@@ -2,6 +2,15 @@
 
 
 {% block user_body %}
+               
+        <h3><p>
+     {# On affiche tous les messages flash dont le nom est « info » #}
+     <FONT color="green"> {% for message in app.session.flashbag.get('info') %}
+        <p>{{ message }}</p>
+      {% endfor %} </FONT>
+       </p>
+      </h3>
+
 
     
     <h4>Informations concernant le compte</h4>
@@ -67,14 +76,6 @@
       Gestion des inscriptions des stages
     </a>          
            
-           
-        <h3><p>
-     {# On affiche tous les messages flash dont le nom est « info » #}
-      {% for message in app.session.flashbag.get('info') %}
-        <p>{{ message }}</p>
-      {% endfor %}
-       </p>
-      </h3>
 
     
 {% endblock %}

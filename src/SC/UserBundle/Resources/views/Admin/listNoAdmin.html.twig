@@ -4,6 +4,13 @@
 
 
 {% block user_body %}
+     <p>
+     {# On affiche tous les messages flash dont le nom est « info » #}
+    <FONT color="green">    {% for message in app.session.flashbag.get('info') %}
+        <p>{{ message }}</p>
+      {% endfor %} </FONT>
+       </p>
+     
 
     
     <table border="1" cellpadding="10" cellspacing="1" width="100%">
@@ -39,13 +46,7 @@
     {% endfor %}
     </table> 
     
-    <h3><p>
-     {# On affiche tous les messages flash dont le nom est « info » #}
-      {% for message in app.session.flashbag.get('info') %}
-        <p>{{ message }}</p>
-      {% endfor %}
-       </p>
-      </h3>
+
     
     
 {% endblock %}

@@ -65,7 +65,7 @@ class AdminController extends Controller
           ->getRepository('SCUserBundle:User');
            
            $repository->activerCompte($email);
-        $request->getSession()->getFlashBag()->add('info', 'Compte bien activité ');
+        $request->getSession()->getFlashBag()->add('info', 'Compte bien activé ');
         
         $message = \Swift_Message::newInstance()
         
