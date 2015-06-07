@@ -11,14 +11,12 @@
       {% endfor %}</FONT>
     </p>
      
-  <h3> Mon compte: </h3>
-<p><b> Adresse e-mail</b> : {{app.session.get('email')}}</p>
+  <h3> Mon compte : </h3>
 
-
-
+    <h4><a href="{{ path('sc_user_paramCompte') }}">Paramètres du compte</a><h4/>
 
     <h4><a href="{{ path('sc_user_compteEnfant') }}">Gestion des enfants</a><h4/>
-    <h4><a href="{{ path('sc_user_paramCompte') }}">Paramètres du compte</a><h4/>
+    
 
    
  {#       {% if is_granted('ROLE_ADMIN') %}
@@ -29,7 +27,7 @@
         
 
 
-     <h4><a href="{{ path('sc_activite_listeEnfantsInscrits') }}">Liste des enfants inscrits aux activités et montant à payer</a><h4/>
+     <h4><a href="{{ path('sc_activite_listeEnfantsInscrits') }}">Vos enfants inscrits aux activités avec le montant à payer</a><h4/>
 
    {%if voirActivite is not defined %}  
        Pour  confirmer votre participation à une sortie: <br/>
