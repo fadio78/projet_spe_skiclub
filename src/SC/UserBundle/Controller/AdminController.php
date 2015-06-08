@@ -21,19 +21,6 @@ class AdminController extends Controller
 {
     public function indexAction(Request $request)
     {
-        //ajout d'une nouvelle saison si non existante 
-        $em = $this -> getDoctrine() ->getManager();
-        $season = new Saison;
-        $year = $season->connaitreSaison();
-        $request->getSession()->set('year', $year);
-        $saison = $em -> getRepository('SCActiviteBundle:Saison') -> find($year);
-        
-        if (null === $saison) {
-            $saison = new Saison();
-            $saison->setAnnee($year);
-            $em->persist($saison);
-            $em->flush();
-        }
         return $this->render('SCUserBundle:Admin:index.html.twig');
         
         
@@ -347,13 +334,6 @@ $message = \Swift_Message::newInstance()
         
         $saison =new Saison;
         $annee = $saison->connaitreSaison();
-        //ajout new saison si inexistante
-        if (null === $saison) {
-            $saison = new Saison();
-            $saison->setAnnee($annee);
-            $em->persist($saison);
-            $em->flush();
-        }
         
         $payés = $em->getRepository('SCUserBundle:Adhesion')->findby(array('saison'=> $annee));
         

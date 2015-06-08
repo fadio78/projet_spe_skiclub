@@ -123,9 +123,22 @@ class SecurityController extends Controller
         $saison = new Saison;
         $annee = $saison->connaitreSaison();
         
+        
+       
            
         $em = $this->getDoctrine()->getManager();
-     
+        // ajout de la saiosn s'il elle 'existe pas 
+        $newSaison = new Saison;
+        $year = $newSaison->connaitreSaison();
+        $request->getSession()->set('year', $year);
+        $newSaison = $em -> getRepository('SCActiviteBundle:Saison') -> find($year);
+        
+        if (null === $newSaison) {
+            $newSaison = new Saison();
+            $newSaison->setAnnee($year);
+            $em->persist($newSaison);
+            $em->flush();
+        }
         
         //on le rentre dans la table adhesion si il est pas encore inscrit 
         
