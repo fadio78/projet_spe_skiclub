@@ -168,3 +168,9 @@ sc_niveauSki_edit:
 sc_contact:
     path: /contact
     defaults:  { _controller: SCUserBundle:Admin:contact}
+
+sc_activite_mesInscr:
+    path:      /mesInscr/{id}
+    defaults:  { _controller: SCActiviteBundle:InscriptionSortie:mesInscr }
+    requirements:
+        id: \d+    

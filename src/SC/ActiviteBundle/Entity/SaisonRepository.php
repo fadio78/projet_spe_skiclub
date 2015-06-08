@@ -22,4 +22,14 @@ class SaisonRepository extends EntityRepository
               
     }   
     
+    public function getActiviteSaison2($saison) {
+      return $this->createQueryBuilder('a')
+                    ->leftJoin('a.activites', 'app')
+                        ->addSelect('app')
+                            ->where('a.annee = :annee')
+                                ->setParameter('annee', $saison);
+    
+
+              
+    }      
 }

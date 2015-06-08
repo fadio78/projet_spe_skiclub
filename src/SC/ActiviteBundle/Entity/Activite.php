@@ -184,4 +184,7 @@ class Activite
         return $this->licence;
     }
 
+    public function __toString() {
+        return $this->nomActivite;
+    }
 }

@@ -39,9 +39,11 @@
 
     {%if voirActivite is defined and voirActivite == 1 %}
         
-          Vous allez accèder à vos inscriptions, choisissez l'activité voulue :     
-          {{ form(form) }}
-    
+        <br><center> <b>Vous allez accèder à vos inscriptions, choisissez l'activité voulue : </b></center> <br/>    <br/>
+        {#  {{ form(form) }} #}
+            {%for activite in activites %}
+             <center>   <a href="{{ path('sc_activite_mesInscr' , {'id': activite.id }) }}"> {{ activite.nomActivite }} </center> </a> <br/>
+            {%endfor%}
     {%endif%}    
   
   
