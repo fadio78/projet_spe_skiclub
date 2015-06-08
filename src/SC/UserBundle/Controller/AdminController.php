@@ -397,7 +397,7 @@ $message = \Swift_Message::newInstance()
         $groupe = $_POST['_groupe'];
         $enfantInscrit = $repository -> findOneBy(array('email' => $email,'prenomEnfant' => $prenomEnfant,'nomEnfant' => $nomEnfant,'activite' => $activite, 'saison' =>$saison )) ; 
         if (null === $enfantInscrit) {
-          throw $this -> createNotFoundException("L'enfant n'existe pas ");
+          throw $this -> createNotFoundException("L'enfant ".$prenomEnfant.$nomEnfant."n/'est pas inscrit à l'activité ");
         }
         $enfantInscrit -> setGroupe($groupe);
         $em -> flush();
