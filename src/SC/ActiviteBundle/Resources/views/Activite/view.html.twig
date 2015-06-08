@@ -63,11 +63,12 @@
       <i class="glyphicon glyphicon-edit"></i>
       Sortie prévues
     </a>
+    {% if (app.session.get('email') != null) %}
     <a href="{{ path('sc_activite_obtenirSortie', {'id': activite.id}) }}" class="btn btn-default">
       <i class="glyphicon glyphicon-edit"></i>
       Voir les inscriptions aux sorties 
     </a>      
-      
+    {% endif %}
     {% if is_granted('ROLE_ADMIN') %}
     <a href="{{ path('sc_activite_ajoutSortie', {'id': activite.id}) }}" class="btn btn-default">
       <i class="glyphicon glyphicon-plus-sign"></i>
@@ -79,10 +80,12 @@
       <i class="glyphicon glyphicon-edit"></i>
       Stages prévus
     </a>
+    {% if (app.session.get('email') != null) %}
     <a href="{{ path('sc_activite_viewChildrenStages', {'id': activite.id}) }}" class="btn btn-default">
       <i class="glyphicon glyphicon-edit"></i>
       Voir les inscriptions aux stages
     </a>
+    {% endif %}
     {% if is_granted('ROLE_ADMIN') %}
     <a href="{{ path('sc_activite_addStage', {'id': activite.id}) }}" class="btn btn-default">
       <i class="glyphicon glyphicon-plus-sign"></i>

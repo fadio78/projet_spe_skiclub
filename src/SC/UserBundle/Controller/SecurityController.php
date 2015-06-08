@@ -123,9 +123,22 @@ class SecurityController extends Controller
         $saison = new Saison;
         $annee = $saison->connaitreSaison();
         
+        
+       
            
         $em = $this->getDoctrine()->getManager();
-     
+        // ajout de la saiosn s'il elle 'existe pas 
+        $newSaison = new Saison;
+        $year = $newSaison->connaitreSaison();
+        $request->getSession()->set('year', $year);
+        $newSaison = $em -> getRepository('SCActiviteBundle:Saison') -> find($year);
+        
+        if (null === $newSaison) {
+            $newSaison = new Saison();
+            $newSaison->setAnnee($year);
+            $em->persist($newSaison);
+            $em->flush();
+        }
         
         //on le rentre dans la table adhesion si il est pas encore inscrit 
         
@@ -246,8 +259,21 @@ class SecurityController extends Controller
 
         // On vérifie que les valeurs entrées sont correctes
         if ($form->isValid()) {
-        // On l'enregistre notre objet $activite dans la base de données, par exemple
+         // on verifie si l'enfant n'a pas d'jà été enregistré
         $em = $this->getDoctrine()->getManager();
+        $listUtilisateur = $em->getRepository('SCUserBundle:User')->findAll();
+        foreach ($listUtilisateur   as $utilisateur)
+            {   
+                    
+                if ($utilisateur->getEmail() == $user->getEmail())
+                {
+                    $request->getSession()->getFlashBag()->add('info', 'login déjà existant');
+                    return $this->render('SCUserBundle:Security:register.html.twig', array('form' => $form->createView()));
+                       
+                }
+            }
+        // On l'enregistre notre objet $activite dans la base de données, par exemple
+        
         $em->persist($user);
         $em->flush();
         $ema = $this->getDoctrine()->getManager();
@@ -296,8 +322,18 @@ class SecurityController extends Controller
         
         // On vérifie que les valeurs entrées sont correctes
         if ($form->isValid()) {
-        // On l'enregistre notre objet $activite dans la base de données, par exemple
         $em = $this->getDoctrine()->getManager();
+        $listUtilisateur = $em->getRepository('SCUserBundle:User')->findAll();
+        foreach ($listUtilisateur   as $utilisateur)
+            {   
+                    
+                if ($utilisateur->getEmail() == $user->getEmail())
+                {
+                    $request->getSession()->getFlashBag()->add('info', 'login déjà existant');
+                    return $this->render('SCUserBundle:Security:register.html.twig', array('form' => $form->createView()));
+                       
+                }
+            }
         $em->persist($user);
         $em->flush();
         $request->getSession()->getFlashBag()->add('info', 'Utilisateur secondaire bien enregistré');
