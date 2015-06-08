@@ -64,7 +64,7 @@ class ActiviteController extends Controller
           ->getRepository('SCActiviteBundle:Activite');
         $activite = $repository->find($id); 
         if (null === $activite) {
-          throw new NotFoundHttpException("L'activité d'id ".$id." n'existe pas.");
+          throw $this -> createNotFoundException("L'activité d'id ".$id." n'existe pas.");
         }
         return $this->render('SCActiviteBundle:Activite:view.html.twig', array('activite' => $activite));
     }
@@ -139,7 +139,7 @@ class ActiviteController extends Controller
         $activite = $em->getRepository('SCActiviteBundle:Activite')->find($id);
 
         if (null === $activite) {
-            throw new NotFoundHttpException("L'activité d'id ".$id." n'existe pas.");
+            throw $this -> createNotFoundException("L'activité d'id ".$id." n'existe pas.");
         }
 
         $form = $this->createForm(new ActiviteEditType(), $activite);
@@ -168,7 +168,7 @@ class ActiviteController extends Controller
         $activite = $repository->find($id);
         //si n'existe pas -> message d'erreur
         if (null === $activite) {
-            throw new NotFoundHttpException("L'activité d'id ".$id." n'existe pas.");
+            throw $this -> createNotFoundException("L'activité d'id ".$id." n'existe pas.");
         }
         else {
 

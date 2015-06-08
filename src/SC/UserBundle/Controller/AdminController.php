@@ -391,13 +391,13 @@ $message = \Swift_Message::newInstance()
         $year = $saison->connaitreSaison();  
         $saison = $em->getRepository('SC\ActiviteBundle\Entity\Saison')->find($year);
         if (null === $saison) {
-          throw new NotFoundHttpException("La saison  d'année ".$annee." n'existe pas.");
+          throw $this -> createNotFoundException("La saison ".$annee." n'existe pas.");
         }
         $repository = $em ->getRepository('SCActiviteBundle:InscriptionActivite');
         $groupe = $_POST['_groupe'];
         $enfantInscrit = $repository -> findOneBy(array('email' => $email,'prenomEnfant' => $prenomEnfant,'nomEnfant' => $nomEnfant,'activite' => $activite, 'saison' =>$saison )) ; 
         if (null === $enfantInscrit) {
-          throw new NotFoundHttpException("L'enfant n'existe pas ");
+          throw $this -> createNotFoundException("L'enfant n'existe pas ");
         }
         $enfantInscrit -> setGroupe($groupe);
         $em -> flush();

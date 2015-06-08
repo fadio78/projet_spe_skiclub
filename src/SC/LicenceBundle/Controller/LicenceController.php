@@ -39,7 +39,7 @@ class LicenceController extends Controller
         //on recupere la licence
         $licence = $repository->find($typeLicence);
         if (null === $licence) {
-          throw new NotFoundHttpException("La licence de type ".$typeLicence." n'existe pas.");
+          throw $this -> createNotFoundException("La licence de type ".$typeLicence." n'existe pas.");
         }
         
         return $this->render('SCLicenceBundle::viewlicence.html.twig', array('licence' => $licence));
@@ -89,7 +89,7 @@ class LicenceController extends Controller
         $licence = $em->getRepository('SCLicenceBundle:Licence')-> find ($typeLicence);
 
         if (null === $licence) {
-            throw new NotFoundHttpException("La licence de type  ".$typeLicence." n'existe pas.");
+            throw $this -> createNotFoundException("La licence de type  ".$typeLicence." n'existe pas.");
         }
 
         $form = $this->createForm(new LicenceEditType(), $licence);

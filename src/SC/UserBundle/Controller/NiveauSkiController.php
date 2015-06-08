@@ -39,7 +39,7 @@ class NiveauSkiController extends Controller
         //on recupere la licence
         $niveauSki = $repository->find($niveau);
         if (null === $niveauSki) {
-          throw new NotFoundHttpException("Le niveau de ski ".$niveau." n'existe pas.");
+          throw $this -> createNotFoundException("Le niveau de ski ".$niveau." n'existe pas.");
         }
         
         return $this->render('SCUserBundle:NiveauSki:view.html.twig', array('niveauSki' => $niveauSki));
@@ -80,7 +80,7 @@ class NiveauSkiController extends Controller
         $niveauSki = $em->getRepository('SCUserBundle:NiveauSki')-> find ($niveau);
 
         if (null === $niveauSki) {
-            throw new NotFoundHttpException("Le niveau de ski ".$niveau." n'existe pas.");
+            throw $this -> createNotFoundException("Le niveau de ski ".$niveau." n'existe pas.");
         }
 
         $form = $this->createForm(new NiveauSkiEditType(), $niveauSki);
