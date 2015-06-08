@@ -221,7 +221,7 @@ class SecurityController extends Controller
 
     
       
-      // il faut aussi remplir la table adheion de l'annee actuel 
+      // il faut aussi remplir la table adhesion de l'annee actuel 
       
       $adhesion = new Adhesion;
       $adhesion->setAdhesionAnnuel(false);
@@ -229,8 +229,9 @@ class SecurityController extends Controller
       $adhesion->setMontantPaye(0);
       $adhesion->setRemise(0);
       
-      $year = $request->getSession()->get('year');
-      $saison = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Saison')->findOneByAnnee(2014);
+      $saison_actuel = new Saison;
+      $year = $saison_actuel->connaitreSaison();
+      $saison = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Saison')->findOneByAnnee($year);
       $adhesion->setSaison($saison);
       $adhesion->setUser($user);
       
