@@ -82,7 +82,7 @@ class SortieController extends Controller
             } 
             return $this->render('SCActiviteBundle:Activite:add.html.twig', array(
                 'form' => $form->createView(),
-                ));
+                'vueLicence'=>1));
         }
         else {
             return $this->pageErreur("l'activité demandée n'existe pas");               

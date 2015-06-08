@@ -24,7 +24,7 @@
         <center>Vous pouvez confirmer ou annuler la participation de {{ prenomEnfant }} à la sortie :</center><br/><br/> <center><b>{{ dateSortie }} à {{ lieu }} </b></center><br/>
         Pour rappel voici les inscrits <br/> <br/>
 
-        <table border="1" cellpadding="10" cellspacing="1" width="100%">
+        <table border="1" cellpadding="10" cellspacing="1" width="100%" id="tab">
             <tr> 
             <th><center>Nom </center></th>
             <th><center>Prénom</center></th>
@@ -33,7 +33,7 @@
     
             <tr/>       
         {%for inscrit in inscrits %}
-   
+            <script>tab.sort() </script>
           {#  {%if (inscrit.emailParent != app.session.get('email')) or (inscrit.emailParent == app.session.get('email') and inscrit.nomEnfant != nomEnfant and inscrit.prenomEnfant != prenomEnfant) %} #}
                 
                 <tr>     
