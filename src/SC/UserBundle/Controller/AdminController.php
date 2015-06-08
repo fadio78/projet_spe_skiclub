@@ -224,7 +224,7 @@ class AdminController extends Controller
         $repository = $em -> getRepository('SCUserBundle:User');
         $user = $repository ->find($email);
         if (null === $user) {
-            throw $this -> createNotFoundException("L'utilisateur d'email ".$email." n'existe pas.");
+            throw $this -> createNotFoundException("L'utilisateur d'email ".$email." n'est pas enregistré.");
         }
         $repository = $em -> getRepository('SCUserBundle:Enfant');
         // pour chaque enfant inscrit à l'activité, on récupère son niveau de ski
@@ -400,7 +400,7 @@ $message = \Swift_Message::newInstance()
         $groupe = $_POST['_groupe'];
         $enfantInscrit = $repository -> findOneBy(array('email' => $email,'prenomEnfant' => $prenomEnfant,'nomEnfant' => $nomEnfant,'activite' => $activite, 'saison' =>$saison )) ; 
         if (null === $enfantInscrit) {
-          throw $this -> createNotFoundException("L'enfant ".$prenomEnfant.$nomEnfant."n/'est pas inscrit à l'activité ");
+          throw $this -> createNotFoundException("L'enfant ".$prenomEnfant.$nomEnfant."n/'est pas inscrit à l'activité".($activite.nomActivite));
         }
         $enfantInscrit -> setGroupe($groupe);
         $em -> flush();
@@ -409,7 +409,7 @@ $message = \Swift_Message::newInstance()
         $repository = $em -> getRepository('SCUserBundle:User');
         $user = $repository ->find($email);
         if (null === $user) {
-            throw $this -> createNotFoundException("L'utilisateur d'email ".$email." n'existe pas.");
+            throw $this -> createNotFoundException("L'utilisateur d'email ".$email." n'est pas enregistré");
         }
         $repository = $em -> getRepository('SCUserBundle:Enfant');
         // pour chaque enfant inscrit à l'activité, on récupère son niveau de ski
