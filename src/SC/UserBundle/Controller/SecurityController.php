@@ -246,8 +246,21 @@ class SecurityController extends Controller
 
         // On vérifie que les valeurs entrées sont correctes
         if ($form->isValid()) {
-        // On l'enregistre notre objet $activite dans la base de données, par exemple
+         // on verifie si l'enfant n'a pas d'jà été enregistré
         $em = $this->getDoctrine()->getManager();
+        $listUtilisateur = $em->getRepository('SCUserBundle:User')->findAll();
+        foreach ($listUtilisateur   as $utilisateur)
+            {   
+                    
+                if ($utilisateur->getEmail() == $user->getEmail())
+                {
+                    $request->getSession()->getFlashBag()->add('info', 'login déjà existant');
+                    return $this->render('SCUserBundle:Security:register.html.twig', array('form' => $form->createView()));
+                       
+                }
+            }
+        // On l'enregistre notre objet $activite dans la base de données, par exemple
+        
         $em->persist($user);
         $em->flush();
         $ema = $this->getDoctrine()->getManager();
