@@ -213,7 +213,7 @@ class AdminController extends Controller
         
     }
     
-    // récupère la liste des inscrits à une activité de la saison en cours pour un email donné
+    // récupère la liste des inscrits aux activitésde la saison en cours pour un email donné
     public function gestionEnfantAction($email)
     {
         $niveauSki = null;

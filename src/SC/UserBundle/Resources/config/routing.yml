@@ -10,6 +10,10 @@ sc_user_compteEnfant:
     path:     /monCompteEnfant
     defaults: { _controller: SCUserBundle:Security:compteEnfant }
     
+sc_user_choixModalite:
+    path:     /choixModalite
+    defaults: { _controller: SCUserBundle:Security:choixModalite }
+    
 sc_user_paramCompte:
     path:     /parametreCompte
     defaults: { _controller: SCUserBundle:Security:paramCompte }

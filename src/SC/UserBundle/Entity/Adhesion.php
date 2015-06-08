@@ -31,7 +31,7 @@ class Adhesion
     /**
      * @var integer
      *
-     * @ORM\Column(name="modalite", type="integer")
+     * @ORM\Column(name="modalite", type="integer",nullable=true)
      */
     private $modalite;
 
