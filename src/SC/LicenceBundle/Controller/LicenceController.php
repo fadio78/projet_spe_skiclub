@@ -54,7 +54,7 @@ class LicenceController extends Controller
         $licence = new Licence();
         $form = $this->get('form.factory')->create(new LicenceType(), $licence);
         // On fait le lien Requête <-> Formulaire
-        // À partir de maintenant, la variable $licence contient les valeurs entrées dans le formulaire par l'e visiteur l'admin
+        // À partir de maintenant, la variable $licence contient les valeurs entrées dans le formulaire par l'admin
         $form->handleRequest($request);
         // On vérifie que les valeurs entrées sont correctes
         if ($form->isValid())

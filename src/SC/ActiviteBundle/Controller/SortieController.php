@@ -106,7 +106,7 @@ class SortieController extends Controller
         
     }
     
-    //permet d'afficher toutes les sorties pour l'activite id sur la saison en cours-> inutilisee
+    //permet d'afficher toutes les sorties pour l'activite id sur la saison en cours-> PLUS UTILISEE
     public function voirSortieAction($id) {
                    
         $saison = new Saison;
@@ -128,7 +128,7 @@ class SortieController extends Controller
     }
     
     //supprime une sortie de l'activite id, la date est passée dans l'url
-    public function deleteSortieAction($id, Request $request, $dateSortie/*, $lieu*/) {
+    public function deleteSortieAction($id, Request $request, $dateSortie) {
         
         
         if ($request->getSession()->get('email') == null) {
@@ -139,13 +139,12 @@ class SortieController extends Controller
         $saison = new Saison;
         $year = $saison->connaitreSaison();
         $saison = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Saison')->findOneByAnnee($year);
-        //$nomLieu = $em->getRepository('SC\ActiviteBundle\Entity\Lieu')->findOneByNomLieu($lieu);
         $activite = $em->getRepository('SC\ActiviteBundle\Entity\Activite')->find($id);
         $sortie = $em->getRepository('SC\ActiviteBundle\Entity\Sortie')
                                                         ->findOneBy(array('dateSortie' => $dateSortie,'activite' =>  $activite /*,'dateSortie'=>$dateSortie,'lieu'=>$nomLieu*/,'saison'=>$saison));
         //au cas ou les paramètres seraient modifiés à la main par quelqu'un
         
-        if (is_null($activite)==true /*OR is_null($lieu)*/) {
+        if (is_null($activite)==true) {
             return $this->pageErreur("l'activité demandée n'existe pas ou le lieu n'est pas reference");
         }
         if (isset($sortie)==FALSE) {
@@ -154,7 +153,7 @@ class SortieController extends Controller
         }
         else {
             
-            $this->estInscrit($sortie->getDateSortie(),$id,/*$lieu*/$sortie->getLieu()->getNomLieu());
+            $this->estInscrit($sortie->getDateSortie(),$id,$sortie->getLieu()->getNomLieu());
             $em->remove($sortie);
             $em->flush();
             $request->getSession()->getFlashBag()->add('info', 'La sortie a bien été supprimée, et un mail a été envoyé aux personnes inscrites');
@@ -223,7 +222,7 @@ class SortieController extends Controller
         
     }
     
-    public function editSortieAction($id, Request $request,$dateSortie/*,$nomLieu*/)
+    public function editSortieAction($id, Request $request,$dateSortie)
     {
         if ($request->getSession()->get('email') == null) {
             return $this->pageErreur("Vous devez être connecté pour accèder à ce lien");
@@ -234,7 +233,6 @@ class SortieController extends Controller
         $year = $saison->connaitreSaison();
         $saison = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Saison')->findOneByAnnee($year); 
         $activite = $em->getRepository('SCActiviteBundle:Activite')->find($id);
-        //$lieu = $em->getRepository('SC\ActiviteBundle\Entity\Lieu')->findOneByNomLieu($nomLieu);
         $user = $this->getDoctrine()->getManager()
                                             ->getRepository('SC\UserBundle\Entity\User')
                                                 ->findOneByEmail(array('email' => $request->getSession()->get('email')));        
