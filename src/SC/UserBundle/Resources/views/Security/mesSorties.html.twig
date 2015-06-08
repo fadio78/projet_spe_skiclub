@@ -3,7 +3,7 @@
 
     <h4>Activite : {{ activite.getNomactivite }}  <div align="right"> Saison : {{ saison }}</div></h4><br/> 
   
-    <p> Voici les inscriptions de vos enfants, pour l'activité {{ activite.getNomactivite }}<br/> En cliquant sur un des enfants vous pourrez annuler ou confirmer sa participation et vous obtiendrez egalement un rapel des autres enfants inscrits <p>
+    <p> Voici les inscriptions de vos enfants pour l'activité {{ activite.getNomactivite }}.<br/>Vous pourrez annuler ou confirmer sa participation et vous obtiendrez également un rappel des autres enfants inscrits <p>
     <br/>
     {% for sortie in mesSorties %}
         
@@ -16,7 +16,7 @@
     {%endfor%}    
     
     {%if mesSorties == null %}
-        aucune inscription
+        Aucune inscription
     {%endif%}  
     <br/>
     <br/>

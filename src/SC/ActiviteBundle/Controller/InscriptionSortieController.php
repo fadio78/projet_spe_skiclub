@@ -39,7 +39,7 @@ class InscriptionSortieController extends Controller
     public function getEnfantAction($id,Request $request,$dateSortie,$lieu) {
         
         if ($request->getSession()->get('email') == null) {
-            return $this->pageErreur("Vous devez être connecté pour accèder à ce lien");
+            return $this->pageErreur("Vous devez être connecté pour accéder à ce lien");
         }             
         
         $em = $this->getDoctrine()->getManager();
