@@ -334,7 +334,7 @@ class ActiviteController extends Controller
         $repository = $em ->getRepository('SCActiviteBundle:Activite');
         $activite = $repository->find($id); 
         if (null === $activite) {
-          throw new NotFoundHttpException("L'activité d'id ".$id." n'existe pas.");
+          throw $this -> createNotFoundException("L'activité d'id ".$id." n'existe pas.");
         }
         $repository = $em -> getRepository('SCActiviteBundle:InscriptionActivite');
         $listeInscrits = $repository -> findAll(array('activite' => $activite, 'saison' => $saison ));

@@ -223,6 +223,9 @@ class AdminController extends Controller
         $listeEnfantsInscrits = $repository -> listeDeMesInscriptions($email); 
         $repository = $em -> getRepository('SCUserBundle:User');
         $user = $repository ->find($email);
+        if (null === $user) {
+            throw $this -> createNotFoundException("L'utilisateur d'email ".$email." n'existe pas.");
+        }
         $repository = $em -> getRepository('SCUserBundle:Enfant');
         // pour chaque enfant inscrit à l'activité, on récupère son niveau de ski
         foreach ( $listeEnfantsInscrits as $inscrit )
@@ -385,7 +388,7 @@ $message = \Swift_Message::newInstance()
         $em = $this ->getDoctrine() ->getManager();
         $activite = $em->getRepository('SC\ActiviteBundle\Entity\Activite')->find($id);
         if (null === $activite) {
-          throw new NotFoundHttpException("L'activité d'id ".$id." n'existe pas.");
+          throw $this -> createNotFoundException("L'activité d'id ".$id." n'existe pas.");
         }
         $saison = new Saison ();
         $year = $saison->connaitreSaison();  
@@ -405,6 +408,9 @@ $message = \Swift_Message::newInstance()
         
         $repository = $em -> getRepository('SCUserBundle:User');
         $user = $repository ->find($email);
+        if (null === $user) {
+            throw $this -> createNotFoundException("L'utilisateur d'email ".$email." n'existe pas.");
+        }
         $repository = $em -> getRepository('SCUserBundle:Enfant');
         // pour chaque enfant inscrit à l'activité, on récupère son niveau de ski
         foreach ( $listeEnfantsInscrits as $inscrit )
