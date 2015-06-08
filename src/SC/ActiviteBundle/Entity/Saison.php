@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Saison
  *
- * @ORM\Table()
+ * @ORM\Table("SkiClub_Saison")
  * @ORM\Entity(repositoryClass="SC\ActiviteBundle\Entity\SaisonRepository")
  */
 class Saison
@@ -24,7 +24,7 @@ class Saison
  
     /**
      * @ORM\ManyToMany(targetEntity="SC\ActiviteBundle\Entity\Activite",cascade={"remove"})
-     * @ORM\JoinTable(name="activites_saisons",
+     * @ORM\JoinTable(name="SkiClub_Activites_Saisons",
      *      joinColumns={@ORM\JoinColumn(name="annee", referencedColumnName="annee")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="id", referencedColumnName="id")}
      *      )

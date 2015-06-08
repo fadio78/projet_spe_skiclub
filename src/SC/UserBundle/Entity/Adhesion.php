@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Adhesion
  *
- * @ORM\Table()
+ * @ORM\Table("SkiClub_Adhesion")
  * @ORM\Entity(repositoryClass="SC\UserBundle\Entity\AdhesionRepository")
  */
 class Adhesion

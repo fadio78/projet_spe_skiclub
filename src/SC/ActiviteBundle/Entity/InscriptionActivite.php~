@@ -3,11 +3,11 @@
 namespace SC\ActiviteBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use SC\UserBundle\Entity\Enfant;
+
 /**
  * InscriptionActivite
  *
- * @ORM\Table("SkiClub_InscriptionActivite")
+ * @ORM\Table()
  * @ORM\Entity(repositoryClass="SC\ActiviteBundle\Entity\InscriptionActiviteRepository")
  */
 class InscriptionActivite
@@ -59,7 +59,7 @@ class InscriptionActivite
     /**
      * @var string
      *
-     * @ORM\Column(nullable = true,name="groupe", type="string", length=255)
+     * @ORM\Column(name="groupe", type="string", length=255)
      */
     private $groupe;
 
@@ -205,29 +205,4 @@ class InscriptionActivite
     {
         return $this->licenceValide;
     }
-
-    /**
-     * Set groupe
-     *
-     * @param string $groupe
-     * @return InscriptionActivite
-     * 
-     */
-    public function setGroupe($groupe = null)
-    {
-        $this->groupe = $groupe;
-
-        return $this;
-    }
-
-    /**
-     * Get groupe
-     *
-     * @return string 
-     */
-    public function getGroupe()
-    {
-        return $this->groupe;
-    }
-
 }
