@@ -347,6 +347,13 @@ $message = \Swift_Message::newInstance()
         
         $saison =new Saison;
         $annee = $saison->connaitreSaison();
+        //ajout new saison si inexistante
+        if (null === $saison) {
+            $saison = new Saison();
+            $saison->setAnnee($annee);
+            $em->persist($saison);
+            $em->flush();
+        }
         
         $payés = $em->getRepository('SCUserBundle:Adhesion')->findby(array('saison'=> $annee));
         
