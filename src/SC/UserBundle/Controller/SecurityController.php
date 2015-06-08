@@ -167,7 +167,7 @@ class SecurityController extends Controller
             $saison_actuel = $em->getRepository('SC\ActiviteBundle\Entity\Saison')->find($annee);
             $adhesion = new Adhesion;
             $adhesion->setAdhesionAnnuel(false);
-            $adhesion->setModalite(0);
+            //$adhesion->setModalite(0);
             $adhesion->setMontantPaye(0);
             $adhesion->setRemise(0);
             $adhesion->setSaison($saison_actuel);
@@ -238,7 +238,7 @@ class SecurityController extends Controller
       
       $adhesion = new Adhesion;
       $adhesion->setAdhesionAnnuel(false);
-      $adhesion->setModalite(1);
+      //$adhesion->setModalite(1);
       $adhesion->setMontantPaye(0);
       $adhesion->setRemise(0);
       
@@ -345,5 +345,23 @@ class SecurityController extends Controller
         'form' => $form->createView(),
         ));
   }
+  
+    public function choixModaliteAction(Request $request)
+    {
+                 
+       $usr= $this->get('security.context')->getToken()->getUser();
+        $email = $usr->getUsername();     
+                 
+        $saison = new Saison;
+        $annee = $saison->connaitreSaison();
+        $modalite= $_POST['_modalite'];
+        $repository = $this
+          ->getDoctrine()
+          ->getManager()
+          ->getRepository('SCUserBundle:Adhesion');
+         
+           $adhesion = $repository->choixModalite($email,$annee,$modalite);
+        return $this->paramCompteAction($request);
+    }
   
 }

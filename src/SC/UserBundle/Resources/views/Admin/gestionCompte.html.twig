@@ -24,6 +24,13 @@
   *Ce montant correspond à la somme des activité des différents enfants et de leurs licences. Il faut donc ajouter <u>l'adhésion Annuel</u>.
   <p/> 
   <br/>
+  {% if adhesion.modalite != null%}
+  <p><u>Nombre de modalité choisi pour le paiement</u> :   {{adhesion.modalite}} <p/>
+   <br/>
+   {% else %}
+     <p>l'utilisateur n'a pas encore choisi ses modalités de paiement<p/>
+   <br/>   
+   {% endif %}
            
              
     <form action="{{ path('sc_admin_ajoutMontant',{'email': user.email}) }}" method="post">

@@ -45,5 +45,16 @@ class AdhesionRepository extends EntityRepository
   
       
     }
+                //permet d'ajouter un nombre a la valeur de remise pour  une saison par l'utilisateur
+        public function choixModalite($email, $annee, $modalite)
+    {
+      $query = $this->_em->createQuery('UPDATE SCUserBundle:Adhesion a SET a.modalite = :modalite  where a.user = :email and a.saison= :annee')
+                       ->setParameter('email', $email)
+                       ->setParameter('annee', $annee)
+                       ->setParameter('modalite', $modalite);
+       $query->execute();
+  
+      
+    }
     
 }

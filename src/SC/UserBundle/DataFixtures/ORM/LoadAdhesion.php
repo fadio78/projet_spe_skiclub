@@ -23,7 +23,7 @@ class LoadAdhesion extends AbstractFixture implements OrderedFixtureInterface
         foreach($advertRepository as $saison){
           $adhesion = new Adhesion;
           $adhesion->setAdhesionAnnuel(false);
-          $adhesion->setModalite(0);
+          //$adhesion->setModalite(0);
           $adhesion->setMontantPaye('0');
           $adhesion->setRemise('0');
           $adhesion->setSaison($saison);
