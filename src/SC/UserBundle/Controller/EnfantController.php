@@ -24,8 +24,20 @@ class EnfantController extends Controller
         $form->handleRequest($request);
         // On vérifie que les valeurs entrées sont correctes
         if ($form->isValid()) {
-        // On l'enregistre notre objet $activite dans la base de données, par exemple
+        // on verifie si l'enfant n'a pas d'jà été enregistré
         $em = $this->getDoctrine()->getManager();
+        $listEnfant = $em->getRepository('SCUserBundle:Enfant')->findby(['userParent'=> $usr->getEmail()]);
+        foreach ($listEnfant   as $child)
+            {   
+                    
+                if ($child ->getNomEnfant() == $enfant -> getNomEnfant() && $child ->getPrenomEnfant() == $enfant -> getPrenomEnfant())
+                {
+                    $request->getSession()->getFlashBag()->add('info', 'Enfant déjà ajouté');
+                    return $this->render('SCUserBundle:Enfant:formEnfant.html.twig', array('form' => $form->createView()));
+                       
+                }
+            }
+        // On l'enregistre notre objet $activite dans la base de données, par exemple
         $em->persist($enfant);
         $em->flush();
         $request->getSession()->getFlashBag()->add('info', 'enfant bien enregistré');

@@ -48,9 +48,9 @@ class AdminController extends Controller
           ->getRepository('SCUserBundle:User');
           
         
-          $listNoAdmin = $repository->findAll();//tous le monde 
+          //$listNoAdmin = $repository->findAll();//tous le monde 
          //$listNoAdmin = $repository->noAdmin();//Que les clients 
-        
+         $listNoAdmin = $repository->findby(array('isActive'=>true));//que les comptes actifs 
         return $this->render('SCUserBundle:Admin:listNoAdmin.html.twig',
                 array('listNoAdmin'=>$listNoAdmin )
                 );
