@@ -5,11 +5,86 @@
 
 {% block user_body %}
     <h2>Formulaire d'inscription</h2>
-  {{ form(form) }}
+
   <p><FONT color="red">
       {# On affiche tous les messages flash dont le nom est « info » #}
         {% for message in app.session.flashbag.get('info') %}
           <p>{{ message }}</p>
         {% endfor %}
     </FONT></p>
+
+<div class="well">
+  {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
+    {# Les erreurs générales du formulaire. #}
+    {{ form_errors(form) }}
+    <div class="form-group">
+      {# Génération du label. #}
+      {{ form_label(form.email, "Email", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+      {# Affichage des erreurs pour ce champ précis. #}
+      {{ form_errors(form.email) }}
+      <div class="col-sm-4">
+        {# Génération de l'input. #}
+        {{ form_widget(form.email, {'attr': {'class': 'form-control'}}) }}
+      </div>
+    </div>
+    {# Idem pour un autre champ. #}
+    <div class="form-group">
+      {{ form_label(form.nom, "Nom", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+      {{ form_errors(form.nom) }}
+      <div class="col-sm-4">
+        {{ form_widget(form.nom, {'attr': {'class': 'form-control'}}) }}
+      </div>
+    </div>
+      
+    {# Idem pour un autre champ. #}
+    <div class="form-group">
+      {{ form_label(form.prenom, "Prenom", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+      {{ form_errors(form.prenom) }}
+      <div class="col-sm-4">
+        {{ form_widget(form.prenom, {'attr': {'class': 'form-control'}}) }}
+      </div>
+    </div>
+    {# Idem pour un autre champ. #}
+    <div class="form-group">
+      {{ form_label(form.telephone, "Telephone", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+      {{ form_errors(form.telephone) }}
+      <div class="col-sm-4">
+        {{ form_widget(form.telephone, {'attr': {'class': 'form-control'}}) }}
+      </div>
+    </div>
+          {# Idem pour un autre champ. #}
+    <div class="form-group">
+      {{ form_label(form.adresse, "Adresse", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+      {{ form_errors(form.adresse) }}
+      <div class="col-sm-4">
+        {{ form_widget(form.adresse, {'attr': {'class': 'form-control'}}) }}
+      </div>
+    </div>
+          {# Idem pour un autre champ. #}
+    <div class="form-group">
+      {{ form_label(form.commune, "Commune", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+      {{ form_errors(form.commune) }}
+      <div class="col-sm-4">
+        {{ form_widget(form.commune, {'attr': {'class': 'form-control'}}) }}
+      </div>
+    </div>
+                {# Idem pour un autre champ. #}
+    <div class="form-group">
+      {{ form_label(form.password, "Saissisez", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+      {{ form_errors(form.password) }}
+      <div class="col-sm-4">
+        {{ form_widget(form.password)}}
+      </div>
+    </div>
+
+  {# Pour le bouton, pas de label ni d'erreur, on affiche juste le widget #}
+  {{ form_widget(form.enregistrer, {'attr': {'class': 'btn btn-primary'}}) }}
+  {# Génération automatique des champs pas encore écrits.
+     Dans cet exemple, ce serait le champ CSRF (géré automatiquement par Symfony !)
+     et tous les champs cachés (type « hidden »). #}
+  {{ form_rest(form) }}
+  
+  {# Fermeture de la balise <form> du formulaire HTML #}
+  {{ form_end(form) }}
+</div> 
 {% endblock %}

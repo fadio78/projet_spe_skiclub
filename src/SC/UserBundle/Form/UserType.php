@@ -26,7 +26,7 @@ class UserType extends AbstractType
                     'type' => 'password',
                     'first_options' => array('label' => 'Mot de passe'),
                     'second_options' => array('label' => 'Confirmation mot de passe'),
-                    'invalid_message' => 'Confirmation mot de passe invalid'
+                    'invalid_message' => 'Confirmation de mot de passe invalide'
                 )
             )
             //->add('type')
