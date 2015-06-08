@@ -253,9 +253,9 @@ class SecurityController extends Controller
         $ema = $this->getDoctrine()->getManager();
         $ema->persist($adhesion);
         $ema->flush();
-        $request->getSession()->getFlashBag()->add('info', 'Utilisateur bien enregistré');
+        $request->getSession()->getFlashBag()->add('info', 'Utilisateur bien enregistré, vous recevrez un mail après activation de votre compte');
         // On redirige vers la page de visualisation de l'annonce nouvellement créée
-        return $this->redirect($this->generateUrl('sc_user_homepage'));
+        return $this->redirect($this->generateUrl('sc_activite_homepage'));
         }
         
         return $this->render('SCUserBundle:Security:register.html.twig', array(
