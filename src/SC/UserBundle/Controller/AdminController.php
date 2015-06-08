@@ -21,6 +21,19 @@ class AdminController extends Controller
 {
     public function indexAction(Request $request)
     {
+        //ajout d'une nouvelle saison si non existante 
+        $em = $this -> getDoctrine() ->getManager();
+        $season = new Saison;
+        $year = $season->connaitreSaison();
+        $request->getSession()->set('year', $year);
+        $saison = $em -> getRepository('SCActiviteBundle:Saison') -> find($year);
+        
+        if (null === $saison) {
+            $saison = new Saison();
+            $saison->setAnnee($year);
+            $em->persist($saison);
+            $em->flush();
+        }
         return $this->render('SCUserBundle:Admin:index.html.twig');
         
         
@@ -48,9 +61,9 @@ class AdminController extends Controller
           ->getRepository('SCUserBundle:User');
           
         
-          $listNoAdmin = $repository->findAll();//tous le monde 
+          //$listNoAdmin = $repository->findAll();//tous le monde 
          //$listNoAdmin = $repository->noAdmin();//Que les clients 
-        
+         $listNoAdmin = $repository->findby(array('isActive'=>true));//que les comptes actifs 
         return $this->render('SCUserBundle:Admin:listNoAdmin.html.twig',
                 array('listNoAdmin'=>$listNoAdmin )
                 );
@@ -223,6 +236,9 @@ class AdminController extends Controller
         $listeEnfantsInscrits = $repository -> listeDeMesInscriptions($email); 
         $repository = $em -> getRepository('SCUserBundle:User');
         $user = $repository ->find($email);
+        if (null === $user) {
+            throw $this -> createNotFoundException("L'utilisateur d'email ".$email." n'existe pas.");
+        }
         $repository = $em -> getRepository('SCUserBundle:Enfant');
         // pour chaque enfant inscrit à l'activité, on récupère son niveau de ski
         foreach ( $listeEnfantsInscrits as $inscrit )
@@ -331,6 +347,13 @@ $message = \Swift_Message::newInstance()
         
         $saison =new Saison;
         $annee = $saison->connaitreSaison();
+        //ajout new saison si inexistante
+        if (null === $saison) {
+            $saison = new Saison();
+            $saison->setAnnee($annee);
+            $em->persist($saison);
+            $em->flush();
+        }
         
         $payés = $em->getRepository('SCUserBundle:Adhesion')->findby(array('saison'=> $annee));
         
@@ -385,7 +408,7 @@ $message = \Swift_Message::newInstance()
         $em = $this ->getDoctrine() ->getManager();
         $activite = $em->getRepository('SC\ActiviteBundle\Entity\Activite')->find($id);
         if (null === $activite) {
-          throw new NotFoundHttpException("L'activité d'id ".$id." n'existe pas.");
+          throw $this -> createNotFoundException("L'activité d'id ".$id." n'existe pas.");
         }
         $saison = new Saison ();
         $year = $saison->connaitreSaison();  
@@ -405,6 +428,9 @@ $message = \Swift_Message::newInstance()
         
         $repository = $em -> getRepository('SCUserBundle:User');
         $user = $repository ->find($email);
+        if (null === $user) {
+            throw $this -> createNotFoundException("L'utilisateur d'email ".$email." n'existe pas.");
+        }
         $repository = $em -> getRepository('SCUserBundle:Enfant');
         // pour chaque enfant inscrit à l'activité, on récupère son niveau de ski
         foreach ( $listeEnfantsInscrits as $inscrit )
