@@ -3,5 +3,10 @@
 <h3>Ajouter un Enfant </h3>
 
   {{ form(form) }}
-
+  <p><FONT color="red">
+      {# On affiche tous les messages flash dont le nom est « info » #}
+        {% for message in app.session.flashbag.get('info') %}
+          <p>{{ message }}</p>
+        {% endfor %}
+    </FONT></p>
 {% endblock %}

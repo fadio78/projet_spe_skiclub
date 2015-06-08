@@ -48,25 +48,22 @@
                 <li class="active"> <a href="{{ path('sc_user_homepage') }}"> <span class="glyphicon glyphicon-home"></span> Accueil </a> </li>
             {% if is_granted('ROLE_ADMIN') %} 
                 
-                <li><a href="{{ path('sc_activite_homepage') }}">Gestion des activités</a></li>
-
+                <li><a href="{{ path('sc_activite_homepage') }}">Gestion des sports d'hiver</a></li>
                 <li><a href="{{ path('sc_licence_homepage')}}"> Gestion des licences</a></li>
-                <li><a href="{{ path('sc_niveauSki_homepage')}}"> Gestion des niveaux du ski</a></li>
-                <li><a href="{{ path('sc_admin_Tresorerie') }}">Trésorie</a></li>
+                <li><a href="{{ path('sc_niveauSki_homepage')}}"> Gestion des niveaux de ski</a></li>
+                <li><a href="{{ path('sc_admin_homepage') }}">Gestion des utilisateurs</a></li>
+                <li><a href="{{ path('sc_admin_Tresorerie') }}">Trésorerie</a></li>
             {%else%}
-            <li><a href="{{ path('sc_activite_homepage') }}">Activités</a></li>
+            <li><a href="{{ path('sc_activite_homepage') }}">Sports d'hiver</a></li>
             {% endif %}
           {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %} 
-             {% if is_granted('ROLE_ADMIN') %} 
-               <li><a href="{{ path('sc_admin_homepage') }}">Gestion des utilisateurs</a></li>
-             {% endif %}
             <li><a href="{{ path('sc_user_compte') }}">Mon compte</a></li>
             <li><a href="{{ path('logout') }}">Déconnexion</a></li>
           {%else%}
             <li> <a href="{{ path('login') }}">Se connecter</a></li>
             <li><a href="{{ path('sc_user_register') }}">S'enregistrer</a></li>
           {% endif %}
-            <li>   <a href="https://scpetitesroches.wordpress.com/"> Voir l'ancien site web» </a></li>
+            <li>   <a href="https://scpetitesroches.wordpress.com/"> Voir l'ancien site web » </a></li>
             <li><a href="{{ path('sc_contact') }}"> Contact </a></li>   
             
             
@@ -128,14 +125,13 @@
         </div>
 
  
-                    
-                    
              
                     
-                    
+             
+                                       
       <div id="content" class="col-md-9">
         {% block body %}
-               
+    
         {% endblock %}
       </div>
     </div>

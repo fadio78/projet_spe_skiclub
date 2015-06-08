@@ -16,20 +16,24 @@
   <h2>{{ activite.nomActivite }}</h2>
     <br>
     </br>
-    <h4> <FONT color="blue"> Vous pouvez soit s'inscrire à l'activité et participer aux sorties prévues, soit s'inscire aux stages soit les deux.
+    <p> <FONT color="blue"> Vous pouvez inscrire votre enfant à l'activité. Il pourra
+        alors participer aux différentes sorties prévues. Il peut également participer
+        à des stages. Si une licence est requise et que votre enfant ne possède 
+        pas la licence pour cette activité, il faudra obtenir la licence associée (même pour des stages).
          {% if   app.session.get('email')    == null  %}
-         Mais tout d'abord enregistrez vous. 
-          {% endif %} </FONT> </h4>
+         Mais tout d'abord vous devez vous connecter. 
+          {% endif %} </FONT> </p>
+    </br><br>
   <ul> {{ activite.description }} </ul>
 
     
     <br>
     </br>
     
-    <ul> Le prix de l'activité est: {{activite.prixActivite}} € </ul>
+    <p> Le prix de l'activité est : {{activite.prixActivite}} € </p>
     
     {% if activite.licence  != null %}
-    <ul> Le type de la licence est: {{activite.licence.typeLicence}} et son prix est: {{activite.licence.prixLicence}} €  </ul>
+    <p> La licence associée est la licence {{activite.licence.typeLicence}} et coûte {{activite.licence.prixLicence}} €  </p>
     {% endif %}
   <p>
     
@@ -59,11 +63,12 @@
       <i class="glyphicon glyphicon-edit"></i>
       Sortie prévues
     </a>
+    {% if (app.session.get('email') != null) %}
     <a href="{{ path('sc_activite_obtenirSortie', {'id': activite.id}) }}" class="btn btn-default">
       <i class="glyphicon glyphicon-edit"></i>
       Voir les inscriptions aux sorties 
     </a>      
-      
+    {% endif %}
     {% if is_granted('ROLE_ADMIN') %}
     <a href="{{ path('sc_activite_ajoutSortie', {'id': activite.id}) }}" class="btn btn-default">
       <i class="glyphicon glyphicon-plus-sign"></i>
@@ -75,10 +80,12 @@
       <i class="glyphicon glyphicon-edit"></i>
       Stages prévus
     </a>
+    {% if (app.session.get('email') != null) %}
     <a href="{{ path('sc_activite_viewChildrenStages', {'id': activite.id}) }}" class="btn btn-default">
       <i class="glyphicon glyphicon-edit"></i>
       Voir les inscriptions aux stages
     </a>
+    {% endif %}
     {% if is_granted('ROLE_ADMIN') %}
     <a href="{{ path('sc_activite_addStage', {'id': activite.id}) }}" class="btn btn-default">
       <i class="glyphicon glyphicon-plus-sign"></i>

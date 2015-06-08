@@ -8,7 +8,7 @@ use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 /**
  * User
  *
- * @ORM\Table()
+ * @ORM\Table("SkiClub_User")
  * @ORM\Entity(repositoryClass="SC\UserBundle\Entity\UserRepository")
  */
 class User implements AdvancedUserInterface

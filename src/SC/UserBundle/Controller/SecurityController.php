@@ -123,9 +123,22 @@ class SecurityController extends Controller
         $saison = new Saison;
         $annee = $saison->connaitreSaison();
         
+        
+       
            
         $em = $this->getDoctrine()->getManager();
-     
+        // ajout de la saiosn s'il elle 'existe pas 
+        $newSaison = new Saison;
+        $year = $newSaison->connaitreSaison();
+        $request->getSession()->set('year', $year);
+        $newSaison = $em -> getRepository('SCActiviteBundle:Saison') -> find($year);
+        
+        if (null === $newSaison) {
+            $newSaison = new Saison();
+            $newSaison->setAnnee($year);
+            $em->persist($newSaison);
+            $em->flush();
+        }
         
         //on le rentre dans la table adhesion si il est pas encore inscrit 
         
@@ -221,7 +234,7 @@ class SecurityController extends Controller
 
     
       
-      // il faut aussi remplir la table adheion de l'annee actuel 
+      // il faut aussi remplir la table adhesion de l'annee actuel 
       
       $adhesion = new Adhesion;
       $adhesion->setAdhesionAnnuel(false);
@@ -229,8 +242,9 @@ class SecurityController extends Controller
       $adhesion->setMontantPaye(0);
       $adhesion->setRemise(0);
       
-      $year = $request->getSession()->get('year');
-      $saison = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Saison')->findOneByAnnee(2014);
+      $saison_actuel = new Saison;
+      $year = $saison_actuel->connaitreSaison();
+      $saison = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Saison')->findOneByAnnee($year);
       $adhesion->setSaison($saison);
       $adhesion->setUser($user);
       
@@ -245,16 +259,29 @@ class SecurityController extends Controller
 
         // On vérifie que les valeurs entrées sont correctes
         if ($form->isValid()) {
-        // On l'enregistre notre objet $activite dans la base de données, par exemple
+         // on verifie si l'enfant n'a pas d'jà été enregistré
         $em = $this->getDoctrine()->getManager();
+        $listUtilisateur = $em->getRepository('SCUserBundle:User')->findAll();
+        foreach ($listUtilisateur   as $utilisateur)
+            {   
+                    
+                if ($utilisateur->getEmail() == $user->getEmail())
+                {
+                    $request->getSession()->getFlashBag()->add('info', 'login déjà existant');
+                    return $this->render('SCUserBundle:Security:register.html.twig', array('form' => $form->createView()));
+                       
+                }
+            }
+        // On l'enregistre notre objet $activite dans la base de données, par exemple
+        
         $em->persist($user);
         $em->flush();
         $ema = $this->getDoctrine()->getManager();
         $ema->persist($adhesion);
         $ema->flush();
-        $request->getSession()->getFlashBag()->add('info', 'Utilisateur bien enregistré');
+        $request->getSession()->getFlashBag()->add('info', 'Utilisateur bien enregistré, vous recevrez un mail après activation de votre compte');
         // On redirige vers la page de visualisation de l'annonce nouvellement créée
-        return $this->redirect($this->generateUrl('sc_user_homepage'));
+        return $this->redirect($this->generateUrl('sc_activite_homepage'));
         }
         
         return $this->render('SCUserBundle:Security:register.html.twig', array(
@@ -295,8 +322,18 @@ class SecurityController extends Controller
         
         // On vérifie que les valeurs entrées sont correctes
         if ($form->isValid()) {
-        // On l'enregistre notre objet $activite dans la base de données, par exemple
         $em = $this->getDoctrine()->getManager();
+        $listUtilisateur = $em->getRepository('SCUserBundle:User')->findAll();
+        foreach ($listUtilisateur   as $utilisateur)
+            {   
+                    
+                if ($utilisateur->getEmail() == $user->getEmail())
+                {
+                    $request->getSession()->getFlashBag()->add('info', 'login déjà existant');
+                    return $this->render('SCUserBundle:Security:register.html.twig', array('form' => $form->createView()));
+                       
+                }
+            }
         $em->persist($user);
         $em->flush();
         $request->getSession()->getFlashBag()->add('info', 'Utilisateur secondaire bien enregistré');

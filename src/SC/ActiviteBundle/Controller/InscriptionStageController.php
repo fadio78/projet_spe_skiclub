@@ -145,6 +145,10 @@ class InscriptionStageController extends Controller
         $activite = new Activite();
         $activite = $em->getRepository('SC\ActiviteBundle\Entity\Activite')->find($id);
         
+        if ($request->getSession()->get('email') == null) {
+            return $this->pageErreur("Vous devez être connecté pour accéder à ce lien");
+        }             
+        
         $listeInscriptionStages = $em->getRepository('SC\ActiviteBundle\Entity\InscriptionStage')->findBy(array('activite'=>$activite, 'saison'=>$saison));
         if (is_null($activite)) {
             $response = new Response;
@@ -193,6 +197,13 @@ class InscriptionStageController extends Controller
         $em->getRepository('SC\ActiviteBundle\Entity\InscriptionStage')
                                 ->validationPayment($prixTotal, $activite, $user, $nomEnfant, $prenomEnfant, $debutStage, $finStage);
         
+        if(is_null($activite) OR is_null($stage) OR is_null($saison)) {
+            $response = new Response;
+            $response->setContent("Error 404: not found");
+            $response->setStatusCode(Response::HTTP_NOT_FOUND);
+            return $response;
+        }
+        
         $listeInscriptionStages = $em->getRepository('SC\ActiviteBundle\Entity\InscriptionStage')
                 ->inscriptionStageActivite($user->getEmail());
         
@@ -213,9 +224,18 @@ class InscriptionStageController extends Controller
         $activite = new Activite();
         $activite = $em->getRepository('SC\ActiviteBundle\Entity\Activite')->find($id);
         
+        
+        
         $inscriptionStage = $em->getRepository('SC\ActiviteBundle\Entity\InscriptionStage')->findOneBy(
                 array('activite'=>$activite, 'user'=>$user, 'nomEnfant'=>$nomEnfant,'prenomEnfant'=>$prenomEnfant,'debutStage'=>$debutStage,
                     'finStage'=>$finStage));
+        
+        if(is_null($activite) OR is_null($inscriptionStage) OR is_null($saison) OR is_null($user)) {
+            $response = new Response;
+            $response->setContent("Error 404: not found");
+            $response->setStatusCode(Response::HTTP_NOT_FOUND);
+            return $response;
+        }
         
         $em->remove($inscriptionStage);
         $em->flush();

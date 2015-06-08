@@ -48,9 +48,9 @@ class AdminController extends Controller
           ->getRepository('SCUserBundle:User');
           
         
-          $listNoAdmin = $repository->findAll();//tous le monde 
+          //$listNoAdmin = $repository->findAll();//tous le monde 
          //$listNoAdmin = $repository->noAdmin();//Que les clients 
-        
+         $listNoAdmin = $repository->findby(array('isActive'=>true));//que les comptes actifs 
         return $this->render('SCUserBundle:Admin:listNoAdmin.html.twig',
                 array('listNoAdmin'=>$listNoAdmin )
                 );
@@ -223,6 +223,9 @@ class AdminController extends Controller
         $listeEnfantsInscrits = $repository -> listeDeMesInscriptions($email); 
         $repository = $em -> getRepository('SCUserBundle:User');
         $user = $repository ->find($email);
+        if (null === $user) {
+            throw $this -> createNotFoundException("L'utilisateur d'email ".$email." n'est pas enregistré.");
+        }
         $repository = $em -> getRepository('SCUserBundle:Enfant');
         // pour chaque enfant inscrit à l'activité, on récupère son niveau de ski
         foreach ( $listeEnfantsInscrits as $inscrit )
@@ -385,19 +388,19 @@ $message = \Swift_Message::newInstance()
         $em = $this ->getDoctrine() ->getManager();
         $activite = $em->getRepository('SC\ActiviteBundle\Entity\Activite')->find($id);
         if (null === $activite) {
-          throw new NotFoundHttpException("L'activité d'id ".$id." n'existe pas.");
+          throw $this -> createNotFoundException("L'activité d'id ".$id." n'existe pas.");
         }
         $saison = new Saison ();
         $year = $saison->connaitreSaison();  
         $saison = $em->getRepository('SC\ActiviteBundle\Entity\Saison')->find($year);
         if (null === $saison) {
-          throw new NotFoundHttpException("La saison  d'année ".$annee." n'existe pas.");
+          throw $this -> createNotFoundException("La saison ".$annee." n'existe pas.");
         }
         $repository = $em ->getRepository('SCActiviteBundle:InscriptionActivite');
         $groupe = $_POST['_groupe'];
         $enfantInscrit = $repository -> findOneBy(array('email' => $email,'prenomEnfant' => $prenomEnfant,'nomEnfant' => $nomEnfant,'activite' => $activite, 'saison' =>$saison )) ; 
         if (null === $enfantInscrit) {
-          throw new NotFoundHttpException("L'enfant n'existe pas ");
+          throw $this -> createNotFoundException("L'enfant ".$prenomEnfant.$nomEnfant."n/'est pas inscrit à l'activité".($activite.nomActivite));
         }
         $enfantInscrit -> setGroupe($groupe);
         $em -> flush();
@@ -405,6 +408,9 @@ $message = \Swift_Message::newInstance()
         
         $repository = $em -> getRepository('SCUserBundle:User');
         $user = $repository ->find($email);
+        if (null === $user) {
+            throw $this -> createNotFoundException("L'utilisateur d'email ".$email." n'est pas enregistré");
+        }
         $repository = $em -> getRepository('SCUserBundle:Enfant');
         // pour chaque enfant inscrit à l'activité, on récupère son niveau de ski
         foreach ( $listeEnfantsInscrits as $inscrit )

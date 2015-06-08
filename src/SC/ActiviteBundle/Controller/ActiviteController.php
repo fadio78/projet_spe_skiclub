@@ -64,7 +64,7 @@ class ActiviteController extends Controller
           ->getRepository('SCActiviteBundle:Activite');
         $activite = $repository->find($id); 
         if (null === $activite) {
-          throw new NotFoundHttpException("L'activité d'id ".$id." n'existe pas.");
+          throw $this -> createNotFoundException("L'activité d'id ".$id." n'existe pas.");
         }
         return $this->render('SCActiviteBundle:Activite:view.html.twig', array('activite' => $activite));
     }
@@ -78,8 +78,10 @@ class ActiviteController extends Controller
         // On récupère à partir de la session l'utilisateur
         $session = $request->getSession();
         $email = $session->get('email');
-
         $user = $this->getDoctrine()->getManager()->getRepository('SC\UserBundle\Entity\User')->find($email);
+        if (null === $user) {
+          throw $this -> createNotFoundException("L'utilisateur d'email".$email." n'est pas enregistré");
+        }
         // On crée un objet Activite
         $activite = new Activite();
         $activite->setUser($user);
@@ -95,7 +97,7 @@ class ActiviteController extends Controller
             $activite->setUser($user);
             $form = $this->get('form.factory')->create(new ActiviteType(), $activite);
             // On fait le lien Requête <-> Formulaire
-            // À partir de maintenant, la variable $activite contient les valeurs entrées dans le formulaire par l'e visiteur l'admin
+            // À partir de maintenant, la variable $activite contient les valeurs entrées dans le formulaire par l'admin
             $form->handleRequest($request);
             // On vérifie que les valeurs entrées sont correctes
             if ($form->isValid()) {
@@ -139,7 +141,7 @@ class ActiviteController extends Controller
         $activite = $em->getRepository('SCActiviteBundle:Activite')->find($id);
 
         if (null === $activite) {
-            throw new NotFoundHttpException("L'activité d'id ".$id." n'existe pas.");
+            throw $this -> createNotFoundException("L'activité d'id ".$id." n'existe pas.");
         }
 
         $form = $this->createForm(new ActiviteEditType(), $activite);
@@ -168,7 +170,7 @@ class ActiviteController extends Controller
         $activite = $repository->find($id);
         //si n'existe pas -> message d'erreur
         if (null === $activite) {
-            throw new NotFoundHttpException("L'activité d'id ".$id." n'existe pas.");
+            throw $this -> createNotFoundException("L'activité d'id ".$id." n'existe pas.");
         }
         else {
 
@@ -334,7 +336,7 @@ class ActiviteController extends Controller
         $repository = $em ->getRepository('SCActiviteBundle:Activite');
         $activite = $repository->find($id); 
         if (null === $activite) {
-          throw new NotFoundHttpException("L'activité d'id ".$id." n'existe pas.");
+          throw $this -> createNotFoundException("L'activité d'id ".$id." n'existe pas.");
         }
         $repository = $em -> getRepository('SCActiviteBundle:InscriptionActivite');
         $listeInscrits = $repository -> findAll(array('activite' => $activite, 'saison' => $saison ));

@@ -33,7 +33,7 @@ class InscriptionActiviteController extends Controller
         $inscriptionActivite = new InscriptionActivite();
         $activite = $em->getRepository('SC\ActiviteBundle\Entity\Activite')->find($id);
         if (null === $activite) {
-          throw new NotFoundHttpException("L'activité d'id ".$id." n'existe pas.");
+          throw $this -> createNotFoundException("L'activité d'id ".$id." n'existe pas.");
         }
         $inscriptionActivite -> setActivite($activite);
         $inscriptionActivite -> setEmail($email);
@@ -41,7 +41,7 @@ class InscriptionActiviteController extends Controller
         $year = $saison->connaitreSaison();  
         $saison = $em->getRepository('SC\ActiviteBundle\Entity\Saison')->find($year);
         if (null === $saison) {
-          throw new NotFoundHttpException("La saison  d'année ".$annee." n'existe pas.");
+          throw $this -> createNotFoundException("La saison  d'année ".$annee." n'existe pas.");
         }
         $inscriptionActivite -> setSaison($saison);
         $defaultData = array('message' => 'Type your message here');

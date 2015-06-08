@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Activite
  *
- * @ORM\Table()
+ * @ORM\Table("SkiClub_Activite")
  * @ORM\Entity(repositoryClass="SC\ActiviteBundle\Entity\ActiviteRepository")
  */
 class Activite

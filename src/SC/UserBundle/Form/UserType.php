@@ -24,9 +24,9 @@ class UserType extends AbstractType
             ->add('password','repeated',
                 array(
                     'type' => 'password',
-                    'invalid_message' => 'Password fields do not match',
-                    'first_options' => array('label' => 'Password'),
-                    'second_options' => array('label' => 'Repeat Password')
+                    'first_options' => array('label' => 'Mot de passe'),
+                    'second_options' => array('label' => 'Confirmation mot de passe'),
+                    'invalid_message' => 'Confirmation mot de passe invalid'
                 )
             )
             //->add('type')
