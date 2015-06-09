@@ -1,3 +1,0 @@
-sc_participation_homepage:
-    path:     /hello/{name}
-    defaults: { _controller: SCParticipationBundle:Default:index }
