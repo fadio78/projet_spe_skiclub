@@ -23,7 +23,7 @@
     <p><u>Choisir modalité de paiement</u></p>
   <form action="{{ path('sc_user_choixModalite') }}" method="post">
   <label for="modalite">Choisir le nombre de modalite(1,2 ou 3) </label>
-  <input type="number" id="modalite" name="_modalite" value="" /> 
+  <input type="number" id="modalite" name="_modalite" value="" min='1' max='3' /> 
   <input type="submit" value="Choisir" />
   </form>
   {% else %}
