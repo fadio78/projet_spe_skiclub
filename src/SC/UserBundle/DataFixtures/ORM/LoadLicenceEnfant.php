@@ -39,6 +39,28 @@ class LoadLicenceEnfant extends AbstractFixture implements OrderedFixtureInterfa
             }
         }
     }
+    //verification pour les stages maintenant 
+    $listInscritsStage = $manager ->getRepository('SCActiviteBundle:InscriptionStage') ->findBy(array('saison' => $saison));
+    foreach ($listInscritsStage as $inscrit )
+    {
+        $licence = $inscrit -> getActivite() -> getLicence();
+        if (isset($licence))
+        {
+            $licenceEnfantExiste = $manager -> getRepository ('SCUserBundle:LicenceEnfant') -> findOneBy(array('email' => $inscrit -> getUser()->getEmail(),'prenomEnfant' => ($inscrit -> getPrenomEnfant()),'nomEnfant' => ($inscrit -> getNomEnfant()),'saison' => $saison,'licence' => $inscrit ->getActivite()->getLicence() ));
+            if ($licenceEnfantExiste == null)
+            {
+                $licenceEnfant = new LicenceEnfant();
+                $licenceEnfant -> setLicence ($licence);
+                $licenceEnfant -> setEmail($inscrit -> getUser()->getEmail());
+                $licenceEnfant -> setPrenomEnfant($inscrit -> getPrenomEnfant());
+                $licenceEnfant -> setNomEnfant($inscrit -> getNomEnfant()); 
+                $licenceEnfant -> setSaison($saison);
+                $manager->persist($licenceEnfant);
+                $manager->flush();
+                
+            }
+        }
+    }
   }
   public function getOrder()
   {
