@@ -33,6 +33,20 @@ class LoadStage extends AbstractFixture implements OrderedFixtureInterface
             $stage1 ->setSaison($saison);
             $stage1 ->setUser($user);
             $manager->persist($stage1);
+            $stage2 = new Stage();
+            $stage2 ->setActivite($activite);
+            $stage2 ->setNomStage('Second Stage de '.$activite->getNomActivite());
+            $mois = rand(1,5);
+            $stage2 ->setDebutStage(($saison->getAnnee()+1).'-'.$mois.'-'.rand(1,15));
+            $stage2 ->setFinStage(($saison->getAnnee()+1).'-'.$mois.'-'.rand(16,30));
+            $stage2 ->setCharges(rand(1,99));
+            $stage2 ->setPrixStage(rand(50,199));
+            $stage2 ->setLieu($lieu);
+            $stage2 ->setSaison($saison);
+            $stage2 ->setUser($user);
+            $manager->persist($stage2);
+            
+            
         }
     }
     $manager->flush();

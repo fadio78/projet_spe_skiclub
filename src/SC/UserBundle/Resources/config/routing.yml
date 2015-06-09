@@ -25,7 +25,13 @@ sc_user_register:
    
 sc_user_ajouter:
     path:     /ajouterUser
-    defaults: { _controller: SCUserBundle:Security:ajouter }        
+    defaults: { _controller: SCUserBundle:Security:ajouter }  
+    
+sc_user_changePassword:
+    path:     /changePassword/{email}
+    defaults: { _controller: SCUserBundle:Security:changePassword }
+    requirements : 
+         email : "[^/]+"
         
 sc_enfant_ajouter:
     path:     /ajoutEnfant

@@ -46,8 +46,11 @@ class SecurityController extends Controller
   }
     public function paramCompteAction(Request $request)
   { 
-        $usr= $this->get('security.context')->getToken()->getUser();
-        $email = $usr->getUsername();
+        $session = $request->getSession();
+      
+        
+       $usr = $this->get('security.context')->getToken()->getUser();
+        $email = $session->get('email');
        
         $saison = new Saison;
         $annee = $saison->connaitreSaison();
@@ -65,7 +68,7 @@ class SecurityController extends Controller
                 $em = $this->getDoctrine()->getManager();
 
            $dette = $em->getRepository('SCActiviteBundle:InscriptionActivite')->getSommeApayer($email);
-              
+             
         return $this->render('SCUserBundle:Security:paramCompte.html.twig',array(
             'user' => $usr ,
             'adhesion'=>$adhesion,
@@ -302,10 +305,11 @@ class SecurityController extends Controller
       //création du salt aléatoire
       $salt = substr(md5(time()),0,10);
       $user->setSalt($salt);
-      $user->setType('user');
+      $user->setType('client');
       $user->setIsActive(true);     
       $user->setIsPrimaire(false);
       $user->setEmailPrimaire($session->get('email'));
+      
       
       $form = $this->get('form.factory')->create(new UserType(), $user);
       
@@ -349,8 +353,11 @@ class SecurityController extends Controller
     public function choixModaliteAction(Request $request)
     {
                  
-       $usr= $this->get('security.context')->getToken()->getUser();
-        $email = $usr->getUsername();     
+       $session = $request->getSession();
+      
+        
+        
+        $email = $session->get('email');     
                  
         $saison = new Saison;
         $annee = $saison->connaitreSaison();
@@ -362,6 +369,41 @@ class SecurityController extends Controller
          
            $adhesion = $repository->choixModalite($email,$annee,$modalite);
         return $this->paramCompteAction($request);
+    }
+    public function changePasswordAction(Request $request, $email)
+            {
+                 $password = $_POST['_password'];
+                 $conf_password = $_POST['_conf_password'];
+                 
+                 if($password == $conf_password){
+                 
+                        $user = new User;
+                    $salt = substr(md5(time()),0,10);
+      
+                
+                    $factory = $this->get('security.encoder_factory');
+                    $encoder = $factory->getEncoder($user);
+                    $newpassword = $encoder->encodePassword($password, $salt);
+      
+
+ 
+        
+        $repository = $this
+          ->getDoctrine()
+          ->getManager()
+          ->getRepository('SCUserBundle:User');
+         
+          $repository->changePassword($email,$newpassword, $salt);
+            $request->getSession()->getFlashBag()->add('info', 'mot de passe modifié ');
+
+            
+                 }else{
+                     $request->getSession()->getFlashBag()->add('info', 'Mot de passe de confirmation incorrecte ');
+                 } 
+            
+         return  $this->paramCompteAction( $request);
+        
+        
     }
   
 }

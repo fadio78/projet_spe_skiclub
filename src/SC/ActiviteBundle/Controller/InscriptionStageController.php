@@ -208,6 +208,7 @@ class InscriptionStageController extends Controller
                 ->inscriptionStageActivite($user->getEmail());
         
         $request->getSession()->getFlashBag()->add('info', 'Paiement confirmé');
+        $this.mailConfirmationPayment($email, $debutStage, $finStage, $prenomEnfant);
         return $this->render('SCActiviteBundle:Stage:viewAllStagesUser.html.twig', array('listeInscriptionStages'=>$listeInscriptionStages, 'email'=>$email));
     }
     
@@ -244,7 +245,35 @@ class InscriptionStageController extends Controller
                 ->inscriptionStageActivite($user->getEmail());
         
         $request->getSession()->getFlashBag()->add('info', 'Inscription supprimée');
+        $this->mailDeleteInscription($email, $debutStage, $finStage, $prenomEnfant);
         return $this->render('SCActiviteBundle:Stage:viewAllStagesUser.html.twig', array('listeInscriptionStages'=>$listeInscriptionStages, 'email'=>$email));
         
     }
+    
+    public function mailConfirmationPayment($email, $debutStage, $finStage, $prenomEnfant) {
+            
+        $message = \Swift_Message::newInstance()                     
+                            ->setSubject('SKICLUB : Accusé de réception de paiement de stage')
+                            ->setFrom('sfr@hotmail.com')
+                            ->setTo($email)
+                            ->setBody('Bonjour, nous vous informons que nous avons bien reçu votre paiement pour le stage du '
+                                    .$debutStage.' au '.$finStage.' à '.$lieu.' pour '.$prenomEnfant.'. A très bientôt.'
+                                    . 'Le SKICLUB');
+                    
+        $this->get('mailer')->send($message);
+    }
+    
+        public function mailDeleteInscription($email, $debutStage, $finStage, $prenomEnfant) {
+            
+        $message = \Swift_Message::newInstance()                     
+                            ->setSubject('SKICLUB : Suppression de l\'inscription à un stage')
+                            ->setFrom('sfr@hotmail.com')
+                            ->setTo($email)
+                            ->setBody('Bonjour, nous avons supprimé l\'inscription de '.$prenomEnfant. ' pour le stage de '
+                                    .$debutStage.' au '.$finStage.'. A très bientôt.'
+                                    . 'Le SKICLUB');
+                    
+        $this->get('mailer')->send($message);
+    }
+
 }
