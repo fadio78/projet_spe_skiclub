@@ -370,5 +370,40 @@ class SecurityController extends Controller
            $adhesion = $repository->choixModalite($email,$annee,$modalite);
         return $this->paramCompteAction($request);
     }
+    public function changePasswordAction(Request $request, $email)
+            {
+                 $password = $_POST['_password'];
+                 $conf_password = $_POST['_conf_password'];
+                 
+                 if($password == $conf_password){
+                 
+                        $user = new User;
+                    $salt = substr(md5(time()),0,10);
+      
+                
+                    $factory = $this->get('security.encoder_factory');
+                    $encoder = $factory->getEncoder($user);
+                    $newpassword = $encoder->encodePassword($password, $salt);
+      
+
+ 
+        
+        $repository = $this
+          ->getDoctrine()
+          ->getManager()
+          ->getRepository('SCUserBundle:User');
+         
+          $repository->changePassword($email,$newpassword, $salt);
+            $request->getSession()->getFlashBag()->add('info', 'mot de passe modifié ');
+
+            
+                 }else{
+                     $request->getSession()->getFlashBag()->add('info', 'Mot de passe de confirmation incorrecte ');
+                 } 
+            
+         return  $this->paramCompteAction( $request);
+        
+        
+    }
   
 }

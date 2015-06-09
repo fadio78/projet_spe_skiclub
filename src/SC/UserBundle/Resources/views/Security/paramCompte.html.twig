@@ -42,7 +42,7 @@
       <br>
   </br>
   <p><u>Changer de mot de passe</u></p>
-  <form action="{{ path('sc_admin_changePassword',{'email': user.email}) }}" method="post">
+  <form action="{{ path('sc_user_changePassword',{'email': user.email}) }}" method="post">
   <label for="password">Nouveau mot de passe : </label>
   <input type="password" id="password" name="_password" value="" /> 
   <br>
@@ -51,5 +51,11 @@
   <br>
   <input type="submit" value="Modifier" />
   </form>
+ <p><FONT color="red">
+      {# On affiche tous les messages flash dont le nom est « info » #}
+        {% for message in app.session.flashbag.get('info') %}
+          <p>{{ message }}</p>
+        {% endfor %}
+    </FONT></p>
     
 {% endblock %}
