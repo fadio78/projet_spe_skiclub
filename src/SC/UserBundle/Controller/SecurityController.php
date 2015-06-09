@@ -46,8 +46,11 @@ class SecurityController extends Controller
   }
     public function paramCompteAction(Request $request)
   { 
-        $usr= $this->get('security.context')->getToken()->getUser();
-        $email = $usr->getUsername();
+        $session = $request->getSession();
+      
+        
+       $usr = $this->get('security.context')->getToken()->getUser();
+        $email = $session->get('email');
        
         $saison = new Saison;
         $annee = $saison->connaitreSaison();
@@ -65,7 +68,7 @@ class SecurityController extends Controller
                 $em = $this->getDoctrine()->getManager();
 
            $dette = $em->getRepository('SCActiviteBundle:InscriptionActivite')->getSommeApayer($email);
-              
+             
         return $this->render('SCUserBundle:Security:paramCompte.html.twig',array(
             'user' => $usr ,
             'adhesion'=>$adhesion,
@@ -350,8 +353,11 @@ class SecurityController extends Controller
     public function choixModaliteAction(Request $request)
     {
                  
-       $usr= $this->get('security.context')->getToken()->getUser();
-        $email = $usr->getUsername();     
+       $session = $request->getSession();
+      
+        
+        
+        $email = $session->get('email');     
                  
         $saison = new Saison;
         $annee = $saison->connaitreSaison();
