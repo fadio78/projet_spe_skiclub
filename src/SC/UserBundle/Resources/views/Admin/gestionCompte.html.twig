@@ -31,7 +31,16 @@
      <p>l'utilisateur n'a pas encore choisi ses modalités de paiement<p/>
    <br/>   
    {% endif %}
-           
+   {% if adhesion.adhesionAnnuel == false%}
+         <form action="{{ path('sc_admin_adherer',{'email': user.email}) }}" method="post">
+    <label for="adhesion">Adhésion : </label>
+    <input type="checkbox"  name="_adhesion" value="1" />        
+     <input type="submit" value="ajouter" />
+     </form>
+     {% else %}
+       <p> L'adhésion de la saison <b>{{adhesion.saison.annee }}</b> est payé.<p/>
+       <br/>  
+     {% endif %}     
              
     <form action="{{ path('sc_admin_ajoutMontant',{'email': user.email}) }}" method="post">
     <label for="montant">Valeur du paiement : </label>
@@ -49,12 +58,7 @@
     
     
     
-      <form action="{{ path('sc_admin_adherer',{'email': user.email}) }}" method="post">
-    <label for="adhesion">Adhésion : </label>
-    <input type="checkbox"  name="_adhesion" value="1" />        
-     <input type="submit" value="ajouter" />
-     </form>
-    
+
     <form action="{{ path('sc_admin_changePassword',{'email': user.email}) }}" method="post">
   <label for="password">Nouveau mot de passe : </label>
     <input type="password" id="password" name="_password" value="" /> 

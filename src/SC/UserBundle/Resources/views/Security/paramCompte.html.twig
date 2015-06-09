@@ -12,8 +12,15 @@
   <br/>
   *Ce montant correspond à la somme des activité des différents enfants et de leurs licences. Il faut donc ajouter <u>l'adhésion Annuel</u>.
   <p/> 
+   <br/>
+    {% if adhesion.adhesionAnnuel == false%}
+  <p>Attention,  l'adhésion de la saison <b>{{adhesion.saison.annee }}</b> n'est pas payé.<p/>
+  {% else %}
+     <p> L'adhésion de la saison <b>{{adhesion.saison.annee }}</b> est payé.<p/>
+   <br/>   
+  {% endif%}
   {% if adhesion.modalite == null%}
-    <p><u>Changer de mot de passe</u></p>
+    <p><u>Choisir modalité de paiement</u></p>
   <form action="{{ path('sc_user_choixModalite') }}" method="post">
   <label for="modalite">Choisir le nombre de modalite(1,2 ou 3) </label>
   <input type="number" id="modalite" name="_modalite" value="" /> 
@@ -23,7 +30,10 @@
      <p><u>Nombre de modalité choisi pour le paiement</u> :   {{adhesion.modalite}} <p/>
    <br/>   
   {% endif%}
+ 
   <br/>
+  
+  
   <p>Vous pouvez ajouter un utilisateur secondaire. Un utilisateur secondaire peut inscrire vos enfants avec son propre compte et son propre mot de passe.</p>
   <p><a href="{{ path('sc_user_ajouter') }}">Ajouter</a><p/>
   
