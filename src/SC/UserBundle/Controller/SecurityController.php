@@ -302,7 +302,7 @@ class SecurityController extends Controller
       //création du salt aléatoire
       $salt = substr(md5(time()),0,10);
       $user->setSalt($salt);
-      $user->setType('user');
+      $user->setType('client');
       $user->setIsActive(true);     
       $user->setIsPrimaire(false);
       $user->setEmailPrimaire($session->get('email'));
