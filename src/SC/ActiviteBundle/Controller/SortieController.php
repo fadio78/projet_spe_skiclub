@@ -279,7 +279,7 @@ class SortieController extends Controller
             return $this->redirect($this->generateUrl('sc_activite_view', array('id' => $activite->getId())));
         }
 
-        return $this->render('SCActiviteBundle:Activite:edit.html.twig', array('form'   => $form->createView(),'activite' => $activite,'edit' => 1));// Je passe également l'activité à la vue si jamais elle veut l'afficher))
+        return $this->render('SCActiviteBundle:Activite:edit.html.twig', array('form'   => $form->createView(),'activite' => $activite,'edit' => 1,'vueLicence'=>1));// Je passe également l'activité à la vue si jamais elle veut l'afficher))
     }
    
 }
