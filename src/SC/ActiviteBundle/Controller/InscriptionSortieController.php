@@ -389,8 +389,19 @@ class InscriptionSortieController extends Controller
             $sortie = $data['sortie'];
             //$inscrits = $em->getRepository('SC\ActiviteBundle\Entity\InscriptionSortie')->findBy(array('idActivite' => $id,'saison' => $year,'lieu' => $sortie->getLieu()->getNomLieu(), 'dateSortie' => $sortie->getDateSortie()));
             $inscrits = $em->getRepository('SC\ActiviteBundle\Entity\InscriptionSortie')->getGroupe($id,$year/*,$sortie->getLieu()->getNomLieu()*/,$sortie->getDateSortie());
-            
-            return $this->render('SCActiviteBundle:Sortie:inscritSortie.html.twig', array('activite'=> $activite, 'inscrits' => $inscrits,'saison' => $year, 'sortie' => $sortie ));
+            // on fait le total des participants
+            $total = 0; $conf = 0; $notConf = 0;
+            foreach ($inscrits as $inscrit) {
+                $total = $total + 1;
+                if ($inscrit['participation'] == 1) {
+                    $conf = $conf + 1;
+                }
+                else {
+                    $notConf = $notConf + 1; 
+                }
+                
+            }
+            return $this->render('SCActiviteBundle:Sortie:inscritSortie.html.twig', array('activite'=> $activite, 'inscrits' => $inscrits,'saison' => $year, 'sortie' => $sortie, 'total' => $total, 'conf' => $conf, 'notConf'=> $notConf ));
         }
         
         return $this->render('SCActiviteBundle:Sortie:ListSorties.html.twig', array('form' => $form->createView(),'activite'=> $activite,'saison' => $year ));        
