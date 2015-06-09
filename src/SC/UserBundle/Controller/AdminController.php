@@ -330,12 +330,12 @@ $message = \Swift_Message::newInstance()
     public function tresorerieAction(Request $request)
     {   $em = $this->getDoctrine()->getManager();
          
-        $listUser = $em->getRepository('SCUserBundle:User')->findAll();//tresorerie concernant tous les users mêmes les désactivé 
+        $listUser = $em->getRepository('SCUserBundle:User')->findBy(array('isPrimaire'=>true));//tresorerie concernant tous les users mêmes les désactivé 
         
         $saison =new Saison;
         $annee = $saison->connaitreSaison();
         
-        $payés = $em->getRepository('SCUserBundle:Adhesion')->findby(array('saison'=> $annee));
+        $payés = $em->getRepository('SCUserBundle:Adhesion')->findBy(array('saison'=> $annee));
         
         $sommeDetteActivité = 0;
         $sommeMontantActivité = 0;
