@@ -35,8 +35,11 @@
   
   
   <p>Vous pouvez ajouter un utilisateur secondaire. Un utilisateur secondaire peut inscrire vos enfants avec son propre compte et son propre mot de passe.</p>
-  <p><a href="{{ path('sc_user_ajouter') }}">Ajouter</a><p/>
-  
+    <a href="{{ path('sc_user_ajouter')}}" class="btn btn-default">
+      <i class="glyphicon glyphicon-plus-sign"></i>
+      Ajouter 
+    </a>
+      <br>
   </br>
   <p><u>Changer de mot de passe</u></p>
   <form action="{{ path('sc_admin_changePassword',{'email': user.email}) }}" method="post">
