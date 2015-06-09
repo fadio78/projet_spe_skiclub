@@ -3,7 +3,8 @@
 
 {% block user_body %}
 
-<table border="1" cellpadding="10" cellspacing="1" width="100%">
+<table id="myTable" class="tablesorter" border="1" cellpadding="10" cellspacing="1" width="100%">
+    <thead> 
    <tr>
 
        <th><center>Nom</center></th>
@@ -14,6 +15,8 @@
 
 
    </tr>
+   </thead>
+   <tbody> 
    
    {% for inscription in listeEnfantsInscrits %}
    <tr>
@@ -41,6 +44,7 @@
 
    </tr>
    {% endfor %}
+   </tbody> 
    
 </table>
 
