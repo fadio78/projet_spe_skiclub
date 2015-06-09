@@ -4,19 +4,23 @@
 {% block activité_body %}
     <h3>Stages de {{activite.nomActivite}}</h3>
 
-<table border="1" cellpadding="10" cellspacing="1" width="100%">
+<table id="myTable" class="tablesorter" border="1" cellpadding="10" cellspacing="1" width="100%">
+    <thead> 
    <tr>
 
        <th><center>Nom</center></th>
 
 <th><center>Prénom</center></th>
 
-       <th><center>Stages</center></th>
+       <th><center>Début du stage</center></th>
+
+       <th><center>Fin du stage</center></th>
        
        <th><center>Confirmation</center></th>
 
    </tr>
-
+   </thead>
+   <tbody> 
    {% for stage in listeInscriptionStages %}
    <tr>
 
@@ -24,15 +28,19 @@
 
        <td><center>{{ stage.prenomEnfant}}</center></td>
 
-       <td><center>{{ stage.debutStage }} au {{ stage.finStage }}</center></td>
+       <td><center>{{ stage.debutStage}}</center></td>
+
+       <td><center>{{ stage.finStage}}</center></td>
+
        {% if  stage.prixPayeStage == 0 %}
        <td  bgcolor="#DF0101"><center></center></td>
        {% else %}
-       <td  bgcolor="#01DF01"><center></center></td>
+       <td  bgcolor="#01DF01"><center><FONT color="#01DF01">OK</center></td>
        {% endif %}
 
    </tr>
    {% endfor %}
+   </tbody> 
    
 </table>
  

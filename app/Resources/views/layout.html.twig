@@ -1,7 +1,7 @@
 {# app/Resources/views/layout.html.twig #}
  
-<!DOCTYPE html>
-<html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
 <head>
  <!-- <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1"> -->
@@ -24,6 +24,10 @@
      {% endstylesheets %} 
          <!-- Fonts -->
     {% endblock %}
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+
+    
+    
 </head>
 
 <body>
@@ -141,18 +145,30 @@
     <footer>
  <!--     <p>The sky's the limit © {{ 'now'|date('Y') }} and beyond.</p>  -->
     </footer>
-  </div>
-  {% block javascripts %}
-    {# Ajoutez ces lignes JavaScript si vous comptez vous servir des fonctionnalités du bootstrap Twitter #}
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  </div
+  
+      {% block javascripts %}
+      {# Ajoutez ces lignes JavaScript si vous comptez vous servir des fonctionnalités du bootstrap Twitter #}
+        {% javascripts 'js/jquery.js' 'js/jquery.tablesorter.js' %}
+
+            <script type="text/javascript" src="{{ asset_url }}"></script>
+
+        {% endjavascripts %}
+      
+    
+    <script>
+        $(document).ready(function() { 
+            $("#myTable").tablesorter(); 
+        } 
+    ); 
+    </script>
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
      <!-- Script to Activate the Carousel -->
     <script>
-    $('.carousel').carousel({
-        interval: 5000 //changes the speed
-    })
+        $('.carousel').carousel({
+            interval: 5000 //changes the speed
+        })
     </script>
-
-  {% endblock %}
+     {% endblock %}
 </body>
 </html>

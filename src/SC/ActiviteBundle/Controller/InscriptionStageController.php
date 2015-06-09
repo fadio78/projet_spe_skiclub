@@ -208,7 +208,7 @@ class InscriptionStageController extends Controller
                 ->inscriptionStageActivite($user->getEmail());
         
         $request->getSession()->getFlashBag()->add('info', 'Paiement confirmé');
-        $this.mailConfirmationPayment($email, $debutStage, $finStage, $prenomEnfant);
+        $this->mailConfirmationPayment($email, $debutStage, $finStage, $prenomEnfant);
         return $this->render('SCActiviteBundle:Stage:viewAllStagesUser.html.twig', array('listeInscriptionStages'=>$listeInscriptionStages, 'email'=>$email));
     }
     
@@ -257,7 +257,7 @@ class InscriptionStageController extends Controller
                             ->setFrom('sfr@hotmail.com')
                             ->setTo($email)
                             ->setBody('Bonjour, nous vous informons que nous avons bien reçu votre paiement pour le stage du '
-                                    .$debutStage.' au '.$finStage.' à '.$lieu.' pour '.$prenomEnfant.'. A très bientôt.'
+                                    .$debutStage.' au '.$finStage.' pour '.$prenomEnfant.'. A très bientôt.'
                                     . 'Le SKICLUB');
                     
         $this->get('mailer')->send($message);
