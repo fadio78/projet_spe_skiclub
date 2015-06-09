@@ -1,7 +1,97 @@
 {# src/SC/ActiviteBundle/Resources/views/Activite/form.html.twig #}
 
 
-<h3>Formulaire d'une Activité</h3>
 
 
-{{ form(form) }}
+  {% if vueLicence is not defined %}
+      <h3>Formulaire d'une activité</h3>
+<div class="well">
+  {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
+    {# Les erreurs générales du formulaire. #}
+    {{ form_errors(form) }}
+    <div class="form-group">
+      {# Génération du label. #}
+      {{ form_label(form.nomActivite, "Nom de l'activité", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+      {# Affichage des erreurs pour ce champ précis. #}
+      {{ form_errors(form.nomActivite) }}
+      <div class="col-sm-4">
+        {# Génération de l'input. #}
+        {{ form_widget(form.nomActivite, {'attr': {'class': 'form-control'}}) }}
+      </div>
+    </div>
+    {# Idem pour un autre champ. #}
+    <div class="form-group">
+      {{ form_label(form.description, "Description", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+      {{ form_errors(form.description) }}
+      <div class="col-sm-4">
+        {{ form_widget(form.description, {'attr': {'class': 'form-control'}}) }}
+      </div>
+    </div>
+      
+    {# Idem pour un autre champ. #}
+    <div class="form-group">
+      {{ form_label(form.prixActivite, "Prix activité", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+      {{ form_errors(form.prixActivite) }}
+      <div class="col-sm-4">
+        {{ form_widget(form.prixActivite, {'attr': {'class': 'form-control'}}) }}
+      </div>
+    </div>
+    {# Idem pour un autre champ. #}
+    <div class="form-group">
+      {{ form_label(form.licence, "Licence", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+      {{ form_errors(form.licence) }}
+      <div class="col-sm-4">
+        {{ form_widget(form.licence, {'attr': {'class': 'form-control'}}) }}
+      </div>
+    </div>
+
+  {# Pour le bouton, pas de label ni d'erreur, on affiche juste le widget #}
+  {{ form_widget(form.enregistrer, {'attr': {'class': 'btn btn-primary'}}) }}
+  {# Génération automatique des champs pas encore écrits.
+     Dans cet exemple, ce serait le champ CSRF (géré automatiquement par Symfony !)
+     et tous les champs cachés (type « hidden »). #}
+  {{ form_rest(form) }}
+  
+  {# Fermeture de la balise <form> du formulaire HTML #}
+  {{ form_end(form) }}
+</div> 
+
+ {% else %}
+     
+     <h3>Formulaire d'une sortie</h3>
+     
+     <div class="well">
+  {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
+    {# Les erreurs générales du formulaire. #}
+    {{ form_errors(form) }}
+    <div class="form-group">
+      {# Génération du label. #}
+      {{ form_label(form.dateSortie, "Date de la sortie", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+      {# Affichage des erreurs pour ce champ précis. #}
+      {{ form_errors(form.dateSortie) }}
+      <div class="col-sm-4">
+        {# Génération de l'input. #}
+        {{ form_widget(form.dateSortie, {'attr': {'class': 'form-control'}}) }}
+      </div>
+    </div>
+      <br>
+    {# Idem pour un autre champ. #}
+    <div class="form-group">
+      {{ form_label(form.lieu, "Lieu", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+      {{ form_errors(form.lieu) }}
+      <div class="col-sm-4">
+        {{ form_widget(form.lieu, {'attr': {'class': 'form-control'}}) }}
+      </div>
+    </div>
+
+  {# Pour le bouton, pas de label ni d'erreur, on affiche juste le widget #}
+  {{ form_widget(form.enregistrer, {'attr': {'class': 'btn btn-primary'}}) }}
+  {# Génération automatique des champs pas encore écrits.
+     Dans cet exemple, ce serait le champ CSRF (géré automatiquement par Symfony !)
+     et tous les champs cachés (type « hidden »). #}
+  {{ form_rest(form) }}
+  
+  {# Fermeture de la balise <form> du formulaire HTML #}
+  {{ form_end(form) }}
+  {%endif %}
+     

@@ -1,3 +1,85 @@
 {# src/SC/ActiviteBundle/Resources/view/Stage/form.html.twig #}
 
-  {{ form(form) }}
+ <div class="well">
+  {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
+    {# Les erreurs générales du formulaire. #}
+    {{ form_errors(form) }}
+    <div class="form-group">
+      {# Génération du label. #}
+      {{ form_label(form.debutStage, "Debut stage", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+      {# Affichage des erreurs pour ce champ précis. #}
+      {{ form_errors(form.debutStage) }}
+      <div class="col-sm-4">
+        {# Génération de l'input. #}
+        {{ form_widget(form.debutStage, {'attr': {'class': 'form-control'}}) }}
+      </div>
+    </div>
+    {# Idem pour un autre champ. #}
+    <div class="form-group">
+      {{ form_label(form.finStage, "Fin stage", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+      {{ form_errors(form.finStage) }}
+      <div class="col-sm-4">
+        {{ form_widget(form.finStage, {'attr': {'class': 'form-control'}}) }}
+      </div>
+    </div>
+      
+    {# Idem pour un autre champ. #}
+    <div class="form-group">
+      {{ form_label(form.nomStage, "Nom du stage", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+      {{ form_errors(form.nomStage) }}
+      <div class="col-sm-4">
+        {{ form_widget(form.nomStage, {'attr': {'class': 'form-control'}}) }}
+      </div>
+    </div>
+    {# Idem pour un autre champ. #}
+    <div class="form-group">
+      {{ form_label(form.description, "Description", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+      {{ form_errors(form.description) }}
+      <div class="col-sm-4">
+        {{ form_widget(form.description, {'attr': {'class': 'form-control'}}) }}
+      </div>
+    </div>
+          {# Idem pour un autre champ. #}
+    <div class="form-group">
+      {{ form_label(form.prixStage, "Prix stage", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+      {{ form_errors(form.prixStage) }}
+      <div class="col-sm-4">
+        {{ form_widget(form.prixStage, {'attr': {'class': 'form-control'}}) }}
+      </div>
+    </div>
+          {# Idem pour un autre champ. #}
+    <div class="form-group">
+      {{ form_label(form.charges, "Charges", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+      {{ form_errors(form.charges) }}
+      <div class="col-sm-4">
+        {{ form_widget(form.charges, {'attr': {'class': 'form-control'}}) }}
+      </div>
+    </div>
+      <br>
+          {# Idem pour un autre champ. #}
+    <div class="form-group">
+      {{ form_label(form.lieu, "Lieu", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+      {{ form_errors(form.lieu) }}
+      <div class="col-sm-4">
+        {{ form_widget(form.lieu, {'attr': {'class': 'form-control'}}) }}
+      </div>
+    </div>
+      <br>
+                {# Idem pour un autre champ. #}
+    <div class="form-group">
+      {{ form_label(form.saison, "Saison", {'label_attr': {'class': 'col-sm-3 control-label'}}) }}
+      {{ form_errors(form.saison) }}
+      <div class="col-sm-4">
+        {{ form_widget(form.saison, {'attr': {'class': 'form-control'}}) }}
+      </div>
+    </div>
+
+  {# Pour le bouton, pas de label ni d'erreur, on affiche juste le widget #}
+  {{ form_widget(form.enregistrer, {'attr': {'class': 'btn btn-primary'}}) }}
+  {# Génération automatique des champs pas encore écrits.
+     Dans cet exemple, ce serait le champ CSRF (géré automatiquement par Symfony !)
+     et tous les champs cachés (type « hidden »). #}
+  {{ form_rest(form) }}
+  
+  {# Fermeture de la balise <form> du formulaire HTML #}
+  {{ form_end(form) }}
