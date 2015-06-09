@@ -307,6 +307,7 @@ class SecurityController extends Controller
       $user->setIsPrimaire(false);
       $user->setEmailPrimaire($session->get('email'));
       
+      
       $form = $this->get('form.factory')->create(new UserType(), $user);
       
       // On fait le lien Requête <-> Formulaire
