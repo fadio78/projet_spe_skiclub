@@ -11,7 +11,7 @@
       {% endfor %} </FONT>
   </p>
 
-  <h2> Saison : {{ app.session.get('year') }} </h2>
+  <FONT COLOR=#FF4000><h2> Saison : {{ app.session.get('year') }} </h2> </FONT> 
   <br/><br>
     {% for activite in listeActivites %}
         <h4>  <a href="{{ path('sc_activite_view', {'id': activite.id}) }}">
