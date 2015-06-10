@@ -51,7 +51,7 @@ class User implements AdvancedUserInterface
      *
      * @ORM\Column(name="telephone", type="string")
      * @Assert\Regex(
-     *     pattern="#^0[1-68]([-. ]?[0-9]{2}){4}$#",
+     *     pattern="#^0[1-8]([-. ]?[0-9]{2}){4}$#",
      *     match=true,
      *     message="Your property should match ..."
      *     )
