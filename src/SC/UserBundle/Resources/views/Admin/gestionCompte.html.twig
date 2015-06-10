@@ -24,41 +24,48 @@
   *Ce montant correspond à la somme des activité des différents enfants et de leurs licences. Il faut donc ajouter <u>l'adhésion Annuel</u>.
   <p/> 
   <br/>
+  <p><u>Modalité de paiement</u></p>
   {% if adhesion.modalite != null%}
   <p><u>Nombre de modalité choisi pour le paiement</u> :   {{adhesion.modalite}} <p/>
-   <br/>
+   <br><br/>
    {% else %}
-     <p>l'utilisateur n'a pas encore choisi ses modalités de paiement<p/>
-   <br/>   
+     <p>L'utilisateur n'a pas encore choisi ses modalités de paiement<p/>
+   <br/>
    {% endif %}
+   
+   <p>Cocher cette case pour valider l'adhésion de l'utilisateur.</p>
    {% if adhesion.adhesionAnnuel == false%}
          <form action="{{ path('sc_admin_adherer',{'email': user.email}) }}" method="post">
     <label for="adhesion">Adhésion : </label>
     <input type="checkbox"  name="_adhesion" value="1" />        
-     <input type="submit" value="ajouter" />
+     <input type="submit" value="valider" />
      </form>
      {% else %}
        <p> L'adhésion de la saison <b>{{adhesion.saison.annee }}</b> est payé.<p/>
        <br/>  
      {% endif %}     
-             
+    <br><br/>
+     
+    <p>Vous pouvez ici ajouter le montant payé par l'utilisateur (en €). Il pourra alors voir ce qu'il a payé et ce qu'il lui reste à payer.
+        <br>
+        Vous pouvez également donner une remise à l'utilisateur (en €).
+    </p>
     <form action="{{ path('sc_admin_ajoutMontant',{'email': user.email}) }}" method="post">
     <label for="montant">Valeur du paiement : </label>
     <input type="number" id="montant" name="_montant" value="" />        
      <input type="submit" value="ajouter" />
-    </form>
-    <br/>  
+    </form> 
          
       <form action="{{ path('sc_admin_ajoutRemise',{'email': user.email}) }}" method="post">
     <label for="remise">Valeur de la remise : </label>
     <input type="number" id="remise" name="_remise" value="" />        
      <input type="submit" value="ajouter" />
      </form>
-    <br/>  
+    <br><br/>  
     
     
     
-
+    <p>Vous pouvez changer le mot de passe de l'utilisateur. Le mot de passe sera automatiquement envoyé par email à l'utilisateur.</p>
     <form action="{{ path('sc_admin_changePassword',{'email': user.email}) }}" method="post">
   <label for="password">Nouveau mot de passe : </label>
     <input type="password" id="password" name="_password" value="" /> 
@@ -75,7 +82,7 @@
       <i class="glyphicon glyphicon-plus"></i>
       Donner les droits d'administrateurs
     </a> 
-    
+        <br><br/>
     
     <a href="{{ path('sc_admin_gestionEnfant', {'email': user.email}) }}" class="btn btn-default">
       <i class="glyphicon glyphicon-folder-open"></i>

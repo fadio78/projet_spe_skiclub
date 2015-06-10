@@ -32,10 +32,10 @@
         </a>
         {%endif%}    
         {% if is_granted('ROLE_ADMIN') %}
-            <a href="{{ path('sc_activite_editStage', {'id': activite.id, 'debutStage' : stage.debutStage, 'finStage' : stage.finStage}) }}" class="btn btn-default">
+            {#<a href="{{ path('sc_activite_editStage', {'id': activite.id, 'debutStage' : stage.debutStage, 'finStage' : stage.finStage}) }}" class="btn btn-default">
             <i class="glyphicon glyphicon-edit"></i>
                  Modifier
-            </a>
+            </a>#}
             <a href="{{ path('sc_activite_deleteStage', {'id': activite.id, 'debutStage' : stage.debutStage, 'finStage' : stage.finStage}) }}" class="btn btn-danger">
                  <i class="glyphicon glyphicon-trash"></i>
                  Supprimer
