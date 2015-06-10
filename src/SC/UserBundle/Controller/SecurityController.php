@@ -224,7 +224,14 @@ class SecurityController extends Controller
         $saison_actuel = new Saison;
         $year = $saison_actuel->connaitreSaison();
         $saison = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Saison')->findOneByAnnee($year);
-      
+        $em = $this -> getDoctrine() ->getManager();
+        if (null === $saison) {
+            $saison = new Saison();
+            $saison->setAnnee($year);
+            $em->persist($saison);
+            $em->flush();
+        }
+        $saison = $this->getDoctrine()->getManager()->getRepository('SC\ActiviteBundle\Entity\Saison')->findOneByAnnee($year);
         $adhesion->setSaison($saison);
         
       
