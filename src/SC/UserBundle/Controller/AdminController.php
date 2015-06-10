@@ -232,7 +232,7 @@ class AdminController extends Controller
             $niveauSki[$email.$inscrit->getPrenomEnfant().$inscrit->getNomEnfant()] = $enfant -> getNiveauSki() -> getNiveau();
             
         }
-        return $this->render('SCUserBundle:Admin:gestionEnfant.html.twig',array('listeEnfantsInscrits' => $listeEnfantsInscrits,'niveauSki' => $niveauSki));
+        return $this->render('SCUserBundle:Admin:gestionEnfant.html.twig',array('listeEnfantsInscrits' => $listeEnfantsInscrits,'niveauSki' => $niveauSki, 'email'=>$email));
         
     }
 
@@ -420,7 +420,7 @@ class AdminController extends Controller
             $niveauSki[$email.$inscrit->getPrenomEnfant().$inscrit->getNomEnfant()] = $enfant -> getNiveauSki() -> getNiveau();
             
         }
-        return $this->render('SCUserBundle:Admin:gestionEnfant.html.twig',array('listeEnfantsInscrits' => $listeEnfantsInscrits,'niveauSki' => $niveauSki));
+        return $this->render('SCUserBundle:Admin:gestionEnfant.html.twig',array('listeEnfantsInscrits' => $listeEnfantsInscrits,'niveauSki' => $niveauSki,'email' => $email));
         
     }
 

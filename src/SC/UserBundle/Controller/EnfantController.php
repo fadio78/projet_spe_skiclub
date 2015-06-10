@@ -13,10 +13,13 @@ class EnfantController extends Controller
 {
     //permet d'ajouter un enfant
     public function ajouterAction(Request $request){
-    
+       $em = $this->getDoctrine()->getManager();
       $enfant = new Enfant;
-      //$session = $request->getSession();
-      $usr= $this->get('security.context')->getToken()->getUser();
+      $session = $request->getSession();
+      $email= $session->get('email');
+      $usr = $em->getRepository('SCUserBundle:User')->findOneBy(['email'=> $email]);
+      
+      //$usr= $this->get('security.context')->getToken()->getUser();
       $enfant->setUserParent($usr);
       $form = $this->get('form.factory')->create(new EnfantType(), $enfant);
       
@@ -25,7 +28,7 @@ class EnfantController extends Controller
         // On vérifie que les valeurs entrées sont correctes
         if ($form->isValid()) {
         // on verifie si l'enfant n'a pas d'jà été enregistré
-        $em = $this->getDoctrine()->getManager();
+        
         $listEnfant = $em->getRepository('SCUserBundle:Enfant')->findby(['userParent'=> $usr->getEmail()]);
         foreach ($listEnfant   as $child)
             {   
@@ -40,7 +43,7 @@ class EnfantController extends Controller
         // On l'enregistre notre objet $activite dans la base de données, par exemple
         $em->persist($enfant);
         $em->flush();
-        $request->getSession()->getFlashBag()->add('info', 'enfant bien enregistré');
+        $request->getSession()->getFlashBag()->add('info', 'Enfant bien enregistré');
         // On redirige vers la page de visualisation de l'annonce nouvellement créée
         return $this->redirect($this->generateUrl('sc_user_compte'));
         }
