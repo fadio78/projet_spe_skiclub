@@ -25,6 +25,8 @@ class AdminController extends Controller
         
         
     }
+    
+    //permet de recuperer la liste des comptes inactif
     public function listUsersInactifAction(Request $request)
     {
         $repository = $this
@@ -40,6 +42,7 @@ class AdminController extends Controller
         
         
     }
+    //permet de recuperer la liste dec comptes actif et primaire
         public function listNoAdminAction(Request $request)
     {
         $repository = $this
@@ -57,85 +60,80 @@ class AdminController extends Controller
         
         
     }
-        public function activerCompteAction(Request $request, $email)
+    //permet à u admin d'activer un compte d'un utilisateur 
+    public function activerCompteAction(Request $request, $email)
     {
         $repository = $this
           ->getDoctrine()
           ->getManager()
           ->getRepository('SCUserBundle:User');
            
-           $repository->activerCompte($email);
+        $repository->activerCompte($email);
         $request->getSession()->getFlashBag()->add('info', 'Compte bien activé ');
         
-        $message = \Swift_Message::newInstance()
-        
-                        
-        ->setSubject('Compte activé')
-        ->setFrom($request->getSession()->get('email'))
-        ->setTo($email)
-        ->setBody('Votre Compte a été activité, vous pouvez vous connecter sur skiclub la petite roche')
-                        
-    ;
+        //envoi d'un mail
+        $message = \Swift_Message::newInstance()                        
+            ->setSubject('Compte activé')
+            ->setFrom($request->getSession()->get('email'))
+            ->setTo($email)
+            ->setBody('Votre Compte a été activité, vous pouvez vous connecter sur skiclub la petite roche')
+         ;
 
-    $this->get('mailer')->send($message);
+        $this->get('mailer')->send($message);
         
         
         return $this->redirect($this->generateUrl('sc_admin_listUsersInactif'));
         
         
     }
-            public function supprimerCompteAction(Request $request, $email)
+    //permet à un admin de supprimer un compte
+    public function supprimerCompteAction(Request $request, $email)
     {
         $repository = $this
           ->getDoctrine()
           ->getManager()
           ->getRepository('SCUserBundle:User');
            
-           $repository->supprimerCompte($email);
+        $repository->supprimerCompte($email);
         $request->getSession()->getFlashBag()->add('info', 'Compte bien supprimé ');
-        return $this->redirect($this->generateUrl('sc_admin_listUsersInactif'));
-        
-        
+        return $this->redirect($this->generateUrl('sc_admin_listUsersInactif'));       
     }
-
-           public function activerAdminAction(Request $request, $email)
+    
+    // permet à un admin de rendre un client admin
+    public function activerAdminAction(Request $request, $email)
     {
         $repository = $this
           ->getDoctrine()
           ->getManager()
           ->getRepository('SCUserBundle:User');
            
-           $repository->activerAdmin($email);
+        $repository->activerAdmin($email);
         $request->getSession()->getFlashBag()->add('info', 'new Admin ! ');
-        return $this->redirect($this->generateUrl('sc_admin_listNoAdmin'));
-        
-        
+        return $this->redirect($this->generateUrl('sc_admin_listNoAdmin'));          
     } 
-               public function gestionCompteAction(Request $request, $email)
-    {
-                   
-                   
+    
+   //permet d'obtenir les infos concernant le paiement dun user (les info de la table adhesion) 
+    public function gestionCompteAction(Request $request, $email)
+    {          
         $saison = new Saison;
         $annee = $saison->connaitreSaison();
+        
         $repository = $this
           ->getDoctrine()
           ->getManager()
           ->getRepository('SCUserBundle:User');
            
-           $user= $repository->findOneby(['email' => $email]);
+        $user= $repository->findOneby(['email' => $email]);
            
            
         $em = $this->getDoctrine()->getManager();
      
         
-        //on le rentre dans la table adhesion si il est pas encore inscrit 
-               
+        //on le rentre dans la table adhesion si il est pas encore inscrit      
         $adhesion = $em->getRepository('SCUserBundle:Adhesion')->findOneby(
                    array('user' => $email,
                          'saison'=> $annee
                    ));
-        
-        
         if ($adhesion == null){
             
             $saison_actuel = $em->getRepository('SC\ActiviteBundle\Entity\Saison')->find($annee);
@@ -149,68 +147,68 @@ class AdminController extends Controller
             $em->persist($adhesion);
             $em->flush();
         }
-           
+         
+        // on recupere les donnees de la table adheion d'uinn user
         $repository = $this
           ->getDoctrine()
           ->getManager()
           ->getRepository('SCUserBundle:Adhesion');
            
-           $adhesion = $repository->findOneby(
-                   array('user' => $email,
-                         'saison'=> $annee
-                   ));
+        $adhesion = $repository->findOneby( array('user' => $email,'saison'=> $annee));
            
-           //On cherche le montant que l'utilisateur doit au total pour une saison 
-           $dette = $em->getRepository('SCActiviteBundle:InscriptionActivite')->getSommeApayer($email);
+        //On cherche le montant que l'utilisateur doit au total pour une saison 
+        $dette = $em->getRepository('SCActiviteBundle:InscriptionActivite')->getSommeApayer($email);
            
               
            
         return $this->render('SCUserBundle:Admin:gestionCompte.html.twig',
-                array('user'=>$user ,
-                      'adhesion'=>$adhesion,
-                      'dette'=>$dette
-                )
+                    array('user'=>$user ,
+                        'adhesion'=>$adhesion,
+                        'dette'=>$dette
+                    )
                 
                 );
         
-        
     }
 
-               public function ajoutMontantAction(Request $request, $email)
+    // permet d'ajouter un montant dans la table adhesion d'un user (attribut montanPayé)
+    public function ajoutMontantAction(Request $request, $email)
     {
 
         $saison = new Saison;
         $annee = $saison->connaitreSaison();
+        
         $montant = $_POST['_montant'];
+        
         $repository = $this
           ->getDoctrine()
           ->getManager()
           ->getRepository('SCUserBundle:Adhesion');
          
-           $adhesion = $repository->ajoutMontant($email,$annee,$montant);
+        $adhesion = $repository->ajoutMontant($email,$annee,$montant);
               
              
-         return  $this->gestionCompteAction( $request, $email);
-        
-        
+        return  $this->gestionCompteAction( $request, $email);
     }
-              public function ajoutRemiseAction(Request $request, $email)
-            {
+    
+    // permet d'ajouter une remise dans la table adhesion d'un user (attribut remise)
+    public function ajoutRemiseAction(Request $request, $email)
+    {
 
         $saison = new Saison;
         $annee = $saison->connaitreSaison();
+        
         $montant = $_POST['_remise'];
         $repository = $this
+                
           ->getDoctrine()
           ->getManager()
           ->getRepository('SCUserBundle:Adhesion');
          
-           $adhesion = $repository->ajoutRemise($email,$annee,$montant);
+        $adhesion = $repository->ajoutRemise($email,$annee,$montant);
               
              
-         return  $this->gestionCompteAction( $request, $email);
-        
-        
+         return  $this->gestionCompteAction( $request, $email);  
     }
     
     // récupère la liste des inscrits aux activitésde la saison en cours pour un email donné
@@ -238,71 +236,67 @@ class AdminController extends Controller
         
     }
 
-    
-        public function adhererAction(Request $request, $email)
-        {
-
+    //permet à un admin d'affirmer qu'un user a payé son adhesion annuel
+    public function adhererAction(Request $request, $email)
+    {
         $saison = new Saison;
         $annee = $saison->connaitreSaison();
+        
         $adhesion = $_POST['_adhesion'];
+        
         $repository = $this
           ->getDoctrine()
           ->getManager()
           ->getRepository('SCUserBundle:Adhesion');
+        
          if ($adhesion == 1){
-          $adhesion = $repository->adherer($email,$annee);
+            $adhesion = $repository->adherer($email,$annee);
          }     
              
-         return  $this->gestionCompteAction( $request, $email);
+        return  $this->gestionCompteAction( $request, $email);
         
         
-        }
-
-        
-             public function changePasswordAction(Request $request, $email)
-            {
-                 $password = $_POST['_password'];
-                 $conf_password = $_POST['_conf_password'];
+    }      
+    
+    // permet à un admin de changer le password d'un user et de lui envoyé un mail
+    public function changePasswordAction(Request $request, $email)
+    {
+        $password = $_POST['_password'];
+        $conf_password = $_POST['_conf_password'];
                  
-                 if($password == $conf_password){
-                 
-                        $user = new User;
-                    $salt = substr(md5(time()),0,10);
-      
-                
-                    $factory = $this->get('security.encoder_factory');
-                    $encoder = $factory->getEncoder($user);
-                    $newpassword = $encoder->encodePassword($password, $salt);
-      
-
- 
-        
-        $repository = $this
-          ->getDoctrine()
-          ->getManager()
-          ->getRepository('SCUserBundle:User');
+        if($password == $conf_password)
+        {
+            $user = new User;
+            $salt = substr(md5(time()),0,10);//creation du salt
+            //on recupere l'encoder pour hasher le password
+            $factory = $this->get('security.encoder_factory');
+            $encoder = $factory->getEncoder($user);
+            //on hash le password
+            $newpassword = $encoder->encodePassword($password, $salt); 
+            //on change me password et le salt dans la base
+            $repository = $this
+                ->getDoctrine()
+                ->getManager()
+                ->getRepository('SCUserBundle:User');
          
-          $repository->changePassword($email,$newpassword, $salt);
+            $repository->changePassword($email,$newpassword, $salt);
             $request->getSession()->getFlashBag()->add('info', 'mot de passe modifié ');
-$message = \Swift_Message::newInstance()
-        
-                        
-        ->setSubject('Changement de mot de passe ')
-        ->setFrom($request->getSession()->get('email'))
-        ->setTo($email)
-        ->setBody('Votre mot de passe a changé voici le nouveau que vous devez aller modifier :'.$password)
-                        
-    ;
-
-    $this->get('mailer')->send($message);
             
-                 }else{
-                     $request->getSession()->getFlashBag()->add('info', 'Mot de passe de confirmation incorrecte ');
-                 } 
+            //on lui envoie un mail du mot de passe en clair pour qu'il aye le modifier
+            $message = \Swift_Message::newInstance()   
+                ->setSubject('Changement de mot de passe ')
+                ->setFrom($request->getSession()->get('email'))
+                ->setTo($email)
+                ->setBody('Votre mot de passe a changé voici le nouveau que vous devez aller modifier :'.$password)          
+            ;
+
+            $this->get('mailer')->send($message);
+            
+        }else{
+                $request->getSession()->getFlashBag()->add('info', 'Mot de passe de confirmation incorrecte ');
+        } 
             
          return  $this->gestionCompteAction( $request, $email);
-        
-        
     }
  
     public function viewAllStagesUserAction($email, Request $request) {
@@ -327,10 +321,14 @@ $message = \Swift_Message::newInstance()
         }
     }
     
+    //permet d'afficher la trésorerie tableau récapitulatif
     public function tresorerieAction(Request $request)
-    {   $em = $this->getDoctrine()->getManager();
-         
-        $listUser = $em->getRepository('SCUserBundle:User')->findBy(array('isPrimaire'=>true,'isActive'=>true));//tresorerie concernant tous les users mêmes les désactivé 
+    {   
+        
+        $em = $this->getDoctrine()->getManager();
+        
+        //la trésorerie concerne les actif primaire et actif
+        $listUser = $em->getRepository('SCUserBundle:User')->findBy(array('isPrimaire'=>true,'isActive'=>true));
         
         $saison =new Saison;
         $annee = $saison->connaitreSaison();
