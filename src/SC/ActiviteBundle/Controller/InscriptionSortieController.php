@@ -84,12 +84,16 @@ class InscriptionSortieController extends Controller
         }
         //on verifie que l'enfant est inscrit a l'activite
         if ($this->inscritActivite($activite,$saison,$nomEnfant,$prenomEnfant,$userParent)==false) {
-            return $this->pageErreur($nomEnfant.' '.'non inscrit à cette activité');
+            //return $this->pageErreur($nomEnfant.' '.'non inscrit à cette activité');
+            $request->getSession()->getFlashBag()->add('info2', 'enfant non inscrit a cette activite');
+            return $this->render('SCActiviteBundle:Activite:view.html.twig', array('activite'=> $activite));
         }
         //on verifie que l'enfant n'est pas deja inscrit a cette sortie
         $sortie = $request->getSession()->get('sortie');
         if ($this->estInscrit($id,$sortie, $userParent, $nomEnfant, $prenomEnfant,$year)==true) {
-            return $this->pageErreur($nomEnfant.' '.'est déja inscrit à cette sortie');
+            //return $this->pageErreur($nomEnfant.' '.'est déja inscrit à cette sortie');
+            $request->getSession()->getFlashBag()->add('info2', 'enfant deja inscrit a cette sortie');
+            return $this->render('SCActiviteBundle:Activite:view.html.twig', array('activite'=> $activite));
         }
 
         $inscriptionSortie = new InscriptionSortie;

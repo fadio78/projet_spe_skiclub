@@ -12,7 +12,13 @@
         <p>{{ message }}</p>
       {% endfor %}</FONT>
   </p>
-    
+  <p>
+    {# On affiche tous les messages flash dont le nom est « info » #}
+      <FONT color="red">{% for message in app.session.flashbag.get('info2') %}
+        <p>{{ message }}</p>
+      {% endfor %}</FONT>
+  </p>
+  
   <h2>{{ activite.nomActivite }}</h2>
     <br>
     </br>
