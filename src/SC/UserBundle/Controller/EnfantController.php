@@ -11,6 +11,7 @@ use SC\UserBundle\Form\EnfantType;
 
 class EnfantController extends Controller
 {
+    //permet d'ajouter un enfant
     public function ajouterAction(Request $request){
     
       $enfant = new Enfant;
@@ -20,8 +21,7 @@ class EnfantController extends Controller
       $form = $this->get('form.factory')->create(new EnfantType(), $enfant);
       
         // On fait le lien Requête <-> Formulaire
-        // À partir de maintenant, la variable $user contient les valeurs entrées dans le formulaire par le visiteur
-        $form->handleRequest($request);
+            $form->handleRequest($request);
         // On vérifie que les valeurs entrées sont correctes
         if ($form->isValid()) {
         // on verifie si l'enfant n'a pas d'jà été enregistré
@@ -29,7 +29,7 @@ class EnfantController extends Controller
         $listEnfant = $em->getRepository('SCUserBundle:Enfant')->findby(['userParent'=> $usr->getEmail()]);
         foreach ($listEnfant   as $child)
             {   
-                    
+                //on verifie si l'enfant existe    
                 if ($child ->getNomEnfant() == $enfant -> getNomEnfant() && $child ->getPrenomEnfant() == $enfant -> getPrenomEnfant())
                 {
                     $request->getSession()->getFlashBag()->add('info', 'Enfant déjà ajouté');
