@@ -3,7 +3,10 @@
 {% block user_body %}
   <h4>Informations concernant le compte</h4>
   <br/>
-  <p><b> Adresse e-mail</b> : {{app.session.get('email')}}</p>
+  <p><b> Adresse e-mail</b> : {{app.session.get('email')}} </p>
+  <p><b> Nom</b> : {{adhesion.user.prenom }} {{adhesion.user.nom }}  </p>
+  <p><b> Tel </b> : {{adhesion.user.telephone }}   </p>
+  <p><b> Adresse</b> : {{adhesion.user.adresse }} {{adhesion.user.commune }}  </p>
 
   <br/>
   <p><u>Montant payé pour la saison <b>{{adhesion.saison.annee }}</b></u> : {{adhesion.montantPaye}} €<p/>
