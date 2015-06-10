@@ -77,6 +77,7 @@ class User implements AdvancedUserInterface
      *
      * 
      * @ORM\Column(name="password", type="string", length=255)
+     * @Assert\Length(min = "6")
      */
     private $password;
 
