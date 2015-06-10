@@ -330,7 +330,7 @@ $message = \Swift_Message::newInstance()
     public function tresorerieAction(Request $request)
     {   $em = $this->getDoctrine()->getManager();
          
-        $listUser = $em->getRepository('SCUserBundle:User')->findBy(array('isPrimaire'=>true));//tresorerie concernant tous les users mêmes les désactivé 
+        $listUser = $em->getRepository('SCUserBundle:User')->findBy(array('isPrimaire'=>true,'isActive'=>true));//tresorerie concernant tous les users mêmes les désactivé 
         
         $saison =new Saison;
         $annee = $saison->connaitreSaison();
@@ -348,6 +348,8 @@ $message = \Swift_Message::newInstance()
             $user = $em->getRepository('SCUserBundle:Adhesion')->findOneby(array('saison'=> $annee,'user'=>$email));
             $listActivitéPayé[$email] = $user->getMontantPaye();
             $sommeMontantActivité = $sommeMontantActivité + $user->getMontantPaye();
+            
+            $listAdhesion[$email] = $user->getAdhesionAnnuel();
             
             $dette = $em->getRepository('SCActiviteBundle:InscriptionActivite')->getSommeApayer($email);
             $listDetteActivité[$email]= $dette;
@@ -372,6 +374,7 @@ $message = \Swift_Message::newInstance()
                     'listActivitéPayé'=>$listActivitéPayé,
                     'listDetteStage'=>$listDetteStage,
                     'listStagePayé'=>$listStagePayé,
+                    'listAdhesion'=>$listAdhesion,
                     'sommeMontantActivité'=> $sommeMontantActivité,
                     'sommeDetteActivité'=>$sommeDetteActivité,
                     'sommeMontantStage'=>$sommeMontantStage,
