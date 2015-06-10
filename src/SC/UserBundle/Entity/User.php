@@ -5,6 +5,8 @@ namespace SC\UserBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface ;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
+use Symfony\Component\Validator\Mapping\ClassMetadata;
+use Symfony\Component\Validator\Constraints as Assert;
 /**
  * User
  *
@@ -45,9 +47,14 @@ class User implements AdvancedUserInterface
     private $prenom;
 
     /**
-     * @var integer
+     * @var string
      *
-     * @ORM\Column(name="telephone", type="integer")
+     * @ORM\Column(name="telephone", type="string")
+     * @Assert\Regex(
+     *     pattern="#^0[1-68]([-. ]?[0-9]{2}){4}$#",
+     *     match=true,
+     *     message="Your property should match ..."
+     *     )
      */
     private $telephone;
 

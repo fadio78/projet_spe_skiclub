@@ -25,12 +25,12 @@
   {% if adhesion.modalite == null%}
     <p><u>Choisir modalité de paiement</u></p>
   <form action="{{ path('sc_user_choixModalite') }}" method="post">
-  <label for="modalite">Choisir le nombre de modalite(1,2 ou 3) </label>
+  <label for="modalite">Choisir le nombre de modalite (en 1,2 ou 3 fois) </label>
   <input type="number" id="modalite" name="_modalite" value="" min='1' max='3' /> 
   <input type="submit" value="Choisir" />
   </form>
   {% else %}
-     <p><u>Nombre de modalité choisi pour le paiement</u> :   {{adhesion.modalite}} <p/>
+     <p><u>Nombre de modalité choisi pour le paiement</u> : en {{adhesion.modalite}} fois<p/>
    <br/>   
   {% endif%}
  
