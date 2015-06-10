@@ -149,7 +149,7 @@ class InscriptionStageController extends Controller
             return $this->pageErreur("Vous devez être connecté pour accéder à ce lien");
         }             
         
-        $listeInscriptionStages = $em->getRepository('SC\ActiviteBundle\Entity\InscriptionStage')->findBy(array('activite'=>$activite, 'saison'=>$saison));
+        $listeInscriptionStages = $em->getRepository('SC\ActiviteBundle\Entity\InscriptionStage')->jointureStageInscriptionStage($activite);
         if (is_null($activite)) {
             $response = new Response;
             $response->setContent("Error 404: not found");
@@ -177,6 +177,7 @@ class InscriptionStageController extends Controller
         }
     }
     
+    // bouton de confirmation de paiement, met la valeur de PrixPayeStage égale à prixStage + charges
     public function confirmPaymentAction($id, $email, $nomEnfant, $prenomEnfant, $debutStage, $finStage, Request $request) {
         $em = $this->getDoctrine()->getManager();
         
@@ -212,6 +213,7 @@ class InscriptionStageController extends Controller
         return $this->render('SCActiviteBundle:Stage:viewAllStagesUser.html.twig', array('listeInscriptionStages'=>$listeInscriptionStages, 'email'=>$email));
     }
     
+    // permet de supprimer l'inscription d'un enfant à un stage
     public function deleteInscriptionStageAction($id, $email, $nomEnfant, $prenomEnfant, $debutStage, $finStage, Request $request) {
         $em = $this->getDoctrine()->getManager();
         
