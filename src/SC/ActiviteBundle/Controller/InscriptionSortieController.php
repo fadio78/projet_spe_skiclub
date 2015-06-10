@@ -206,8 +206,19 @@ class InscriptionSortieController extends Controller
         $mesSorties = $em->getRepository('SC\ActiviteBundle\Entity\InscriptionSortie')->jointureSortieInscriptionSortie($id,$request->getSession()->get('email'),$year);        
         //liste des inscrits pour la sorties demandée
         $inscrits = $em->getRepository('SC\ActiviteBundle\Entity\InscriptionSortie')->getGroupe($id,$year/*,$lieu*/,$dateSortie);
-
-        return $this->render('SCUserBundle:Security:mesSorties.html.twig', array('activite'=> $activite, 'mesSorties' => $mesSorties,'choix'=>1,'inscrits'=>$inscrits,'nomEnfant'=>$nomEnfant,'prenomEnfant' => $prenomEnfant, 'dateSortie' => $dateSortie, 'lieu'=>$lieu,'saison'=>$year));
+        
+        $total = 0; $conf = 0; $notConf = 0;
+            foreach ($inscrits as $inscrit) {
+                $total = $total + 1;
+                if ($inscrit['participation'] == 1) {
+                    $conf = $conf + 1;
+                }
+                else {
+                    $notConf = $notConf + 1; 
+                }
+                
+            }
+        return $this->render('SCUserBundle:Security:mesSorties.html.twig', array('activite'=> $activite, 'mesSorties' => $mesSorties,'choix'=>1,'inscrits'=>$inscrits,'nomEnfant'=>$nomEnfant,'prenomEnfant' => $prenomEnfant, 'dateSortie' => $dateSortie, 'lieu'=>$lieu,'saison'=>$year,'total' => $total, 'conf' => $conf, 'notConf'=> $notConf ));
     }
     
     //permet de lister les inscriptions de l'utilisateur pour l'activite donnee

@@ -25,14 +25,16 @@
         Pour rappel voici les inscrits <br/> <br/>
         
 
-        <table border="1" cellpadding="10" cellspacing="1" width="100%" id="tab">
+        <table id="myTable" class="tablesorter" border="1" cellpadding="10" cellspacing="1" width="100%" id="tab">
+            <thead> 
             <tr> 
             <th><center>Nom </center></th>
             <th><center>Prénom</center></th>
             <th><center>Confirmation</center></th>
             <th><center>Groupe</center></th>
-    
-            <tr/>       
+            <tr/>
+            </thead> 
+            <tbody>     
         {%for inscrit in inscrits %}
           {#  {%if (inscrit.emailParent != app.session.get('email')) or (inscrit.emailParent == app.session.get('email') and inscrit.nomEnfant != nomEnfant and inscrit.prenomEnfant != prenomEnfant) %} #}
                 
@@ -41,7 +43,7 @@
                     <td><center> {{ inscrit.prenomEnfant }}  </center></td>  
                 
                     {%if inscrit.participation == 1 %} 
-                       <td  bgcolor="#01DF01"><center></center></td>
+                       <td  bgcolor="#01DF01"><center><FONT color="#01DF01">OK</center></td>
                     {%else%}
                         <td  bgcolor="#DF0101"><center></center></td>
                     {%endif%}
@@ -50,7 +52,12 @@
                 </tr> 
           {#  {%endif%} #}
         {%endfor%}
+        <tbody>     
      </table>
+     <br/><br/>
+     <b> Total inscrits : {{ total }}</b><br/>
+     <b> Total confirmé : {{ conf }}</b><br/>
+     <b> Total non confirmé : {{ notConf }}</b>
      <br/>
      <br/>
      <br/>     
