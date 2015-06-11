@@ -33,8 +33,9 @@
    <br/>
    {% endif %}
    
-   <p>Cocher cette case pour valider l'adhésion de l'utilisateur.</p>
+   
    {% if adhesion.adhesionAnnuel == false%}
+       <p>Cocher cette case pour valider l'adhésion de l'utilisateur.</p>
          <form action="{{ path('sc_admin_adherer',{'email': user.email}) }}" method="post">
     <label for="adhesion">Adhésion : </label>
     <input type="checkbox"  name="_adhesion" value="1" />        

@@ -243,6 +243,9 @@ class SortieController extends Controller
         $newSortie = new Sortie;
         //la sortie qui va etre modifiee
         $sortie = $em->getRepository('SCActiviteBundle:Sortie')->findOneBy(array('dateSortie'=>$dateSortie,'activite'=>$activite,'saison'=>$saison/*,'lieu'=>$lieu*/));
+        if (null === $sortie) {
+           return $this->pageErreur("cette sortie n'existe pas");
+        }        
         $form = $this->get('form.factory')->create(new SortieType(), $newSortie);
         $form->handleRequest($request);
         

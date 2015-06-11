@@ -14,7 +14,7 @@ class LoadStage extends AbstractFixture implements OrderedFixtureInterface
 {
   public function load(ObjectManager $manager)
   {
-    $user = $manager ->getRepository('SCUserBundle:User') ->findOneBy(array('email' => 'sfr@hotmail.com'));
+    $user = $manager ->getRepository('SCUserBundle:User') ->findOneBy(array('email' => 'admin@hotmail.com'));
     $listActivite = $manager ->getRepository('SCActiviteBundle:Activite') ->findAll();
     $listSaison =  $manager->getRepository('SCActiviteBundle:Saison')->findAll();
     $lieu =  $manager->getRepository('SCActiviteBundle:Lieu')->findOneByNomLieu('evrest');
