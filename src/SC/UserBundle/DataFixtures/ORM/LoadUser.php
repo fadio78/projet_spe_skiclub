@@ -14,7 +14,7 @@ class LoadUser extends AbstractFixture implements OrderedFixtureInterface
   public function load(ObjectManager $manager)
   {
     // Les noms d'utilisateurs à créer
-    $listNames = array('sgbd@hotmail.com', 'test@hotmail.com', 'sfr@hotmail.com','dupont@gmail.com','bob@gmail.com','alice@gmail.com','john@gmail.com','cris@hotmail.com','leo@hotmail.com','new@hotmail.com','gerard@hotmail.com','jeanne@hotmail.com','marie@hotmail.com','lucie@hotmail.com','barca@hotmail.com','real@hotmail.com','coool@hotmail.com');
+    $listNames = array('sgbd@hotmail.com', 'test@hotmail.com', 'admin@hotmail.com','dupont@gmail.com','bob@gmail.com','alice@gmail.com','john@gmail.com','cris@hotmail.com','leo@hotmail.com','new@hotmail.com','gerard@hotmail.com','jeanne@hotmail.com','marie@hotmail.com','lucie@hotmail.com','barca@hotmail.com','real@hotmail.com','coool@hotmail.com');
     $i = 0;
     foreach ($listNames as $name) {
       // On crée l'utilisateur

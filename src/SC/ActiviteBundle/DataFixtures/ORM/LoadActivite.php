@@ -14,7 +14,7 @@ class LoadActivite extends AbstractFixture implements OrderedFixtureInterface
 {
   public function load(ObjectManager $manager)
   {
-    $user = $manager ->getRepository('SCUserBundle:User') ->findOneBy(array('email' => 'sfr@hotmail.com'));
+    $user = $manager ->getRepository('SCUserBundle:User') ->findOneBy(array('email' => 'admin@hotmail.com'));
 
     
     $activite1 = new Activite ();
